@@ -2,13 +2,14 @@
 # AI-Native SDLC Starter Makefile
 # ==============================================================================
 
-.PHONY: all help init verify test lint eval format new-intent audit clean
+.PHONY: all help init install-hooks verify test lint eval format new-intent audit clean
 
 all: verify
 
 help:
 	@echo "AI-Native SDLC Lifecycle Commands:"
-	@echo "  make init          - Initialize a fresh project environment"
+	@echo "  make init          - Initialize a fresh project environment & install git hooks"
+	@echo "  make install-hooks - Configure .githooks as git core.hooksPath"
 	@echo "  make verify        - Run full local feedback verification (test + lint + artifacts)"
 	@echo "  make test          - Run unit & integration test suite"
 	@echo "  make lint          - Run syntax & code style linters"
@@ -17,11 +18,14 @@ help:
 	@echo "  make new-intent    - Scaffold a new Stage 1 intent artifact (Usage: make new-intent TITLE='...')"
 	@echo "  make audit         - Check artifact chain linkages and anti-shortcuts"
 
-init:
+init: install-hooks
 	@echo "🚀 Initializing AI-Native SDLC project repository..."
-	@mkdir -p intent specs plans evals templates .gemini/skills .gemini/agents scripts
-	@chmod +x scripts/*.sh evals/*.py 2>/dev/null || true
+	@mkdir -p intent specs plans evals templates .gemini/skills .gemini/agents scripts .githooks
+	@chmod +x scripts/*.sh evals/*.py .githooks/* 2>/dev/null || true
 	@echo "✅ Initialization complete. Review GEMINI.md to tailor project instructions."
+
+install-hooks:
+	@bash ./scripts/install-hooks.sh
 
 verify:
 	@bash ./scripts/verify.sh

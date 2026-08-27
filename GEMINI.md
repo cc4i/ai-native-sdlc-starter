@@ -14,6 +14,7 @@ We follow the **AI-Native SDLC** lifecycle:
    - For bug fixes: Write reproducing test that fails -> Fix implementation without modifying the test -> Verify green.
 4. **Never Gut or Skip Failing Tests**: When a test fails, fix the code, not the test assertion.
 5. **Single-Command Verification**: Run `make verify` (or `./scripts/verify.sh`) before reporting any task complete.
+6. **Unbroken Chain Enforcement**: Git pre-commit/pre-push hooks and CI block any commits or PRs modifying `src/` without corresponding `intent.md ➔ spec.md ➔ plan.md` artifacts. Always update the artifact chain first.
 
 ---
 

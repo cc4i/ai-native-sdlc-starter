@@ -1,20 +1,49 @@
-name: Artifact Chain Integrity
+name: SDLC Artifact Chain & Quality Gate
 
 on:
   pull_request:
-    paths:
-      - 'intent/**'
-      - 'specs/**'
-      - 'plans/**'
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
 
 jobs:
-  check-artifacts:
-    name: Check Artifact Traceability
+  verify-chain:
+    name: Verify Unbroken Artifact Chain & Quality Gates
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout Code with full history
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Verify Linkages
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check Artifact Chain Integrity
+        run: bash scripts/check-artifacts.sh
+
+      - name: Verify Single-Command Harness (make verify)
+        run: make verify
+
+      - name: Run Continuous AI Evals (make eval)
+        run: make eval
+
+      - name: Verify Source Traceability on PR
+        if: github.event_name == 'pull_request'
         run: |
-          bash scripts/check-artifacts.sh
+          CHANGED_SRC=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^src/' || true)
+          if [ -n "$CHANGED_SRC" ]; then
+            echo "🔍 Source code modified in PR:"
+            echo "$CHANGED_SRC"
+            echo "Verifying presence of Stage 1 (intent), Stage 2 (spec), and Stage 3 (plan) artifacts..."
+            INTENT_COUNT=$(find intent -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" | wc -l | tr -d ' ')
+            SPEC_COUNT=$(find specs -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" | wc -l | tr -d ' ')
+            PLAN_COUNT=$(find plans -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" | wc -l | tr -d ' ')
+            if [ "$INTENT_COUNT" -eq 0 ] || [ "$SPEC_COUNT" -eq 0 ] || [ "$PLAN_COUNT" -eq 0 ]; then
+              echo "❌ Error: PR modifies src/ but lacks complete artifact chain in intent/, specs/, or plans/."
+              exit 1
+            fi
+            echo "✅ Source code changes are grounded in verified artifacts."
+          fi

@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# AI-Native SDLC Pre-Commit Hook (.githooks/pre-commit)
+# ==============================================================================
+# Enforces the unbroken artifact chain:
+# intent.md ➔ spec.md ➔ plan.md ➔ make verify ➔ commit
+# ==============================================================================
+
+set -euo pipefail
+
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
+CYAN="\033[0;36m"
+BOLD="\033[1m"
+RESET="\033[0m"
+
+echo -e "${CYAN}${BOLD}🛡️  [SDLC Pre-Commit] Validating artifact chain and verification harness...${RESET}"
+
+# 1. Identify staged files
+STAGED_SRC=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^src/' || true)
+STAGED_ALL=$(git diff --cached --name-only --diff-filter=ACMR || true)
+
+# If source code in src/ is being modified:
+if [ -n "$STAGED_SRC" ]; then
+    echo -e "${YELLOW}🔍 Source code changes detected in src/:${RESET}"
+    echo "$STAGED_SRC" | sed 's/^/  - /'
+
+    # Check 1: Verify that intent artifacts exist
+    INTENT_COUNT=$(find intent -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
+    if [ "$INTENT_COUNT" -eq 0 ]; then
+        echo -e "${RED}${BOLD}❌ SDLC VIOLATION: No Stage 1 (intent.md) artifacts found in intent/.${RESET}"
+        echo -e "👉 Rule: You cannot modify production code in src/ without an approved intent artifact."
+        echo -e "   Remediation: Run ${CYAN}make new-intent TITLE=\"Your Feature\"${RESET} and interview with /grill-me."
+        exit 1
+    fi
+
+    # Check 2: Verify that spec artifacts exist
+    SPEC_COUNT=$(find specs -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
+    if [ "$SPEC_COUNT" -eq 0 ]; then
+        echo -e "${RED}${BOLD}❌ SDLC VIOLATION: No Stage 2 (spec.md) artifacts found in specs/.${RESET}"
+        echo -e "👉 Rule: You cannot modify production code without an approved Gherkin specification."
+        echo -e "   Remediation: Generate ${CYAN}specs/NNN-[feature].md${RESET} before writing code."
+        exit 1
+    fi
+
+    # Check 3: Verify that plan artifacts exist
+    PLAN_COUNT=$(find plans -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
+    if [ "$PLAN_COUNT" -eq 0 ]; then
+        echo -e "${RED}${BOLD}❌ SDLC VIOLATION: No Stage 3 (plan.md) artifacts found in plans/.${RESET}"
+        echo -e "👉 Rule: Never write non-trivial code without an approved plan.md with TDD execution groups."
+        echo -e "   Remediation: Create ${CYAN}plans/NNN-[feature].md${RESET} with TDD steps."
+        exit 1
+    fi
+fi
+
+# Run Single-Command Verification Harness
+echo -e "${CYAN}🧪 Running local verification loop (make verify)...${RESET}"
+if command -v make >/dev/null 2>&1; then
+    if ! make verify; then
+        echo -e "${RED}${BOLD}❌ SDLC VIOLATION: Local verification loop failed.${RESET}"
+        echo -e "👉 Rule: Commits are rejected if tests fail, lint errors exist, or TODO stubs remain."
+        echo -e "   Fix the failing code and run ${CYAN}make verify${RESET} to re-verify."
+        exit 1
+    fi
+else
+    if ! bash ./scripts/verify.sh; then
+        echo -e "${RED}${BOLD}❌ SDLC VIOLATION: scripts/verify.sh failed.${RESET}"
+        exit 1
+    fi
+fi
+
+echo -e "${GREEN}${BOLD}✅ [SDLC Pre-Commit] All checks passed. Commit allowed.${RESET}"
+exit 0

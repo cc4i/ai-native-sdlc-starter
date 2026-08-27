@@ -132,6 +132,7 @@ mkdir -p \
     evals \
     templates \
     scripts \
+    .githooks \
     .gemini/skills/intent-capture \
     .gemini/skills/spec-architect \
     .gemini/skills/secure-api-design \
@@ -824,7 +825,55 @@ echo "✅ [SDLC Verify] ALL CHECKS PASSED. Ready for review."
 echo "=================================================="
 EOF
 
-chmod +x scripts/*.sh
+cat << 'EOF' > scripts/install-hooks.sh
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "${ROOT_DIR}"
+
+mkdir -p .githooks
+chmod +x .githooks/* 2>/dev/null || true
+
+if [ -d ".git" ]; then
+    git config core.hooksPath .githooks
+    echo "  ✓ Git hooks activated in .githooks/"
+fi
+EOF
+
+cat << 'EOF' > .githooks/pre-commit
+#!/usr/bin/env bash
+set -euo pipefail
+
+STAGED_SRC=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^src/' || true)
+if [ -n "$STAGED_SRC" ]; then
+    INTENT_COUNT=$(find intent -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
+    SPEC_COUNT=$(find specs -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
+    PLAN_COUNT=$(find plans -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
+    if [ "$INTENT_COUNT" -eq 0 ] || [ "$SPEC_COUNT" -eq 0 ] || [ "$PLAN_COUNT" -eq 0 ]; then
+        echo "❌ SDLC VIOLATION: Source code modified in src/ without complete artifact chain (intent/spec/plan)."
+        exit 1
+    fi
+fi
+
+if command -v make >/dev/null 2>&1; then
+    make verify
+else
+    bash ./scripts/verify.sh
+fi
+EOF
+
+cat << 'EOF' > .githooks/pre-push
+#!/usr/bin/env bash
+set -euo pipefail
+
+if command -v make >/dev/null 2>&1; then
+    make eval
+else
+    python3 ./evals/run_evals.py
+fi
+EOF
+
+chmod +x scripts/*.sh .githooks/* 2>/dev/null || true
 
 # ------------------------------------------------------------------------------
 # 5. Continuous AI Evaluation Suite (evals/)
@@ -929,12 +978,14 @@ chmod +x evals/run_evals.py
 echo -e "${BLUE}📦 (6/6) Generating root Makefile and GitHub Actions...${RESET}"
 
 cat << 'EOF' > Makefile
-.PHONY: all help init verify test lint eval format new-intent audit clean
+.PHONY: all help init install-hooks verify test lint eval format new-intent audit clean
 
 all: verify
 
 help:
 	@echo "AI-Native SDLC Commands:"
+	@echo "  make init          - Initialize project and install Git enforcement hooks"
+	@echo "  make install-hooks - Configure .githooks as git core.hooksPath"
 	@echo "  make verify        - Run local verification loop (lint + test + harness)"
 	@echo "  make test          - Run test suite"
 	@echo "  make lint          - Run linters & artifact check"
@@ -942,6 +993,12 @@ help:
 	@echo "  make format        - Format codebase"
 	@echo "  make new-intent    - Scaffold new intent (make new-intent TITLE='...')"
 	@echo "  make audit         - Check artifact chain linkages"
+
+init: install-hooks
+	@echo "✅ AI-Native SDLC project initialized."
+
+install-hooks:
+	@bash ./scripts/install-hooks.sh
 
 verify:
 	@bash ./scripts/verify.sh

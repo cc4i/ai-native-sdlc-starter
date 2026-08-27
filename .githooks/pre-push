@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# AI-Native SDLC Pre-Push Hook (.githooks/pre-push)
+# ==============================================================================
+# Validates continuous AI evals regression suite before pushing to remote.
+# ==============================================================================
+
+set -euo pipefail
+
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+CYAN="\033[0;36m"
+BOLD="\033[1m"
+RESET="\033[0m"
+
+echo -e "${CYAN}${BOLD}🛡️  [SDLC Pre-Push] Running continuous AI evaluation regression suite...${RESET}"
+
+if command -v make >/dev/null 2>&1; then
+    if ! make eval; then
+        echo -e "${RED}${BOLD}❌ SDLC VIOLATION: Continuous AI evals failed.${RESET}"
+        echo -e "👉 Rule: Pushes are rejected if prompt, skill, or agent directives cause evaluation regressions."
+        echo -e "   Remediation: Run ${CYAN}make eval${RESET} locally to inspect and fix failed assertions."
+        exit 1
+    fi
+else
+    if ! python3 ./evals/run_evals.py; then
+        echo -e "${RED}${BOLD}❌ SDLC VIOLATION: evals/run_evals.py failed.${RESET}"
+        exit 1
+    fi
+fi
+
+echo -e "${GREEN}${BOLD}✅ [SDLC Pre-Push] All AI regression evals passed. Push allowed.${RESET}"
+exit 0
