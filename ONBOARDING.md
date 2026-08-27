@@ -59,24 +59,20 @@ You do **not** even need to clone this repository. Run the self-contained `boots
 
 ```bash
 # 1. Run bootstrap (interactive or with flags)
-bash /Users/chuancc/mywork/ai/project-start/bootstrap.sh /path/to/my-new-project --name="Payment Service" --stack=python
+curl -fsSL https://raw.githubusercontent.com/cc4i/ai-native-sdlc-starter/main/bootstrap.sh | bash -s -- /path/to/my-new-project --name="Payment Service" --stack=python
 
-# 2. Or from a remote URL (when hosted in your organization):
-# curl -fsSL https://raw.githubusercontent.com/your-org/ai-sdlc-starter/main/bootstrap.sh | bash -s -- /path/to/my-new-project
-
-# 3. Enter your project and verify
+# 2. Enter your project and verify
 cd /path/to/my-new-project
 make verify && make eval
 ```
 
-### Option B: Clone / Copy this Template
+### Option B: Clone this Template
 ```bash
-# 1. Copy template into your new project directory
-cp -r /Users/chuancc/mywork/ai/project-start /path/to/my-new-project
+# 1. Clone into your new project directory
+git clone https://github.com/cc4i/ai-native-sdlc-starter.git /path/to/my-new-project
 cd /path/to/my-new-project
 
-# 2. Initialize Git & verify
-git init
+# 2. Verify health
 make verify && make eval
 ```
 

@@ -8,7 +8,7 @@
 #
 # Usage:
 #   bash bootstrap.sh [target-directory] [options]
-#   curl -fsSL <url>/bootstrap.sh | bash -s -- [target-directory] [options]
+#   curl -fsSL https://raw.githubusercontent.com/cc4i/ai-native-sdlc-starter/main/bootstrap.sh | bash -s -- [target-directory] [options]
 #
 # Options:
 #   --name=<name>         Project name (default: directory name)

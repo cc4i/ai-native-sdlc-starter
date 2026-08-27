@@ -183,22 +183,18 @@ You do **not** even need to clone this repository. You can bootstrap any new or 
 
 ```bash
 # 1. Run bootstrap in a new or existing project folder:
-bash /Users/chuancc/mywork/ai/project-start/bootstrap.sh /path/to/my-new-project --name="My Awesome Service" --stack=python
+curl -fsSL https://raw.githubusercontent.com/cc4i/ai-native-sdlc-starter/main/bootstrap.sh | bash -s -- /path/to/my-new-project --name="My Awesome Service" --stack=python
 
-# 2. Or from a remote URL (when hosted):
-# curl -fsSL https://raw.githubusercontent.com/your-org/ai-sdlc-starter/main/bootstrap.sh | bash -s -- /path/to/my-new-project
-
-# 3. Enter your new project:
+# 2. Enter your new project:
 cd /path/to/my-new-project
 
-# 4. Verify baseline health:
+# 3. Verify baseline health:
 make verify && make eval
 ```
 
-### Option B: Copying this Template
+### Option B: Cloning this Template
 ```bash
-cp -r /Users/chuancc/mywork/ai/project-start /path/to/my-new-project
-cd /path/to/my-new-project
-git init
+git clone https://github.com/cc4i/ai-native-sdlc-starter.git my-new-project
+cd my-new-project
 make verify && make eval
 ```
