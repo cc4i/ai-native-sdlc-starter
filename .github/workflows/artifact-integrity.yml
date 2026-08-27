@@ -1,0 +1,20 @@
+name: Artifact Chain Integrity
+
+on:
+  pull_request:
+    paths:
+      - 'intent/**'
+      - 'specs/**'
+      - 'plans/**'
+
+jobs:
+  check-artifacts:
+    name: Check Artifact Traceability
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Verify Linkages
+        run: |
+          bash scripts/check-artifacts.sh

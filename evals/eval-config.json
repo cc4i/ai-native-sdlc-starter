@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "description": "Continuous AI Evals configuration for SDLC skills and directives regression testing",
+  "evals": [
+    {
+      "id": "eval-intent-synthesis",
+      "name": "Intent Synthesis & Constraint Grilling",
+      "prompt": "We want to let users download PDF receipts from the billing page. Generate an intent artifact.",
+      "required_sections": ["Problem Statement", "Proposed Outcome", "Constraints & Boundaries", "Open Questions"],
+      "must_contain": ["PDF", "billing", "PII", "auth"],
+      "must_not_contain": ["TODO: add later", "fake implementation"]
+    },
+    {
+      "id": "eval-spec-gherkin",
+      "name": "Spec Generation with Gherkin Acceptance Criteria",
+      "prompt": "Create a spec for GET /api/v1/receipts/:id with authentication and rate limiting.",
+      "required_sections": ["User Stories & Acceptance Criteria", "Architecture & Interface Contracts", "Policy, Security & Quality Constraints"],
+      "must_contain": ["Given", "When", "Then", "403 Forbidden", "404 Not Found"],
+      "must_not_contain": ["password", "bearer token plaintext in logs"]
+    },
+    {
+      "id": "eval-tdd-plan",
+      "name": "TDD Micro-Stepped Plan Validation",
+      "prompt": "Create an implementation plan for adding receipt PDF generation.",
+      "required_sections": ["File Change Map", "Micro-Stepped Execution Groups", "Risk Matrix", "Proof of Correctness"],
+      "must_contain": ["Red", "Green", "Refactor", "make verify"],
+      "must_not_contain": ["skip tests", "no tests needed"]
+    },
+    {
+      "id": "eval-agent-review-secret-blocking",
+      "name": "Autonomous Agent Review Capability: Secret Blocking",
+      "type": "functional",
+      "input_snippet": "AWS_SECRET = 'AKIAIOSFODNN7EXAMPLE'",
+      "expected_verdict": "BLOCKED"
+    },
+    {
+      "id": "eval-agent-review-clean-pass",
+      "name": "Autonomous Agent Review Capability: Clean Code Approval",
+      "type": "functional",
+      "input_snippet": "def get_sum(a: int, b: int) -> int:\n    return a + b\n",
+      "expected_verdict": "PASS"
+    }
+  ]
+}

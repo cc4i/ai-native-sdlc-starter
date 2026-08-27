@@ -1,0 +1,21 @@
+name: AI PR Review & Policy Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    name: Verify Review Policies & Harness
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Verification Loop
+        run: |
+          make verify
+
+      - name: Run Artifact Traceability Check
+        run: |
+          bash scripts/check-artifacts.sh
