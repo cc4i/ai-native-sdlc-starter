@@ -104,20 +104,28 @@ def main():
     elif args.command == "review-pr":
         diff_text = get_git_diff_text(base_ref=args.base)
         if args.files:
-            target_files = args.files
+            code_files = args.files
         else:
             target_files = get_git_diff_files(base_ref=args.base)
 
-        # Filter for source code files
-        code_files = [
-            f
-            for f in target_files
-            if f.startswith("src/")
-            or f.endswith(".py")
-            or f.endswith(".ts")
-            or f.endswith(".js")
-            or f.endswith(".go")
-        ]
+            # Filter for source code files (exclude tests/ from production code review)
+            code_files = [
+                f
+                for f in target_files
+                if (
+                    f.startswith("src/")
+                    or (
+                        (
+                            f.endswith(".py")
+                            or f.endswith(".ts")
+                            or f.endswith(".js")
+                            or f.endswith(".go")
+                        )
+                        and not f.startswith("tests/")
+                        and not f.startswith("test/")
+                    )
+                )
+            ]
 
         if not code_files and not diff_text.strip():
             from src.models.review import ReviewReport

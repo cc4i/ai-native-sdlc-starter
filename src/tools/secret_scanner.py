@@ -53,6 +53,10 @@ class SecretScannerTool:
         lines = content.splitlines()
 
         for line_idx, line in enumerate(lines, 1):
+            # Support inline secret suppression pragmas (e.g. for mock test fixtures)
+            if "pragma: allowlist secret" in line.lower() or "nosec" in line.lower():
+                continue
+
             for name, pattern, severity, rule_id, desc in self.patterns:
                 if pattern.search(line):
                     findings.append(

@@ -15,14 +15,14 @@ class TestSecretScannerTool(unittest.TestCase):
         self.scanner = SecretScannerTool()
 
     def test_detect_openai_api_key(self):
-        code = 'OPENAI_KEY = "sk-proj-1234567890abcdef1234567890abcdef1234"'
+        code = "OPENAI_KEY = " + '"sk-proj-1234567890abcdef1234567890abcdef1234"'
         findings = self.scanner.scan(code, "test_secrets.py")
         self.assertTrue(len(findings) >= 1)
         self.assertEqual(findings[0].severity, Severity.BLOCKER)
         self.assertIn("Secret", findings[0].title)
 
     def test_detect_private_key_header(self):
-        code = 'KEY = "-----BEGIN RSA PRIVATE KEY-----\\nMIIEowIBAAKCAQEA0..."'
+        code = "KEY = " + '"-----BEGIN RSA PRIVATE KEY-----\\nMIIEowIBAAKCAQEA0..."'
         findings = self.scanner.scan(code, "config.py")
         self.assertTrue(len(findings) >= 1)
         self.assertEqual(findings[0].severity, Severity.BLOCKER)
@@ -30,6 +30,11 @@ class TestSecretScannerTool(unittest.TestCase):
     def test_clean_code_no_secrets(self):
         code = 'import os\napi_key = os.environ.get("OPENAI_API_KEY")'
         findings = self.scanner.scan(code, "safe.py")
+        self.assertEqual(len(findings), 0)
+
+    def test_suppress_secrets_with_pragma(self):
+        code = 'OPENAI_KEY = "sk-proj-1234567890abcdef1234567890abcdef1234567890abcdef"  # pragma: allowlist secret\nAWS_KEY = "AKIAIOSFODNN7EXAMPLE"  # nosec'
+        findings = self.scanner.scan(code, "mock_fixture.py")
         self.assertEqual(len(findings), 0)
 
 

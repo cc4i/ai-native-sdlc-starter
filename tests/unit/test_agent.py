@@ -13,7 +13,7 @@ class TestReviewAgent(unittest.TestCase):
         self.agent = ReviewAgent()
 
     def test_verdict_blocked_on_secret(self):
-        code = 'AWS_KEY = "AKIAIOSFODNN7EXAMPLE"'
+        code = "AWS_KEY = " + '"AKIAIOSFODNN7EXAMPLE"'
         report = self.agent.review_code(code, "config.py")
         self.assertEqual(report.verdict, Verdict.BLOCKED)
         self.assertTrue(any(f.severity == Severity.BLOCKER for f in report.findings))

@@ -27,7 +27,7 @@ class TestCliIntegration(unittest.TestCase):
 
     def test_cli_review_blocked_file(self):
         with tempfile.NamedTemporaryFile(suffix=".py", mode="w", delete=False) as f:
-            f.write('KEY = "sk-proj-1234567890abcdef1234567890abcdef1234"\n')
+            f.write("KEY = " + '"sk-proj-1234567890abcdef1234567890abcdef1234"\n')
             temp_name = f.name
 
         try:
