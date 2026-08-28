@@ -3,7 +3,8 @@
 **Linked Spec**: [`docs/specs/007-inline-pr-review-and-gemini.md`](file:///Users/chuancc/mywork/ai/project-start/docs/specs/007-inline-pr-review-and-gemini.md)  
 **Author**: Antigravity Staff Architect  
 **Date**: 2026-08-28  
-**Status**: Ready for Construction  
+**Status**: Completed  
+**Shipped**: 0ee3921  
 
 ---
 
