@@ -72,6 +72,22 @@ release:
 	fi
 	@bash ./scripts/release.sh "$(VERSION)"
 
+release-push:
+	@if [ -z "$(VERSION)" ]; then \
+		echo "Usage: make release-push VERSION=v1.X.X"; \
+		exit 1; \
+	fi
+	@bash ./scripts/release.sh "$(VERSION)" --push
+
+release-remote:
+	@if [ -z "$(VERSION)" ]; then \
+		echo "Usage: make release-remote VERSION=v1.X.X"; \
+		exit 1; \
+	fi
+	@echo "🚀 Triggering remote GitHub Release workflow for $(VERSION)..."
+	@gh workflow run release.yml -f tag="$(VERSION)"
+	@echo "✓ Workflow triggered. Track status with: gh run list --workflow=release.yml"
+
 audit:
 	@bash ./scripts/check-artifacts.sh
 

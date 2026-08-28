@@ -4,6 +4,16 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release version tag (e.g. v1.1.0)'
+        required: true
+        default: 'v1.1.0'
+      target_commit:
+        description: 'Branch or commit SHA to release (default: main)'
+        required: false
+        default: 'main'
 
 permissions:
   contents: write
@@ -16,6 +26,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.inputs.target_commit || github.sha }}
           fetch-depth: 0
 
       - name: Install uv
@@ -34,10 +45,20 @@ jobs:
       - name: Publish GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG_NAME: ${{ github.ref_name }}
+          TAG_INPUT: ${{ github.event.inputs.tag }}
+          TARGET_COMMIT: ${{ github.event.inputs.target_commit || 'main' }}
         run: |
+          TAG_NAME="${TAG_INPUT:-${GITHUB_REF_NAME}}"
           echo "Publishing GitHub Release for ${TAG_NAME}..."
-          gh release create "${TAG_NAME}" \
-            --title "Release ${TAG_NAME}" \
-            --generate-notes \
-            --verify-tag
+
+          if git rev-parse "${TAG_NAME}" >/dev/null 2>&1; then
+            gh release create "${TAG_NAME}" \
+              --title "Release ${TAG_NAME}" \
+              --generate-notes \
+              --verify-tag
+          else
+            gh release create "${TAG_NAME}" \
+              --target "${TARGET_COMMIT}" \
+              --title "Release ${TAG_NAME}" \
+              --generate-notes
+          fi

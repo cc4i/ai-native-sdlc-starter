@@ -23,6 +23,7 @@ RESET="\033[0m"
 VERSION="${1:-}"
 DRY_RUN=false
 SKIP_VERIFY=false
+PUSH=false
 
 for arg in "$@"; do
     case "$arg" in
@@ -32,12 +33,15 @@ for arg in "$@"; do
         --skip-verify)
             SKIP_VERIFY=true
             ;;
+        --push)
+            PUSH=true
+            ;;
     esac
 done
 
 if [ -z "$VERSION" ] || [ "$VERSION" = "--dry-run" ]; then
     echo -e "${RED}Error: Version argument required (e.g. v1.1.0).${RESET}"
-    echo "Usage: $0 <vX.Y.Z> [--dry-run] [--skip-verify]"
+    echo "Usage: $0 <vX.Y.Z> [--dry-run] [--skip-verify] [--push]"
     exit 1
 fi
 
@@ -79,22 +83,18 @@ if [ "$SKIP_VERIFY" = false ]; then
     bash ./scripts/verify.sh
 fi
 
-# 4. Update pyproject.toml version
-if [ -f "pyproject.toml" ]; then
-    sed -i.bak -E "s/^version = \".*\"/version = \"$CLEAN_VERSION\"/" pyproject.toml
-    rm -f pyproject.toml.bak
-    if command -v uv >/dev/null 2>&1; then
-        uv lock --quiet 2>/dev/null || true
-    fi
-    if ! git diff --quiet pyproject.toml; then
-        git add pyproject.toml uv.lock 2>/dev/null || git add pyproject.toml
-        git commit -m "chore(release): bump version to $VERSION"
-    fi
-fi
-
-# 5. Create Annotated Git Tag
+# 4. Create Annotated Git Tag
 git tag -a "$VERSION" -m "Release $VERSION - AI-Native SDLC"
 echo -e "${GREEN}${BOLD}✅ Release tag '$VERSION' created successfully!${RESET}"
-echo ""
-echo "To publish this release to GitHub and trigger release workflow, run:"
-echo -e "  ${CYAN}git push origin $VERSION${RESET}"
+
+# 5. Push Tag if --push requested, otherwise prompt
+if [ "$PUSH" = true ]; then
+    echo -e "${BLUE}🚀 Pushing tag '$VERSION' to origin...${RESET}"
+    git push origin "$VERSION"
+    echo -e "${GREEN}${BOLD}✅ Tag '$VERSION' pushed to GitHub! Release workflow triggered.${RESET}"
+else
+    echo ""
+    echo "To publish this release to GitHub and trigger release workflow, run:"
+    echo -e "  git push origin $VERSION"
+    echo "Or run with --push: bash scripts/release.sh $VERSION --push"
+fi

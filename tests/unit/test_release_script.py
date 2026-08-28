@@ -38,6 +38,26 @@ class TestReleaseScript(unittest.TestCase):
         self.assertIn("Dry run", res.stdout + res.stderr)
         self.assertEqual(res.returncode, 0)
 
+    def test_release_script_contains_no_git_commit(self):
+        """scripts/release.sh must never run git commit to prevent branch protection violations on main."""
+        content = self.release_script.read_text(encoding="utf-8")
+        # Ensure no active git commit command exists in release.sh
+        lines = [line.strip() for line in content.splitlines() if not line.strip().startswith("#")]
+        self.assertFalse(
+            any("git commit" in line for line in lines),
+            "scripts/release.sh must not execute 'git commit' on protected branches"
+        )
+
+    def test_release_script_supports_push_flag_in_help(self):
+        """scripts/release.sh usage string must include --push."""
+        res = subprocess.run(
+            ["bash", str(self.release_script)],
+            cwd=str(self.root_dir),
+            capture_output=True,
+            text=True,
+        )
+        self.assertIn("--push", res.stdout + res.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()
