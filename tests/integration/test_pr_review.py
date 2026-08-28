@@ -56,5 +56,36 @@ class TestPrReviewCliIntegration(unittest.TestCase):
         self.assertIn("PR Review Audit Report", content)
         out_file.unlink()
 
+    def test_cli_review_pr_inline_json_generation(self):
+        reviews_dir = self.root_dir / "docs" / "reviews"
+        if not reviews_dir.exists():
+            reviews_dir = self.root_dir / "reviews"
+        out_json = reviews_dir / "test_temp_inline.json"
+        cmd = [
+            "python3",
+            "-m",
+            "src.cli",
+            "review-pr",
+            "--files",
+            "src/cli.py",
+            "--inline-json",
+            str(out_json),
+        ]
+        result = subprocess.run(
+            cmd,
+            cwd=str(self.root_dir),
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 0)
+        self.assertTrue(out_json.exists())
+        import json
+        data = json.loads(out_json.read_text(encoding="utf-8"))
+        self.assertIn("body", data)
+        self.assertIn("event", data)
+        self.assertEqual(data["event"], "COMMENT")
+        self.assertIn("comments", data)
+        out_json.unlink()
+
 if __name__ == "__main__":
     unittest.main()

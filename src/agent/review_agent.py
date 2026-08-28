@@ -9,14 +9,16 @@ from src.models.review import Finding, ReviewReport, Severity, Verdict
 from src.tools.secret_scanner import SecretScannerTool
 from src.tools.ast_checker import AstSecurityCheckerTool
 from src.tools.spec_matcher import SpecComplianceTool
+from src.agent.gemini_reviewer import GeminiReviewer
 
 class ReviewAgent:
-    """Orchestrates security, AST, and spec compliance tools to produce code review audits."""
+    """Orchestrates security, AST, spec compliance, and Gemini 3.7 Flash semantic tools to produce code review audits."""
 
-    def __init__(self):
+    def __init__(self, model: Optional[str] = None, api_key: Optional[str] = None):
         self.secret_scanner = SecretScannerTool()
         self.ast_checker = AstSecurityCheckerTool()
         self.spec_matcher = SpecComplianceTool()
+        self.gemini_reviewer = GeminiReviewer(model=model, api_key=api_key)
 
     def review_code(
         self,
@@ -127,6 +129,8 @@ class ReviewAgent:
             for b in blockers:
                 loc = f" (`{b.file_path}:{b.line_number}`)" if b.line_number else ""
                 lines.append(f"- **[{b.rule_id}] {b.title}**{loc}: {b.message}")
+                if b.suggestion and b.suggestion.strip():
+                    lines.append(f"  ```suggestion\n  {b.suggestion.strip()}\n  ```")
         else:
             lines.append("*None.*")
 
@@ -139,20 +143,27 @@ class ReviewAgent:
             for imp in importants:
                 loc = f" (`{imp.file_path}:{imp.line_number}`)" if imp.line_number else ""
                 lines.append(f"- **[{imp.rule_id}] {imp.title}**{loc}: {imp.message}")
+                if imp.suggestion and imp.suggestion.strip():
+                    lines.append(f"  ```suggestion\n  {imp.suggestion.strip()}\n  ```")
         else:
             lines.append("*None.*")
 
+        capped_nits = nits[:5]
         lines.extend([
             "",
-            f"### 💡 Tier 3: Nit / Suggestions ({len(nits)} found)",
+            f"### 💡 Tier 3: Nit / Suggestions ({len(capped_nits)} shown, cap 5)",
         ])
 
-        if nits:
-            for nit in nits:
+        if capped_nits:
+            for nit in capped_nits:
                 loc = f" (`{nit.file_path}:{nit.line_number}`)" if nit.line_number else ""
                 lines.append(f"- {nit.title}{loc}: {nit.message}")
+                if nit.suggestion and nit.suggestion.strip():
+                    lines.append(f"  ```suggestion\n  {nit.suggestion.strip()}\n  ```")
         else:
             lines.append("*None.*")
+
+        tally_line = f"Important: {len(blockers)}, Consider: {len(importants)}, Nit: {len(capped_nits)}"
 
         lines.extend([
             "",
@@ -160,6 +171,9 @@ class ReviewAgent:
             "## 3. Governance Sign-Off",
             f"- **Automated Verification**: {report.verdict.value}",
             "- **Human Code Owner Sign-Off**: [ ] Required for Blocker / Production Releases",
+            f"- **Severity Tally**: `{tally_line}`",
+            "",
+            f"*{tally_line}*",
             "",
         ])
 

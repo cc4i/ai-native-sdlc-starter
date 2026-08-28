@@ -24,6 +24,7 @@ class Finding:
     file_path: str = ""
     line_number: Optional[int] = None
     rule_id: str = ""
+    suggestion: Optional[str] = None
 
 @dataclass
 class ReviewReport:
