@@ -82,7 +82,7 @@ class ReviewAgent:
                         spec_content=spec_content,
                     )
                     all_findings.extend(sub_report.findings)
-                except OSError, UnicodeDecodeError:
+                except (OSError, UnicodeDecodeError):
                     continue
 
         # Compute Overall Verdict
