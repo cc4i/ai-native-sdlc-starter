@@ -3,6 +3,7 @@
 **Linked Spec**: [`docs/specs/009-streamlined-git-release-workflow.md`](../specs/009-streamlined-git-release-workflow.md)  
 **Author**: @antigravity  
 **Status**: Complete  
+**Shipped**: 52c3fd1  
 
 ---
 
