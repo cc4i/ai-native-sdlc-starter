@@ -1,7 +1,7 @@
 # PR Review Audit Report
 
 **Pull Request**: # [PR Number / Branch Name]  
-**Linked Plan**: [`plans/NNN-title.md`](file:///Users/chuancc/mywork/ai/project-start/plans)  
+**Linked Plan**: [`plans/NNN-title.md`](../../plans)  
 **Reviewer**: [Auditor Agent / Implementation Validator / Human]  
 **Date**: [YYYY-MM-DD]  
 **Verdict**: [PASS | CHANGES REQUESTED | BLOCKED]  

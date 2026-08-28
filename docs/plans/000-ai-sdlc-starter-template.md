@@ -1,6 +1,6 @@
 # Plan: AI-Native SDLC Starter Template Construction
 
-**Linked Spec**: [`specs/000-ai-sdlc-starter-template.md`](file:///Users/chuancc/mywork/ai/project-start/specs/000-ai-sdlc-starter-template.md)  
+**Linked Spec**: [`specs/000-ai-sdlc-starter-template.md`](../../specs/000-ai-sdlc-starter-template.md)  
 **Author**: Antigravity Builder Agent  
 **Date**: 2026-08-27  
 **Status**: Completed  

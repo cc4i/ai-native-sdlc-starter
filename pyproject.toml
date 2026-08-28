@@ -1,0 +1,39 @@
+[project]
+name = "ai-native-sdlc"
+version = "1.1.0"
+description = "Enterprise-grade starter template and CLI for the AI-Native Software Development Life Cycle"
+readme = "README.md"
+authors = [
+    { name = "Antigravity Team", email = "sdlc@antigravity.ai" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+ai-sdlc = "src.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.5.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501", "E402"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[[tool.uv.index]]
+url = "https://pypi.org/simple"
+default = true

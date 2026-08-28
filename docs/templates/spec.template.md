@@ -1,6 +1,6 @@
 # Spec: [Feature / Improvement Name]
 
-**Linked Intent**: [`intent/NNN-title.md`](file:///Users/chuancc/mywork/ai/project-start/intent)  
+**Linked Intent**: [`intent/NNN-title.md`](../../intent)  
 **Author**: [Architect / Product Owner / Agent]  
 **Date**: [YYYY-MM-DD]  
 **Status**: [Draft | Validated | Approved]  

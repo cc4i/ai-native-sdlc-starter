@@ -4,12 +4,22 @@ Python AST Security and Code Quality Inspector.
 
 import ast
 from typing import List
+
 from src.models.review import Finding, Severity
 
 DANGEROUS_CALLS = {
-    "eval": (Severity.BLOCKER, "AST-001", "Dangerous execution: 'eval()' evaluates untrusted input as arbitrary Python code."),
-    "exec": (Severity.BLOCKER, "AST-002", "Dangerous execution: 'exec()' executes arbitrary statements."),
+    "eval": (
+        Severity.BLOCKER,
+        "AST-001",
+        "Dangerous execution: 'eval()' evaluates untrusted input as arbitrary Python code.",
+    ),
+    "exec": (
+        Severity.BLOCKER,
+        "AST-002",
+        "Dangerous execution: 'exec()' executes arbitrary statements.",
+    ),
 }
+
 
 class AstVisitor(ast.NodeVisitor):
     def __init__(self, file_path: str):
@@ -32,12 +42,16 @@ class AstVisitor(ast.NodeVisitor):
                         rule_id=rule_id,
                     )
                 )
-        
+
         # Detect subprocess.Popen / run with shell=True
         if isinstance(node.func, ast.Attribute):
             if node.func.attr in ("Popen", "run", "call", "check_output", "check_call"):
                 for kw in node.keywords:
-                    if kw.arg == "shell" and isinstance(kw.value, ast.Constant) and kw.value.value is True:
+                    if (
+                        kw.arg == "shell"
+                        and isinstance(kw.value, ast.Constant)
+                        and kw.value.value is True
+                    ):
                         self.findings.append(
                             Finding(
                                 severity=Severity.BLOCKER,
@@ -70,7 +84,11 @@ class AstSecurityCheckerTool:
     """Inspects Python source code AST for security vulnerabilities and anti-patterns."""
 
     def scan(self, content: str, file_path: str = "") -> List[Finding]:
-        if not file_path.endswith(".py") and not content.startswith("def ") and not "import " in content:
+        if (
+            not file_path.endswith(".py")
+            and not content.startswith("def ")
+            and "import " not in content
+        ):
             # Non-python content, skip AST inspection
             return []
 

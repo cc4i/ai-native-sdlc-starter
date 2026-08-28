@@ -1,6 +1,6 @@
 # Specification: Align README.md and Onboarding Docs with Codebase Reality
 
-**Linked Intent**: [`docs/intent/006-update-readme-and-docs.md`](file:///Users/chuancc/mywork/ai/project-start/docs/intent/006-update-readme-and-docs.md)  
+**Linked Intent**: [`docs/intent/006-update-readme-and-docs.md`](../intent/006-update-readme-and-docs.md)  
 **Author**: Antigravity Staff Architect  
 **Date**: 2026-08-28  
 **Status**: Ready for Planning  

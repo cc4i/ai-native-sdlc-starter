@@ -1,6 +1,6 @@
 # Spec: AI-Native SDLC Starter Template & Bootstrap Engine
 
-**Linked Intent**: [`intent/000-ai-sdlc-starter-template.md`](file:///Users/chuancc/mywork/ai/project-start/intent/000-ai-sdlc-starter-template.md)  
+**Linked Intent**: [`intent/000-ai-sdlc-starter-template.md`](../../intent/000-ai-sdlc-starter-template.md)  
 **Author**: Antigravity SDLC Architect  
 **Date**: 2026-08-27  
 **Status**: Approved  

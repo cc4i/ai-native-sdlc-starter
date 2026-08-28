@@ -1,6 +1,6 @@
 # Spec: Strict SDLC Lifecycle Enforcement, Git Hooks & CI Merge Gates
 
-**Linked Intent**: [`intent/003-sdlc-lifecycle-enforcement-hooks.md`](file:///Users/chuancc/mywork/ai/project-start/intent/003-sdlc-lifecycle-enforcement-hooks.md)  
+**Linked Intent**: [`intent/003-sdlc-lifecycle-enforcement-hooks.md`](../../intent/003-sdlc-lifecycle-enforcement-hooks.md)  
 **Author**: Staff Systems Architect & DevOps  
 **Date**: 2026-08-27  
 **Status**: Approved  

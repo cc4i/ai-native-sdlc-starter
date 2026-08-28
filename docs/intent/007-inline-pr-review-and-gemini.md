@@ -27,7 +27,7 @@ Build a built-in review engine that **matches and surpasses** `claude-code-actio
    - Format actionable suggestions with GitHub 1-click replacement blocks (` ```suggestion ... ``` `).
 2. **Gemini 3.7 Flash Semantic Review Engine**:
    - Default model: **Gemini 3.7 Flash** (`gemini-3.7-flash`).
-   - Executes structured multi-pass code review (Pass 1: Correctness, Pass 2: Security, Pass 3: Plan Compliance) based on [`REVIEW.md`](file:///Users/chuancc/mywork/ai/project-start/REVIEW.md).
+   - Executes structured multi-pass code review (Pass 1: Correctness, Pass 2: Security, Pass 3: Plan Compliance) based on [`REVIEW.md`](../../REVIEW.md).
    - Returns structured JSON findings with severity classification (`Important`, `Consider`, `Nit`) and machine-readable tally: `Important: n, Consider: n, Nit: n`.
    - Enforces a strict Nit cap (default max 5 nits per review) to prevent reviewer fatigue.
 3. **Hybrid Two-Tier Architecture**:

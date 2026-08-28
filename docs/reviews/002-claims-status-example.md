@@ -1,7 +1,7 @@
 # PR Review Audit Report: Milestone 002
 
 **Pull Request**: #3 (Claims Status Self-Service Example Reference)  
-**Linked Plan**: [`plans/002-claims-status-example.md`](file:///Users/chuancc/mywork/ai/project-start/plans/002-claims-status-example.md)  
+**Linked Plan**: [`plans/002-claims-status-example.md`](../../plans/002-claims-status-example.md)  
 **Reviewer**: Autonomous Antigravity ReviewAgent  
 **Date**: 2026-08-27  
 **Verdict**: `PASS`  

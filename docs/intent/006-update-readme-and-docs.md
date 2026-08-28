@@ -9,7 +9,7 @@
 
 ## 1. Problem Statement
 
-Following the successful completion of Milestone 004 (PR Review Automation & Branch Protection) and Milestone 005 (Docs Restructure, Shipped Commit Tracking, Stage 6 Control Bands, and Jetski Lifecycle Hooks), [`README.md`](file:///Users/chuancc/mywork/ai/project-start/README.md) and [`ONBOARDING.md`](file:///Users/chuancc/mywork/ai/project-start/ONBOARDING.md) are out of sync with the actual repository layout and capabilities:
+Following the successful completion of Milestone 004 (PR Review Automation & Branch Protection) and Milestone 005 (Docs Restructure, Shipped Commit Tracking, Stage 6 Control Bands, and Jetski Lifecycle Hooks), [`README.md`](../../README.md) and [`ONBOARDING.md`](../../ONBOARDING.md) are out of sync with the actual repository layout and capabilities:
 
 - The directory tree diagrams list legacy root folders (`intent/`, `specs/`, `plans/`, `templates/`) instead of the unified `docs/` hierarchy.
 - Crucial production files and modules are completely missing from documentation: `docs/reviews/`, `bands.yaml`, `hooks.json`, `src/tools/band_detector.py`, `scripts/jetski_guard.py`, `scripts/check-control-bands.py`, and `tests/`.

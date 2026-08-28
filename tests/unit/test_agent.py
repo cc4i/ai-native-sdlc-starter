@@ -3,37 +3,39 @@ Unit tests for ReviewAgent orchestrator.
 """
 
 import unittest
-from src.models.review import Severity, Verdict
+
 from src.agent.review_agent import ReviewAgent
+from src.models.review import Severity, Verdict
+
 
 class TestReviewAgent(unittest.TestCase):
     def setUp(self):
         self.agent = ReviewAgent()
 
     def test_verdict_blocked_on_secret(self):
-        code = 'AWS_KEY = "AKIAIOSFODNN7EXAMPLE"'
+        code = "AWS_KEY = " + '"AKIAIOSFODNN7EXAMPLE"'
         report = self.agent.review_code(code, "config.py")
         self.assertEqual(report.verdict, Verdict.BLOCKED)
         self.assertTrue(any(f.severity == Severity.BLOCKER for f in report.findings))
 
     def test_verdict_blocked_on_eval(self):
-        code = 'def run(s):\n    return eval(s)'
+        code = "def run(s):\n    return eval(s)"
         report = self.agent.review_code(code, "executor.py")
         self.assertEqual(report.verdict, Verdict.BLOCKED)
 
     def test_verdict_changes_requested_on_silent_exception(self):
-        code = 'try:\n    pass\nexcept Exception:\n    pass'
+        code = "try:\n    pass\nexcept Exception:\n    pass"
         report = self.agent.review_code(code, "task.py")
         self.assertEqual(report.verdict, Verdict.CHANGES_REQUESTED)
         self.assertTrue(any(f.severity == Severity.IMPORTANT for f in report.findings))
 
     def test_verdict_pass_on_clean_code(self):
-        code = '''
+        code = """
 def calculate_tax(amount: float, rate: float) -> float:
     if amount < 0 or rate < 0:
         raise ValueError("Amount and rate must be non-negative")
     return amount * rate
-'''
+"""
         report = self.agent.review_code(code, "tax.py")
         self.assertEqual(report.verdict, Verdict.PASS)
         self.assertEqual(len(report.findings), 0)

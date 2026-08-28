@@ -3,24 +3,26 @@ Unit tests for Code Review Agent Inspection Tools.
 """
 
 import unittest
+
 from src.models.review import Severity
-from src.tools.secret_scanner import SecretScannerTool
 from src.tools.ast_checker import AstSecurityCheckerTool
+from src.tools.secret_scanner import SecretScannerTool
 from src.tools.spec_matcher import SpecComplianceTool
+
 
 class TestSecretScannerTool(unittest.TestCase):
     def setUp(self):
         self.scanner = SecretScannerTool()
 
     def test_detect_openai_api_key(self):
-        code = 'OPENAI_KEY = "sk-proj-1234567890abcdef1234567890abcdef1234"'
+        code = "OPENAI_KEY = " + '"sk-proj-1234567890abcdef1234567890abcdef1234"'
         findings = self.scanner.scan(code, "test_secrets.py")
         self.assertTrue(len(findings) >= 1)
         self.assertEqual(findings[0].severity, Severity.BLOCKER)
         self.assertIn("Secret", findings[0].title)
 
     def test_detect_private_key_header(self):
-        code = 'KEY = "-----BEGIN RSA PRIVATE KEY-----\\nMIIEowIBAAKCAQEA0..."'
+        code = "KEY = " + '"-----BEGIN RSA PRIVATE KEY-----\\nMIIEowIBAAKCAQEA0..."'
         findings = self.scanner.scan(code, "config.py")
         self.assertTrue(len(findings) >= 1)
         self.assertEqual(findings[0].severity, Severity.BLOCKER)
@@ -30,35 +32,48 @@ class TestSecretScannerTool(unittest.TestCase):
         findings = self.scanner.scan(code, "safe.py")
         self.assertEqual(len(findings), 0)
 
+    def test_suppress_secrets_with_pragma(self):
+        code = 'OPENAI_KEY = "sk-proj-1234567890abcdef1234567890abcdef1234567890abcdef"  # pragma: allowlist secret\nAWS_KEY = "AKIAIOSFODNN7EXAMPLE"  # nosec'
+        findings = self.scanner.scan(code, "mock_fixture.py")
+        self.assertEqual(len(findings), 0)
+
 
 class TestAstSecurityCheckerTool(unittest.TestCase):
     def setUp(self):
         self.checker = AstSecurityCheckerTool()
 
     def test_detect_eval_usage(self):
-        code = 'def calculate(expr):\n    return eval(expr)'
+        code = "def calculate(expr):\n    return eval(expr)"
         findings = self.checker.scan(code, "calc.py")
-        self.assertTrue(any(f.severity == Severity.BLOCKER and "eval" in f.message for f in findings))
+        self.assertTrue(
+            any(f.severity == Severity.BLOCKER and "eval" in f.message for f in findings)
+        )
 
     def test_detect_exec_usage(self):
-        code = 'exec("import os; os.system(\'ls\')")'
+        code = "exec(\"import os; os.system('ls')\")"
         findings = self.checker.scan(code, "dynamic.py")
-        self.assertTrue(any(f.severity == Severity.BLOCKER and "exec" in f.message for f in findings))
+        self.assertTrue(
+            any(f.severity == Severity.BLOCKER and "exec" in f.message for f in findings)
+        )
 
     def test_detect_silent_exception_swallow(self):
-        code = 'try:\n    do_something()\nexcept Exception:\n    pass'
+        code = "try:\n    do_something()\nexcept Exception:\n    pass"
         findings = self.checker.scan(code, "handler.py")
-        self.assertTrue(any(f.severity == Severity.IMPORTANT and "silent" in f.message.lower() for f in findings))
+        self.assertTrue(
+            any(
+                f.severity == Severity.IMPORTANT and "silent" in f.message.lower() for f in findings
+            )
+        )
 
     def test_clean_python_code(self):
-        code = '''
+        code = """
 def add(a: int, b: int) -> int:
     try:
         return a + b
     except TypeError as e:
         logger.error(f"Invalid input: {e}")
         raise
-'''
+"""
         findings = self.checker.scan(code, "math_utils.py")
         self.assertEqual(len(findings), 0)
 

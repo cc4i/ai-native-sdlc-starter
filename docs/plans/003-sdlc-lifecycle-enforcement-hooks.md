@@ -1,6 +1,6 @@
 # Plan: SDLC Lifecycle Enforcement & Git Hooks Implementation
 
-**Linked Spec**: [`specs/003-sdlc-lifecycle-enforcement-hooks.md`](file:///Users/chuancc/mywork/ai/project-start/specs/003-sdlc-lifecycle-enforcement-hooks.md)  
+**Linked Spec**: [`specs/003-sdlc-lifecycle-enforcement-hooks.md`](../../specs/003-sdlc-lifecycle-enforcement-hooks.md)  
 **Author**: Staff Engineer & DevOps  
 **Date**: 2026-08-27  
 **Status**: Completed  

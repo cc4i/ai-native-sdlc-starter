@@ -1,7 +1,8 @@
 import unittest
-from src.tools.github_publisher import GitHubReviewPublisher
-from src.tools.diff_parser import DiffParser
+
 from src.models.review import Finding, ReviewReport, Severity, Verdict
+from src.tools.diff_parser import DiffParser
+from src.tools.github_publisher import GitHubReviewPublisher
 
 SAMPLE_DIFF = """diff --git a/src/api.py b/src/api.py
 index 1111111..2222222 100644
@@ -14,6 +15,7 @@ index 1111111..2222222 100644
 +    c = 4
      return a + b
 """
+
 
 class TestGitHubReviewPublisher(unittest.TestCase):
     def setUp(self):
@@ -44,7 +46,7 @@ class TestGitHubReviewPublisher(unittest.TestCase):
             title="Dangerous eval",
             message="Use ast.literal_eval instead",
             suggestion="ast.literal_eval(user_input)",
-            rule_id="SEC-001"
+            rule_id="SEC-001",
         )
         body = self.publisher.build_inline_comment_body(finding)
         self.assertIn("🚨 Important: Dangerous eval", body)
@@ -59,7 +61,7 @@ class TestGitHubReviewPublisher(unittest.TestCase):
             message="Bad line",
             file_path="src/api.py",
             line_number=11,  # in diff
-            suggestion="b = 3"
+            suggestion="b = 3",
         )
         f_summary = Finding(
             severity=Severity.IMPORTANT,
@@ -73,13 +75,11 @@ class TestGitHubReviewPublisher(unittest.TestCase):
             target_name="PR #1",
             verdict=Verdict.BLOCKED,
             findings=[f_inline, f_summary],
-            summary="Review failed due to blocker."
+            summary="Review failed due to blocker.",
         )
 
         payload = self.publisher.build_review_payload(
-            report=report,
-            diff_parser=self.diff_parser,
-            commit_id="abc1234"
+            report=report, diff_parser=self.diff_parser, commit_id="abc1234"
         )
 
         self.assertEqual(payload["event"], "COMMENT")
@@ -93,6 +93,7 @@ class TestGitHubReviewPublisher(unittest.TestCase):
         self.assertIn("Additional Findings (File / Global Scope)", payload["body"])
         self.assertIn("Missing config at file top", payload["body"])
         self.assertIn("Important: 1, Consider: 1, Nit: 0", payload["body"])
+
 
 if __name__ == "__main__":
     unittest.main()

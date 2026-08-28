@@ -11,7 +11,8 @@ from pathlib import Path
 root_dir = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(root_dir))
 
-from src.tools.band_detector import BandDetector, Tier
+from src.tools.band_detector import BandDetector
+
 
 def main():
     bands_file = root_dir / "bands.yaml"
@@ -35,7 +36,9 @@ def main():
 
     result = detector.evaluate(current_value, sample_baseline, sample_config)
     print(f"  - Metric: {result.metric_name}")
-    print(f"  - Current Value: {result.current_value:.2f} | Baseline Mean: {result.mean:.2f} (σ={result.stddev:.2f})")
+    print(
+        f"  - Current Value: {result.current_value:.2f} | Baseline Mean: {result.mean:.2f} (σ={result.stddev:.2f})"
+    )
     print(f"  - Tier: {result.tier.value.upper()} | Z-Score: {result.z_score:.2f}σ")
     print(f"  - Status: {result.message}")
 
@@ -45,6 +48,7 @@ def main():
     else:
         print("  ✓ All metrics within normal control bands.")
         sys.exit(0)
+
 
 if __name__ == "__main__":
     main()

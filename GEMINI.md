@@ -61,6 +61,16 @@ All project decisions are tracked in version-controlled Markdown artifacts under
 
 ---
 
+## 🧠 Codebase Intelligence & Scalability (CodeGraph)
+
+- If `.codegraph/` exists or the `codegraph_explore` MCP tool is available:
+  1. **Before editing or refactoring**: Query `codegraph_explore` to inspect callers, callees, and the change's blast radius instead of manually grepping files.
+  2. **In Stage 2 (Design) & Stage 3 (Build)**: Use CodeGraph to populate the "Affected Callers & Blast Radius" section in `plan.md`.
+  3. **In Stage 5 (Deploy / PR Review)**: Cross-check diffs against CodeGraph to catch breaking signature changes across un-staged files.
+- Refer to `docs/architecture/SCALING_AND_CODEGRAPH.md` for full guidance.
+
+---
+
 ## 🚨 Troubleshooting & Gotchas
 
 - **Do not modify test files during bug fixing** unless the test itself was proven to be incorrectly specified in `spec.md`.

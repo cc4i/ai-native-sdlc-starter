@@ -8,6 +8,7 @@ import subprocess
 import unittest
 from pathlib import Path
 
+
 class TestGitHooksIntegration(unittest.TestCase):
     """Verifies that Git pre-commit and pre-push enforcement hooks are properly configured."""
 
@@ -36,6 +37,7 @@ class TestGitHooksIntegration(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, f"Installer failed: {result.stderr}")
         self.assertIn("Git hooks", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

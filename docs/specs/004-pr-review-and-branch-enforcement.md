@@ -1,6 +1,6 @@
 # Spec: Automated AI PR Review & Branch Protection Enforcement
 
-**Linked Intent**: [`intent/004-pr-review-and-branch-enforcement.md`](file:///Users/chuancc/mywork/ai/project-start/intent/004-pr-review-and-branch-enforcement.md)  
+**Linked Intent**: [`intent/004-pr-review-and-branch-enforcement.md`](../../intent/004-pr-review-and-branch-enforcement.md)  
 **Author**: Systems Architect & Security Lead  
 **Date**: 2026-08-28  
 **Status**: Approved  

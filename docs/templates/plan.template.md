@@ -1,6 +1,6 @@
 # Plan: [Implementation Task / Milestone Name]
 
-**Linked Spec**: [`specs/NNN-title.md`](file:///Users/chuancc/mywork/ai/project-start/specs)  
+**Linked Spec**: [`specs/NNN-title.md`](../../specs)  
 **Author**: [Architect / Engineer / Agent]  
 **Date**: [YYYY-MM-DD]  
 **Status**: [Draft | In Progress | Completed]  

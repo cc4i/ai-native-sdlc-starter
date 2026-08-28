@@ -1,7 +1,7 @@
 # PR Review Audit Report: Milestone 000
 
 **Pull Request**: #1 (Initial Template Bootstrap)  
-**Linked Plan**: [`plans/000-ai-sdlc-starter-template.md`](file:///Users/chuancc/mywork/ai/project-start/plans/000-ai-sdlc-starter-template.md)  
+**Linked Plan**: [`plans/000-ai-sdlc-starter-template.md`](../../plans/000-ai-sdlc-starter-template.md)  
 **Reviewer**: Autonomous Antigravity ReviewAgent & Lead Auditor  
 **Date**: 2026-08-27  
 **Verdict**: `PASS`  

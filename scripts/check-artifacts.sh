@@ -53,4 +53,9 @@ for plan in ${DOCS_PREFIX}plans/[0-9][0-9][0-9]-*.md; do
     fi
 done
 
+# Check CodeGraph knowledge index status
+if [ -d ".codegraph" ]; then
+    echo "  ✓ CodeGraph knowledge index active (.codegraph/ detected)."
+fi
+
 echo "  ✓ Artifact chain structure verified."

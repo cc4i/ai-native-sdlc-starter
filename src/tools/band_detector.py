@@ -7,13 +7,15 @@ to close the SDLC loop between production observations and Stage 1 Intents.
 import math
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional
+from typing import List
+
 
 class Tier(Enum):
     INSUFFICIENT_DATA = "insufficient_data"
     LOG = "log"
     DIAGNOSE = "diagnose"
     ACT = "act"
+
 
 @dataclass
 class BandResult:
@@ -26,6 +28,7 @@ class BandResult:
     action: str
     action_required: bool
     message: str
+
 
 class BandDetector:
     """Statistical detector comparing metrics against rolling baselines."""

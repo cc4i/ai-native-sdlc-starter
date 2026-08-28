@@ -5,7 +5,6 @@ Validates skills, rules, templates, and agent directives against regression test
 """
 
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -14,11 +13,12 @@ root_dir = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(root_dir))
 
 from src.agent.review_agent import ReviewAgent
-from src.models.review import Verdict
+
 
 def load_eval_config(config_path: Path):
     with open(config_path, "r", encoding="utf-8") as f:
         return json.load(f)
+
 
 def run_eval_case(eval_case: dict, root_dir: Path) -> tuple[bool, list[str]]:
     errors = []
@@ -32,7 +32,9 @@ def run_eval_case(eval_case: dict, root_dir: Path) -> tuple[bool, list[str]]:
         expected_verdict = eval_case.get("expected_verdict", "PASS")
         report = agent.review_code(snippet, file_path="eval_snippet.py")
         if report.verdict.value != expected_verdict:
-            errors.append(f"Expected verdict '{expected_verdict}', but got '{report.verdict.value}'")
+            errors.append(
+                f"Expected verdict '{expected_verdict}', but got '{report.verdict.value}'"
+            )
         return len(errors) == 0, errors
 
     # Static structural evals
@@ -61,6 +63,7 @@ def run_eval_case(eval_case: dict, root_dir: Path) -> tuple[bool, list[str]]:
             errors.append(f"Missing required section: '{section}' in {target_file.name}")
 
     return len(errors) == 0, errors
+
 
 def main():
     config_file = root_dir / "evals" / "eval-config.json"
@@ -99,6 +102,7 @@ def main():
         sys.exit(1)
     else:
         print("✅ All AI regression evaluations passed successfully.")
+
 
 if __name__ == "__main__":
     main()
