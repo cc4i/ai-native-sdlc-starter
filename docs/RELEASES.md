@@ -16,33 +16,33 @@ We strictly adhere to [Semantic Versioning 2.0.0](https://semver.org/):
 ## 🚀 The Release Lifecycle
 
 ```
-[All Milestones Complete in 00-ROADMAP.md]
-                   │
-                   ▼
-       [Run Local make verify]
-                   │
-                   ▼
-  [Execute make release VERSION=vX.Y.Z]
-                   │
-                   ├── 1. Validates clean working tree
-                   ├── 2. Runs verify.sh & check-artifacts.sh
-                   ├── 3. Updates pyproject.toml version
-                   └── 4. Creates annotated git tag vX.Y.Z
-                   │
-                   ▼
-        [git push origin vX.Y.Z]
-                   │
-                   ▼
-   [GitHub Actions .github/workflows/release.yml]
-                   │
-                   └── Publishes GitHub Release with auto-generated notes
+        [All Milestones Complete in 00-ROADMAP.md]
+                           │
+             ┌─────────────┴─────────────┐
+             ▼                           ▼
+    [Method A: By Git Tag]      [Method B: By CLI Command]
+             │                           │
+  [make release VERSION=v1.1.0] [make release-remote VERSION=v1.1.0]
+  (Validates & tags without      (Dispatches release.yml with
+   direct commits to main)        target version tag)
+             │                           │
+             ▼                           │
+   [git push origin v1.1.0]              │
+             │                           │
+             └─────────────┬─────────────┘
+                           ▼
+             [GitHub Actions release.yml]
+                           │
+                           ├── 1. Runs verify.sh on Ubuntu CI
+                           └── 2. Generates notes directly from git history
+                                  (gh release create --generate-notes)
 ```
 
 ---
 
-## 📋 Release Checklist
+## 📋 Release Workflows
 
-Before cutting a release:
+### Method A: Release via Git Tag (Recommended)
 
 1. **Verify Active Milestones**:
    - Check [`docs/plans/00-ROADMAP.md`](plans/00-ROADMAP.md). Ensure all milestones under the target release are marked `COMPLETED` with valid shipped commit hashes (`Shipped: <SHA>`).
@@ -50,17 +50,29 @@ Before cutting a release:
    ```bash
    make verify && make eval
    ```
-   Both must pass with zero warnings or errors.
-3. **Cut the Release**:
+3. **Cut and Push Release Tag**:
    ```bash
+   # Option 1: In one single command
+   make release-push VERSION=v1.1.0
+
+   # Option 2: Step-by-step
    make release VERSION=v1.1.0
-   ```
-   *(Use `--dry-run` to validate version syntax beforehand: `bash scripts/release.sh v1.1.0 --dry-run`)*
-4. **Publish to GitHub**:
-   ```bash
    git push origin v1.1.0
    ```
-   This triggers `.github/workflows/release.yml` which automatically compiles release notes and publishes the release on GitHub.
+   *(Note: Zero `git commit` commands are executed, guaranteeing 100% compliance with `main` branch protection).*
+
+### Method B: Release via CLI Command (Remote Dispatch)
+
+You can trigger a full build and release without creating tags locally:
+```bash
+# Via Makefile:
+make release-remote VERSION=v1.1.0
+
+# Or via GitHub CLI:
+gh workflow run release.yml -f tag=v1.1.0
+```
+
+GitHub Actions will check out `main`, verify health, create the tag, and publish the release with changelog automatically derived from git commits.
 
 ---
 

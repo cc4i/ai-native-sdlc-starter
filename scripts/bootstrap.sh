@@ -29,7 +29,7 @@ CYAN="\033[0;36m"
 RED="\033[0;31m"
 RESET="\033[0m"
 
-TARGET_DIR="."
+TARGET_DIR=""
 PROJECT_NAME=""
 STACK=""
 INIT_GIT=true
@@ -44,10 +44,13 @@ print_banner() {
 }
 
 usage() {
-    echo "Usage: $0 [target-directory] [options]"
+    print_banner
+    local script_name
+    script_name="$(basename "$0")"
+    echo "Usage: ${script_name} <target-directory> [options]"
     echo ""
     echo "Arguments:"
-    echo "  target-directory      Path to new or existing project folder (default: current directory)"
+    echo "  <target-directory>    Path to new or existing project folder (e.g. ./my-app)"
     echo ""
     echo "Options:"
     echo "  --name=<name>         Project name (default: directory basename)"
@@ -57,10 +60,14 @@ usage() {
     echo "  -h, --help            Show this help message"
     echo ""
     echo "Examples:"
-    echo "  $0 ./my-new-app --name='Billing Service' --stack=python"
-    echo "  $0 . --stack=typescript"
+    echo "  ${script_name} ./my-new-app --name='Billing Service' --stack=python"
+    echo "  ${script_name} ./my-ts-app --stack=typescript"
     exit 0
 }
+
+if [ $# -eq 0 ]; then
+    usage
+fi
 
 # Parse Arguments
 for arg in "$@"; do
@@ -90,10 +97,24 @@ for arg in "$@"; do
     esac
 done
 
+if [ -z "$TARGET_DIR" ]; then
+    echo -e "${RED}Error: Target directory required.${RESET}"
+    echo ""
+    usage
+fi
+
 # Resolve Target Directory
 mkdir -p "$TARGET_DIR"
 cd "$TARGET_DIR"
 TARGET_DIR_FULL="$(pwd)"
+
+# Self-overwrite protection guard
+if ([ -f "$TARGET_DIR_FULL/scripts/bootstrap.sh" ] || [ -f "$TARGET_DIR_FULL/bootstrap.sh" ]) && [ -d "$TARGET_DIR_FULL/docs" ] && [ "$FORCE" = false ]; then
+    echo -e "${RED}❌ Safety Guard: Target directory '$TARGET_DIR_FULL' is the starter repository itself.${RESET}"
+    echo "   Bootstrapping into the starter repo will overwrite repository source files."
+    echo "   Remediation: Specify a separate target directory (e.g. $(basename "$0") ./my-app) or use --force if intentional."
+    exit 1
+fi
 
 if [ -z "$PROJECT_NAME" ]; then
     PROJECT_NAME="$(basename "$TARGET_DIR_FULL")"

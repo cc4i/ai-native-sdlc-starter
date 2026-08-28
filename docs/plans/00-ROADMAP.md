@@ -8,7 +8,8 @@ This roadmap tracks all active and planned milestones for the repository across 
 
 | Milestone | Linked Spec | Linked Plan | Status | Shipped Commit | Owner |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **008: Modern Tooling (uv), CodeGraph & Release Workflow** | [`specs/008-modern-tooling-codegraph-and-release.md`](../specs/008-modern-tooling-codegraph-and-release.md) | [`plans/008-modern-tooling-codegraph-and-release.md`](008-modern-tooling-codegraph-and-release.md) | COMPLETED | `4a1cf80` | @antigravity |
+| **008: Modern Tooling (uv), CodeGraph & Release Workflow** | [`specs/008-modern-tooling-codegraph-and-release.md`](../specs/008-modern-tooling-codegraph-and-release.md) | [`plans/008-modern-tooling-codegraph-and-release.md`](008-modern-tooling-codegraph-and-release.md) | COMPLETED | `2661740` | @antigravity |
+| **009: Streamlined Release Workflow (Tag & Cmd Triggered)** | [`specs/009-streamlined-git-release-workflow.md`](../specs/009-streamlined-git-release-workflow.md) | [`plans/009-streamlined-git-release-workflow.md`](009-streamlined-git-release-workflow.md) | COMPLETED | `52c3fd1` | @antigravity |
 
 ---
 

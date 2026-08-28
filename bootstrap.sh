@@ -29,7 +29,7 @@ CYAN="\033[0;36m"
 RED="\033[0;31m"
 RESET="\033[0m"
 
-TARGET_DIR="."
+TARGET_DIR=""
 PROJECT_NAME=""
 STACK=""
 INIT_GIT=true
@@ -44,10 +44,13 @@ print_banner() {
 }
 
 usage() {
-    echo "Usage: $0 [target-directory] [options]"
+    print_banner
+    local script_name
+    script_name="$(basename "$0")"
+    echo "Usage: ${script_name} <target-directory> [options]"
     echo ""
     echo "Arguments:"
-    echo "  target-directory      Path to new or existing project folder (default: current directory)"
+    echo "  <target-directory>    Path to new or existing project folder (e.g. ./my-app)"
     echo ""
     echo "Options:"
     echo "  --name=<name>         Project name (default: directory basename)"
@@ -57,10 +60,14 @@ usage() {
     echo "  -h, --help            Show this help message"
     echo ""
     echo "Examples:"
-    echo "  $0 ./my-new-app --name='Billing Service' --stack=python"
-    echo "  $0 . --stack=typescript"
+    echo "  ${script_name} ./my-new-app --name='Billing Service' --stack=python"
+    echo "  ${script_name} ./my-ts-app --stack=typescript"
     exit 0
 }
+
+if [ $# -eq 0 ]; then
+    usage
+fi
 
 # Parse Arguments
 for arg in "$@"; do
@@ -90,10 +97,24 @@ for arg in "$@"; do
     esac
 done
 
+if [ -z "$TARGET_DIR" ]; then
+    echo -e "${RED}Error: Target directory required.${RESET}"
+    echo ""
+    usage
+fi
+
 # Resolve Target Directory
 mkdir -p "$TARGET_DIR"
 cd "$TARGET_DIR"
 TARGET_DIR_FULL="$(pwd)"
+
+# Self-overwrite protection guard
+if ([ -f "$TARGET_DIR_FULL/scripts/bootstrap.sh" ] || [ -f "$TARGET_DIR_FULL/bootstrap.sh" ]) && [ -d "$TARGET_DIR_FULL/docs" ] && [ "$FORCE" = false ]; then
+    echo -e "${RED}❌ Safety Guard: Target directory '$TARGET_DIR_FULL' is the starter repository itself.${RESET}"
+    echo "   Bootstrapping into the starter repo will overwrite repository source files."
+    echo "   Remediation: Specify a separate target directory (e.g. $(basename "$0") ./my-app) or use --force if intentional."
+    exit 1
+fi
 
 if [ -z "$PROJECT_NAME" ]; then
     PROJECT_NAME="$(basename "$TARGET_DIR_FULL")"
@@ -204,13 +225,13 @@ cat << 'EOF' > docs/templates/intent.template.md
 
 ## 6. Approval & Handover
 - **Product Owner Review**: [ ] Approved by @username on YYYY-MM-DD
-- **Ready for Stage 2 (Design)**: `docs/specs/[NNN-title].md`
+- **Ready for Stage 2 (Design)**: `specs/[NNN-title].md`
 EOF
 
 cat << 'EOF' > docs/templates/spec.template.md
 # Spec: [Feature / Improvement Name]
 
-**Linked Intent**: [`docs/intent/NNN-title.md`](file:///docs/intent)  
+**Linked Intent**: [`intent/NNN-title.md`](file:///intent)  
 **Author**: [Architect / Product Owner / Agent]  
 **Date**: [YYYY-MM-DD]  
 **Status**: [Draft | Validated | Approved]  
@@ -289,17 +310,16 @@ And [no internal system details or stack traces are leaked]
 
 - **Spec Gate Verdict**: [ ] PASSED by `spec-validator` (2-of-3 skeptic majority)
 - **Sign-off**: [ ] Tech Lead / Architect approval on YYYY-MM-DD
-- **Ready for Stage 3 (Build)**: `docs/plans/[NNN-title].md`
+- **Ready for Stage 3 (Build)**: `plans/[NNN-title].md`
 EOF
 
 cat << 'EOF' > docs/templates/plan.template.md
 # Plan: [Implementation Task / Milestone Name]
 
-**Linked Spec**: [`docs/specs/NNN-title.md`](file:///docs/specs)  
+**Linked Spec**: [`specs/NNN-title.md`](file:///specs)  
 **Author**: [Architect / Engineer / Agent]  
 **Date**: [YYYY-MM-DD]  
 **Status**: [Draft | In Progress | Completed]  
-**Shipped**: [Commit SHA upon merge]  
 
 ---
 
@@ -362,7 +382,7 @@ cat << 'EOF' > docs/templates/review.template.md
 # PR Review Audit Report
 
 **Pull Request**: # [PR Number / Branch Name]  
-**Linked Plan**: [`docs/plans/NNN-title.md`](file:///docs/plans)  
+**Linked Plan**: [`plans/NNN-title.md`](file:///plans)  
 **Reviewer**: [Auditor Agent / Implementation Validator / Human]  
 **Date**: [YYYY-MM-DD]  
 **Verdict**: [PASS | CHANGES REQUESTED | BLOCKED]  
@@ -461,34 +481,29 @@ cat << 'EOF' > docs/templates/incident-intent.template.md
 
 ## 5. Triage & Lifecycle Handover
 
-- **On-Call Engineer Action**: [ ] Fix Now (Escalate to Stage 2 `docs/specs/`) | [ ] Schedule | [ ] Dismiss False Positive
+- **On-Call Engineer Action**: [ ] Fix Now (Escalate to Stage 2 `specs/`) | [ ] Schedule | [ ] Dismiss False Positive
 - **Assigned To**: @[engineer or team]
-- **Next Artifact**: `docs/specs/incident-INC-NNN-fix.md`
+- **Next Artifact**: `specs/incident-INC-NNN-fix.md`
 EOF
 
 # Stage READMEs
-cat << 'EOF' > docs/intent/README.md
-# Stage 1: Intent Artifacts (`docs/intent/`)
+cat << 'EOF' > intent/README.md
+# Stage 1: Intent Artifacts (`intent/`)
 Houses raw problem statements & originator proto-specs. Use `/grill-me` or `./scripts/new-intent.sh` to scaffold.
 EOF
 
-cat << 'EOF' > docs/specs/README.md
-# Stage 2: Technical Specifications (`docs/specs/`)
+cat << 'EOF' > specs/README.md
+# Stage 2: Technical Specifications (`specs/`)
 Houses Gherkin-compliant technical specs linked to intent artifacts.
 EOF
 
-cat << 'EOF' > docs/plans/README.md
-# Stage 3: Implementation Plans (`docs/plans/`)
+cat << 'EOF' > plans/README.md
+# Stage 3: Implementation Plans (`plans/`)
 Houses micro-stepped TDD execution plans and release roadmaps.
 EOF
 
-cat << 'EOF' > docs/reviews/README.md
-# Stage 5: PR Review Audits (`docs/reviews/`)
-Houses PR review audit reports and governance sign-offs generated by ReviewAgent.
-EOF
-
-cat << EOF > docs/plans/00-ROADMAP.md
-# Master Product Roadmap (\`docs/plans/00-ROADMAP.md\`)
+cat << EOF > plans/00-ROADMAP.md
+# Master Product Roadmap (\`plans/00-ROADMAP.md\`)
 
 Project: **$PROJECT_NAME**  
 Active Release: **v1.0-mvp**
@@ -497,9 +512,9 @@ Active Release: **v1.0-mvp**
 
 ## 🚀 Active Release: v1.0-mvp
 
-| Milestone | Linked Spec | Linked Plan | Status | Shipped | Owner |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **001: Initial Core MVP** | \`docs/specs/001-initial-mvp.md\` | \`docs/plans/001-initial-mvp.md\` | PROPOSED | - | @owner |
+| Milestone | Linked Spec | Linked Plan | Status | Owner |
+| :--- | :--- | :--- | :--- | :--- |
+| **001: Initial Core MVP** | \`specs/001-initial-mvp.md\` | \`plans/001-initial-mvp.md\` | PROPOSED | @owner |
 
 ---
 
@@ -530,8 +545,8 @@ description: Elicit, interview, and formalize raw user requirements and ideas in
 # Intent Capture Skill
 
 1. **Interactive Grilling**: Ask targeted questions (scope, user personas, friction, constraints, out-of-scope).
-2. **Synthesize**: Format strictly using `docs/templates/intent.template.md`.
-3. **Save**: Output to `docs/intent/NNN-[feature-slug].md`.
+2. **Synthesize**: Format strictly using `templates/intent.template.md`.
+3. **Save**: Output to `intent/NNN-[feature-slug].md`.
 EOF
 
 cat << 'EOF' > .gemini/skills/spec-architect/SKILL.md
@@ -542,10 +557,10 @@ description: Transform an approved intent.md into an unambiguous, testable techn
 
 # Spec Architect Skill
 
-1. Parse problem, constraints, and open questions from linked `docs/intent/`.
+1. Parse problem, constraints, and open questions from linked `intent.md`.
 2. Apply `secure-api-design` standards.
 3. Draft Gherkin scenarios (`Given / When / Then`) covering happy paths, auth errors, boundary inputs, and timeouts.
-4. Output to `docs/specs/NNN-[feature-slug].md`.
+4. Output to `specs/NNN-[feature-slug].md`.
 EOF
 
 cat << 'EOF' > .gemini/skills/secure-api-design/SKILL.md
@@ -585,19 +600,19 @@ description: Conduct multi-perspective adversarial review on specs, plans, and d
 
 1. Default to skepticism: search for hidden race conditions, missing edge cases, and anti-shortcuts.
 2. Classify findings into: 🚨 Blocker, ⚠️ Important, 💡 Nit.
-3. Format output adhering to `docs/templates/review.template.md`.
+3. Format output adhering to `templates/review.template.md`.
 EOF
 
 cat << 'EOF' > .gemini/agents/product-owner.md
 # Product Owner Subagent
 **Role**: Requirements Grilling & Intent Capture  
-Never write production code. Interview users with `/grill-me` and manage `docs/plans/00-ROADMAP.md`.
+Never write production code. Interview users with `/grill-me` and manage `plans/00-ROADMAP.md`.
 EOF
 
 cat << 'EOF' > .gemini/agents/architect.md
 # Architect Subagent
 **Role**: Technical Spec & TDD Implementation Planning  
-Produce Gherkin `docs/specs/` and micro-stepped `docs/plans/` with safety harnesses. Never edit code directly.
+Produce Gherkin `specs/` and micro-stepped `plans/` with safety harnesses. Never edit code directly.
 EOF
 
 cat << 'EOF' > .gemini/agents/engineer.md
@@ -620,10 +635,10 @@ echo -e "${BLUE}⚙️  (4/6) Configuring stack-specific directives (Stack: $STA
 # Configure commands based on stack
 case "$STACK" in
     python)
-        VERIFY_CMD="uv run ruff check . && uv run pytest tests/ -v"
-        TEST_CMD="uv run pytest tests/ -v"
-        LINT_CMD="uv run ruff check ."
-        FORMAT_CMD="uv run ruff format ."
+        VERIFY_CMD="pytest tests/ -v && ruff check ."
+        TEST_CMD="pytest tests/ -v"
+        LINT_CMD="ruff check ."
+        FORMAT_CMD="ruff format ."
         ;;
     typescript)
         VERIFY_CMD="npm run lint && npm test && npm run build"
@@ -651,30 +666,6 @@ case "$STACK" in
         ;;
 esac
 
-if [ "$STACK" = "python" ]; then
-    cat << EOF > pyproject.toml
-[project]
-name = "$(echo "$PROJECT_NAME" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
-version = "0.1.0"
-description = "$PROJECT_NAME"
-requires-python = ">=3.14"
-dependencies = []
-
-[dependency-groups]
-dev = [
-    "pytest>=8.0.0",
-    "ruff>=0.5.0",
-]
-
-[tool.ruff]
-line-length = 100
-target-version = "py314"
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-EOF
-fi
-
 cat << EOF > GEMINI.md
 # Project Agent Directives (GEMINI.md)
 
@@ -686,8 +677,8 @@ Stack: **$STACK**
 ## 🎯 Primary Directives & Workflow Loop
 
 We follow the **AI-Native SDLC** lifecycle:
-1. **Never write non-trivial code without an approved \`plan.md\`** (located under \`docs/plans/\` or \`plans/\`).
-2. **Always ground planning in \`spec.md\`** (located under \`docs/specs/\` or \`specs/\`) and \`intent.md\` (located under \`docs/intent/\` or \`intent/\`).
+1. **Never write non-trivial code without an approved \`plan.md\`** (located under \`plans/\`).
+2. **Always ground planning in \`spec.md\`** (located under \`specs/\`) and \`intent.md\` (located under \`intent/\`).
 3. **Strict Test-Driven Development (TDD)**:
    - For new features: Write failing interface test -> Implement minimum code -> Refactor -> Verify green.
    - For bug fixes: Write reproducing test that fails -> Fix implementation without modifying the test -> Verify green.
@@ -710,13 +701,9 @@ We follow the **AI-Native SDLC** lifecycle:
 
 ## 📋 Artifact Locations & Schema
 
-All project decisions are tracked in version-controlled Markdown artifacts under \`docs/\`:
-
-- **\`docs/intent/\`**: Originator problem statement, desired outcome, constraints (\`docs/intent/NNN-title.md\`).
-- **\`docs/specs/\`**: Formal requirements, Gherkin acceptance criteria (\`Given / When / Then\`), edge cases (\`docs/specs/NNN-title.md\`).
-- **\`docs/plans/\`**: Micro-stepped execution groups, files to change, risk matrix (\`docs/plans/NNN-title.md\`), roadmap in \`docs/plans/00-ROADMAP.md\`.
-- **\`docs/reviews/\`**: PR Review audit reports and governance sign-offs (\`docs/reviews/NNN-title.md\`).
-- **\`docs/templates/\`**: Standard markdown templates for each SDLC stage.
+- **\`intent/\`**: Originator problem statement, desired outcome, constraints (\`intent/NNN-title.md\`).
+- **\`specs/\`**: Formal requirements, Gherkin acceptance criteria (\`Given / When / Then\`), edge cases (\`specs/NNN-title.md\`).
+- **\`plans/\`**: Micro-stepped execution groups, files to change, risk matrix (\`plans/NNN-title.md\`), roadmap in \`plans/00-ROADMAP.md\`.
 - **\`evals/\`**: AI regression test prompts and assertions.
 - **\`REVIEW.md\`**: Standard PR review criteria, severity tiers (Blocker/Important/Nit).
 
@@ -759,14 +746,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${ROOT_DIR}"
 
 echo "  - Checking directory structure..."
-DOCS_PREFIX=""
-if [ -d "docs/intent" ]; then
-    DOCS_PREFIX="docs/"
-    REQUIRED_DIRS=("docs/intent" "docs/specs" "docs/plans" "docs/reviews" "docs/templates" "evals" ".gemini/skills" ".gemini/agents")
-else
-    REQUIRED_DIRS=("intent" "specs" "plans" "reviews" "evals" "templates" ".gemini/skills" ".gemini/agents")
-fi
-
+REQUIRED_DIRS=("intent" "specs" "plans" "evals" "templates" ".gemini/skills" ".gemini/agents")
 for dir in "${REQUIRED_DIRS[@]}"; do
     if [ ! -d "$dir" ]; then
         echo "  ❌ Missing required directory: $dir"
@@ -775,23 +755,16 @@ for dir in "${REQUIRED_DIRS[@]}"; do
 done
 
 echo "  - Verifying spec -> intent traceability..."
-for spec in ${DOCS_PREFIX}specs/[0-9][0-9][0-9]-*.md; do
-    if [ -f "$spec" ] && ! grep -qi "Linked Intent" "$spec"; then
+for spec in specs/[0-9][0-9][0-9]-*.md; do
+    if [ -f "$spec" ] && ! grep -q "Linked Intent" "$spec"; then
         echo "  ⚠️  Warning: Spec $spec is missing a 'Linked Intent' reference."
     fi
 done
 
-echo "  - Verifying plan -> spec traceability and shipped status..."
-for plan in ${DOCS_PREFIX}plans/[0-9][0-9][0-9]-*.md; do
-    if [ -f "$plan" ]; then
-        if ! grep -qi "Linked Spec" "$plan"; then
-            echo "  ⚠️  Warning: Plan $plan is missing a 'Linked Spec' reference."
-        fi
-        if grep -qi "Status:.*Complete" "$plan"; then
-            if ! grep -qi "Shipped:" "$plan"; then
-                echo "  ⚠️  Warning: Completed plan $plan is missing 'Shipped: <SHA>' commit hash."
-            fi
-        fi
+echo "  - Verifying plan -> spec traceability..."
+for plan in plans/[0-9][0-9][0-9]-*.md; do
+    if [ -f "$plan" ] && ! grep -q "Linked Spec" "$plan"; then
+        echo "  ⚠️  Warning: Plan $plan is missing a 'Linked Spec' reference."
     fi
 done
 
@@ -810,17 +783,11 @@ if [ -z "$TITLE" ]; then
     exit 1
 fi
 
-INTENT_DIR="intent"
-TEMPLATE_FILE="templates/intent.template.md"
-if [ -d "docs/intent" ]; then
-    INTENT_DIR="docs/intent"
-    TEMPLATE_FILE="docs/templates/intent.template.md"
-fi
-
 SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/^-+|-+$//g')
-EXISTING_COUNT=$(find "$INTENT_DIR" -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" | wc -l | tr -d ' ')
+EXISTING_COUNT=$(find intent -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" | wc -l | tr -d ' ')
 NEXT_NUM=$(printf "%03d" $((EXISTING_COUNT + 1)))
-TARGET_FILE="${INTENT_DIR}/${NEXT_NUM}-${SLUG}.md"
+TARGET_FILE="intent/${NEXT_NUM}-${SLUG}.md"
+TEMPLATE_FILE="templates/intent.template.md"
 
 if [ -f "$TARGET_FILE" ]; then
     echo "❌ Error: File $TARGET_FILE already exists."
@@ -998,16 +965,12 @@ def main():
     for idx, case in enumerate(evals, 1):
         name = case.get("name", case.get("id"))
         eval_id = case.get("id", "")
-        templates_dir = root_dir / "docs" / "templates"
-        if not templates_dir.exists():
-            templates_dir = root_dir / "templates"
-
         if "intent" in eval_id:
-            target = templates_dir / "intent.template.md"
+            target = root_dir / "templates" / "intent.template.md"
         elif "spec" in eval_id:
-            target = templates_dir / "spec.template.md"
+            target = root_dir / "templates" / "spec.template.md"
         elif "plan" in eval_id:
-            target = templates_dir / "plan.template.md"
+            target = root_dir / "templates" / "plan.template.md"
         else:
             target = root_dir / "GEMINI.md"
 
@@ -1094,7 +1057,7 @@ cat << 'EOF' > .github/workflows/ai-evals.yml
 name: Continuous AI Evals
 on:
   pull_request:
-    paths: ['GEMINI.md', 'REVIEW.md', '.gemini/**', 'docs/templates/**', 'templates/**', 'evals/**']
+    paths: ['GEMINI.md', 'REVIEW.md', '.gemini/**', 'templates/**', 'evals/**']
   push:
     branches: [main]
   schedule:
@@ -1129,7 +1092,7 @@ cat << 'EOF' > .github/workflows/artifact-integrity.yml
 name: Artifact Chain Integrity
 on:
   pull_request:
-    paths: ['docs/**', 'src/**', 'evals/**', 'intent/**', 'specs/**', 'plans/**']
+    paths: ['intent/**', 'specs/**', 'plans/**']
 jobs:
   check-artifacts:
     name: Check Artifact Traceability
@@ -1155,105 +1118,6 @@ __pycache__/
 EOF
 fi
 
-if [ "$FORCE" = true ] || [ ! -f "README.md" ]; then
-cat << EOF > README.md
-# $PROJECT_NAME
-
-> **Built with the AI-Native Software Development Life Cycle (SDLC) on Google Jetski & Antigravity (AGY).**
-
----
-
-## 🚀 Quickstart: Coding with Antigravity / AGY
-
-Welcome to **$PROJECT_NAME**! This repository is pre-configured with autonomous agent workflows, strict quality gates, and the AI-Native SDLC lifecycle.
-
-### 1. Scaffold Your First Feature (Stage 1: Intent)
-In AI-Native SDLC, never write code without capturing intent first:
-\`\`\`bash
-# Generate a new intent artifact:
-make new-intent TITLE="Your Feature Name"
-\`\`\`
-Then open **Antigravity** and prompt:
-> *"/grill-me let's brainstorm docs/intent/001-*.md"*
-
-### 2. Design the Specification (Stage 2: Spec)
-Ask Antigravity to turn intent into a Gherkin specification:
-> *"Read docs/intent/001-*.md and write docs/specs/001-*.md with Gherkin acceptance criteria."*
-
-### 3. Plan & Build with Strict TDD (Stage 3 & 4)
-Ask the **Architect** subagent to plan micro-stepped tasks:
-> *"/plan Read docs/specs/001-*.md and generate docs/plans/001-*.md with TDD execution groups."*
-
-Implement each group with the **Engineer** subagent:
-> *"Implement Execution Group 1 from docs/plans/001-*.md using strict TDD (Red ➔ Green ➔ Refactor)."*
-
-### 4. Verify & Proof
-Before completing any task, run the local verification loop:
-\`\`\`bash
-make verify && make eval
-\`\`\`
-
----
-
-## 🛠️ Essential Commands
-
-| Command | Purpose |
-| :--- | :--- |
-| \`make init\` | Configure \`.githooks\` enforcement hooks |
-| \`make verify\` | Run local lint, tests, and artifact integrity checks |
-| \`make test\` | Run automated test suite |
-| \`make eval\` | Run continuous AI instruction & prompt regression evals |
-| \`make new-intent TITLE="..."\` | Scaffold a new Stage 1 intent artifact |
-| \`make review-pr\` | Run autonomous ReviewAgent on local branch diff |
-
----
-
-## 🧠 Antigravity (AGY) & Jetski Capabilities
-
-This project includes pre-installed skills and subagent definitions under \`.gemini/\`:
-
-### 🎯 Antigravity Slash Commands
-- **\`/grill-me\`**: Interrogate requirements & discover edge cases before writing code.
-- **\`/plan\`**: Generate micro-stepped TDD plans grounded in specs.
-- **\`/goal\`**: Autonomous multi-step execution loop.
-- **\`/owl\`**: Deep strategic reasoning, refactoring analysis, and proof.
-
-### 🤖 Autonomous Subagents (\`.gemini/agents/\`)
-- **\`product-owner\`**: Requirements grilling & intent capture.
-- **\`architect\`**: Technical spec design & micro-stepped TDD planning.
-- **\`engineer\`**: Strict Test-Driven Development builder (Red ➔ Green ➔ Refactor).
-- **\`auditor\`**: Quality gatekeeper, consistency checker & PR reviewer.
-
----
-
-## 📋 Repository Structure
-
-\`\`\`
-├── docs/
-│   ├── intent/          # Stage 1: Problem statements & proto-specs
-│   ├── specs/           # Stage 2: Formal requirements & Gherkin scenarios
-│   ├── plans/           # Stage 3: Micro-stepped TDD plans & 00-ROADMAP.md
-│   ├── reviews/         # Stage 5: PR review audit reports
-│   └── templates/       # Standard markdown templates for each stage
-├── evals/               # Continuous AI regression evaluations (make eval)
-├── scripts/             # Developer productivity & verification tooling
-├── .gemini/             # Antigravity AGY skills & subagent definitions
-├── GEMINI.md            # Autonomous agent rules & instructions
-├── REVIEW.md            # Code review guidelines & severity ladder
-└── Makefile             # Single-command dev workflow targets
-\`\`\`
-
----
-
-## 🛡️ Governance & Safety Guardrails
-
-1. **Plan First**: Never write non-trivial code without an approved plan under \`docs/plans/\`.
-2. **Strict TDD**: Write failing test ➔ minimum code ➔ refactor ➔ green. Never modify test assertions to force a pass.
-3. **Protected Main**: Never commit directly to \`main\`. Create feature branches (\`feat/NNN-feature\`).
-4. **Verified Merges**: All pull requests must pass \`make verify\` and \`make eval\`.
-EOF
-fi
-
 # Optional Git initialization
 if [ "$INIT_GIT" = true ] && [ ! -d ".git" ]; then
     echo -e "${BLUE}🔧 Initializing Git repository...${RESET}"
@@ -1271,6 +1135,6 @@ echo ""
 echo -e "🚀 Next Steps to start building with Antigravity / Jetski:"
 echo -e "  1. Review & customize ${BOLD}GEMINI.md${RESET} for project-specific rules."
 echo -e "  2. Scaffold your first feature: ${CYAN}make new-intent TITLE=\"Your Feature Name\"${RESET}"
-echo -e "  3. Open Antigravity and prompt: ${CYAN}\"/grill-me let's brainstorm docs/intent/001-*.md\"${RESET}"
+echo -e "  3. Open Antigravity and prompt: ${CYAN}\"/grill-me let's brainstorm intent/001-*.md\"${RESET}"
 echo -e "  4. Run verification harness: ${CYAN}make verify && make eval${RESET}"
 echo ""
