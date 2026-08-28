@@ -86,8 +86,10 @@ if [ -f "pyproject.toml" ]; then
     if command -v uv >/dev/null 2>&1; then
         uv lock --quiet 2>/dev/null || true
     fi
-    git add pyproject.toml uv.lock 2>/dev/null || git add pyproject.toml
-    git commit -m "chore(release): bump version to $VERSION"
+    if ! git diff --quiet pyproject.toml; then
+        git add pyproject.toml uv.lock 2>/dev/null || git add pyproject.toml
+        git commit -m "chore(release): bump version to $VERSION"
+    fi
 fi
 
 # 5. Create Annotated Git Tag

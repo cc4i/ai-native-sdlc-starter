@@ -36,16 +36,16 @@ for script in scripts/*.sh; do
 done
 
 if [ "$USE_UV" = true ]; then
-    uv run ruff check . --quiet 2>/dev/null || python3 -m py_compile src/*.py src/**/*.py tests/**/*.py 2>/dev/null || true
+    uv run ruff check .
 else
-    python3 -m py_compile src/*.py src/**/*.py tests/**/*.py 2>/dev/null || true
+    python3 -m py_compile $(git ls-files 'src/*.py' 'tests/*.py')
 fi
 echo "  ✓ Scripts and Python syntax valid."
 
 # 3. Automated Test Suite
 echo "🧪 (3/4) Executing automated test suite..."
 if [ "$USE_UV" = true ]; then
-    uv run pytest tests/ -q 2>/dev/null || python3 -m unittest discover tests -v
+    uv run pytest tests/ -v
 else
     python3 -m unittest discover tests -v
 fi
