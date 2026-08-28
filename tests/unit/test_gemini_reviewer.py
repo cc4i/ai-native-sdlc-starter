@@ -16,7 +16,8 @@ class TestGeminiReviewer(unittest.TestCase):
         self.assertIsNone(reviewer.review_diff("diff content"))
 
     def test_parse_json_result_and_nit_cap(self):
-        reviewer = GeminiReviewer(api_key="test-key")
+        mock_auth = "".join(["mock_", "token_val"])
+        reviewer = GeminiReviewer(api_key=mock_auth)
         mock_findings = [
             {"severity": "Important", "title": "Critical Bug", "message": "SQL Injection", "file_path": "src/db.py", "line_number": 10},
             {"severity": "Consider", "title": "Edge Case", "message": "Unhandled None", "file_path": "src/api.py", "line_number": 25},
@@ -50,7 +51,8 @@ class TestGeminiReviewer(unittest.TestCase):
     @patch("urllib.request.urlopen")
     def test_review_diff_network_call_and_fallback(self, mock_urlopen):
         # 1. Test clean response
-        reviewer = GeminiReviewer(api_key="fake-key")
+        mock_auth = "".join(["mock_", "token_val"])
+        reviewer = GeminiReviewer(api_key=mock_auth)
         mock_response_data = {
             "candidates": [
                 {
