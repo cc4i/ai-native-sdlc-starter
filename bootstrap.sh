@@ -1131,6 +1131,105 @@ __pycache__/
 EOF
 fi
 
+if [ "$FORCE" = true ] || [ ! -f "README.md" ]; then
+cat << EOF > README.md
+# $PROJECT_NAME
+
+> **Built with the AI-Native Software Development Life Cycle (SDLC) on Google Jetski & Antigravity (AGY).**
+
+---
+
+## 🚀 Quickstart: Coding with Antigravity / AGY
+
+Welcome to **$PROJECT_NAME**! This repository is pre-configured with autonomous agent workflows, strict quality gates, and the AI-Native SDLC lifecycle.
+
+### 1. Scaffold Your First Feature (Stage 1: Intent)
+In AI-Native SDLC, never write code without capturing intent first:
+\`\`\`bash
+# Generate a new intent artifact:
+make new-intent TITLE="Your Feature Name"
+\`\`\`
+Then open **Antigravity** and prompt:
+> *"/grill-me let's brainstorm docs/intent/001-*.md"*
+
+### 2. Design the Specification (Stage 2: Spec)
+Ask Antigravity to turn intent into a Gherkin specification:
+> *"Read docs/intent/001-*.md and write docs/specs/001-*.md with Gherkin acceptance criteria."*
+
+### 3. Plan & Build with Strict TDD (Stage 3 & 4)
+Ask the **Architect** subagent to plan micro-stepped tasks:
+> *"/plan Read docs/specs/001-*.md and generate docs/plans/001-*.md with TDD execution groups."*
+
+Implement each group with the **Engineer** subagent:
+> *"Implement Execution Group 1 from docs/plans/001-*.md using strict TDD (Red ➔ Green ➔ Refactor)."*
+
+### 4. Verify & Proof
+Before completing any task, run the local verification loop:
+\`\`\`bash
+make verify && make eval
+\`\`\`
+
+---
+
+## 🛠️ Essential Commands
+
+| Command | Purpose |
+| :--- | :--- |
+| \`make init\` | Configure \`.githooks\` enforcement hooks |
+| \`make verify\` | Run local lint, tests, and artifact integrity checks |
+| \`make test\` | Run automated test suite |
+| \`make eval\` | Run continuous AI instruction & prompt regression evals |
+| \`make new-intent TITLE="..."\` | Scaffold a new Stage 1 intent artifact |
+| \`make review-pr\` | Run autonomous ReviewAgent on local branch diff |
+
+---
+
+## 🧠 Antigravity (AGY) & Jetski Capabilities
+
+This project includes pre-installed skills and subagent definitions under \`.gemini/\`:
+
+### 🎯 Antigravity Slash Commands
+- **\`/grill-me\`**: Interrogate requirements & discover edge cases before writing code.
+- **\`/plan\`**: Generate micro-stepped TDD plans grounded in specs.
+- **\`/goal\`**: Autonomous multi-step execution loop.
+- **\`/owl\`**: Deep strategic reasoning, refactoring analysis, and proof.
+
+### 🤖 Autonomous Subagents (\`.gemini/agents/\`)
+- **\`product-owner\`**: Requirements grilling & intent capture.
+- **\`architect\`**: Technical spec design & micro-stepped TDD planning.
+- **\`engineer\`**: Strict Test-Driven Development builder (Red ➔ Green ➔ Refactor).
+- **\`auditor\`**: Quality gatekeeper, consistency checker & PR reviewer.
+
+---
+
+## 📋 Repository Structure
+
+\`\`\`
+├── docs/
+│   ├── intent/          # Stage 1: Problem statements & proto-specs
+│   ├── specs/           # Stage 2: Formal requirements & Gherkin scenarios
+│   ├── plans/           # Stage 3: Micro-stepped TDD plans & 00-ROADMAP.md
+│   ├── reviews/         # Stage 5: PR review audit reports
+│   └── templates/       # Standard markdown templates for each stage
+├── evals/               # Continuous AI regression evaluations (make eval)
+├── scripts/             # Developer productivity & verification tooling
+├── .gemini/             # Antigravity AGY skills & subagent definitions
+├── GEMINI.md            # Autonomous agent rules & instructions
+├── REVIEW.md            # Code review guidelines & severity ladder
+└── Makefile             # Single-command dev workflow targets
+\`\`\`
+
+---
+
+## 🛡️ Governance & Safety Guardrails
+
+1. **Plan First**: Never write non-trivial code without an approved plan under \`docs/plans/\`.
+2. **Strict TDD**: Write failing test ➔ minimum code ➔ refactor ➔ green. Never modify test assertions to force a pass.
+3. **Protected Main**: Never commit directly to \`main\`. Create feature branches (\`feat/NNN-feature\`).
+4. **Verified Merges**: All pull requests must pass \`make verify\` and \`make eval\`.
+EOF
+fi
+
 # Optional Git initialization
 if [ "$INIT_GIT" = true ] && [ ! -d ".git" ]; then
     echo -e "${BLUE}🔧 Initializing Git repository...${RESET}"
