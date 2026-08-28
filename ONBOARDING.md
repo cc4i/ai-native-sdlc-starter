@@ -83,11 +83,11 @@ make verify && make eval
 ### 3.1 Product Managers / Domain Originators
 * **Your Goal**: Turn user pain points, feature ideas, and customer requests into clean, structured intent proto-specs.
 * **Workflow**:
-  1. **Scaffold Intent**: Run `./scripts/new-intent.sh "My Feature Name"`.
+  1. **Scaffold Intent**: Run `make new-intent TITLE="My Feature Name"` (or `./scripts/new-intent.sh`).
   2. **Brainstorm with Antigravity**: Use the slash command `/grill-me` or invoke the `product-owner` subagent:
      > *"I want to add self-service invoice downloads for billing customers. Grill me on requirements, constraints, security, and edge cases."*
-  3. **Refine & Commit**: Antigravity populates [`intent/00X-feature.md`](file:///Users/chuancc/mywork/ai/project-start/intent) using [`templates/intent.template.md`](file:///Users/chuancc/mywork/ai/project-start/templates/intent.template.md).
-  4. **Sign-off**: Review the generated artifact and commit it to git.
+  3. **Refine & Commit**: Antigravity populates [`docs/intent/00X-feature.md`](file:///Users/chuancc/mywork/ai/project-start/docs/intent) using [`docs/templates/intent.template.md`](file:///Users/chuancc/mywork/ai/project-start/docs/templates/intent.template.md).
+  4. **Sign-off**: Review the generated artifact and commit it to git on a feature branch.
 
 ---
 
@@ -95,10 +95,10 @@ make verify && make eval
 * **Your Goal**: Convert approved intent into a robust, secure, testable specification with Gherkin acceptance criteria.
 * **Workflow**:
   1. **Generate Spec**: Prompt Antigravity:
-     > *"Read `intent/00X-feature.md` and generate `specs/00X-feature.md` using our `spec-architect` and `secure-api-design` skills."*
+     > *"Read `docs/intent/00X-feature.md` and generate `docs/specs/00X-feature.md` using our `spec-architect` and `secure-api-design` skills."*
   2. **Adversarial Spec Validation**: Run the `spec-validator` subagent (3-skeptic panel) to hunt for ambiguities, missing status codes, and security flaws:
-     > *"Run spec-validator on `specs/00X-feature.md`. Poke holes in these requirements before we plan."*
-  3. **Approve**: Once validated, update status in [`plans/00-ROADMAP.md`](file:///Users/chuancc/mywork/ai/project-start/plans/00-ROADMAP.md) to `SPEC_VALIDATED`.
+     > *"Run spec-validator on `docs/specs/00X-feature.md`. Poke holes in these requirements before we plan."*
+  3. **Approve**: Once validated, update status in [`docs/plans/00-ROADMAP.md`](file:///Users/chuancc/mywork/ai/project-start/docs/plans/00-ROADMAP.md) to `SPEC_VALIDATED`.
 
 ---
 
@@ -106,10 +106,10 @@ make verify && make eval
 * **Your Goal**: Plan the implementation, write failing tests first (TDD), and implement code in atomic micro-steps.
 * **Workflow**:
   1. **Plan First**: Use slash command `/plan` or the `architect` subagent:
-     > *"Read `specs/00X-feature.md` and create `plans/00X-feature.md`. Break work into sequential TDD execution groups."*
+     > *"Read `docs/specs/00X-feature.md` and create `docs/plans/00X-feature.md`. Break work into sequential TDD execution groups."*
   2. **Adversarial Plan Validation**: Run `plan-validator` to ensure all file paths, dependencies, and assumptions match reality.
   3. **Strict TDD Implementation**: Dispatch the `engineer` subagent:
-     > *"Implement Execution Group 1 from `plans/00X-feature.md` using strict Test-Driven Development (Red ➔ Green ➔ Refactor)."*
+     > *"Implement Execution Group 1 from `docs/plans/00X-feature.md` using strict Test-Driven Development (Red ➔ Green ➔ Refactor)."*
   4. **Continuous Local Proof**: Run `make verify` after each micro-step. **Never modify test assertions to fix a failing test!**
 
 ---
@@ -117,20 +117,22 @@ make verify && make eval
 ### 3.4 Reviewers & QA Gatekeepers
 * **Your Goal**: Ensure all pull requests satisfy acceptance criteria, pass security policies, and contain zero anti-shortcuts.
 * **Workflow**:
-  1. **Automated Audit**: Run the `auditor` or `implementation-validator` subagent against [`REVIEW.md`](file:///Users/chuancc/mywork/ai/project-start/REVIEW.md):
-     > *"Audit this branch against `specs/00X-feature.md` and `REVIEW.md`. Classify findings into Blocker, Important, Nit."*
-  2. **Auto-Fix Loop**: Tag `@agent fix` on PR comments for automated remediation.
-  3. **Human Approval**: The designated Code Owner reviews findings, verifies `make verify` and `make eval` are green, and merges.
+  1. **Automated Audit**: Run `make review-pr` locally or invoke the `auditor` / `implementation-validator` subagents:
+     > *"Audit this branch against `docs/specs/00X-feature.md` and `REVIEW.md`. Classify findings into Blocker, Important, Nit."*
+  2. **PR Comment Automation**: When a PR is opened, GitHub Actions runs `ReviewAgent` and posts an audit report comment automatically.
+  3. **Auto-Fix Loop**: Tag `@agent fix` on PR comments for automated remediation.
+  4. **Human Approval**: The designated Code Owner reviews findings, verifies `make verify` and `make eval` are green, and merges the PR.
 
 ---
 
 ### 3.5 SRE & On-Call Engineers
 * **Your Goal**: Close the loop by converting production anomalies and metric breaches into actionable intent artifacts automatically.
 * **Workflow**:
-  1. Monitoring/alert webhook triggers diagnostic agent.
-  2. Agent diagnoses logs and generates [`intent/incident-NNN.md`](file:///Users/chuancc/mywork/ai/project-start/templates/incident-intent.template.md).
-  3. On-call engineer triages the incident into Stage 2 (Design) or dismisses it.
-  4. When the bug is fixed, a regression test is permanently added to [`evals/eval-config.json`](file:///Users/chuancc/mywork/ai/project-start/evals/eval-config.json).
+  1. Statistical control bands in [`bands.yaml`](file:///Users/chuancc/mywork/ai/project-start/bands.yaml) continuously monitor metric variance.
+  2. Run `python3 scripts/check-control-bands.py` to evaluate metrics.
+  3. Critical breaches ($\ge 3\sigma$) automatically draft a new intent artifact: [`docs/intent/incident-NNN.md`](file:///Users/chuancc/mywork/ai/project-start/docs/templates/incident-intent.template.md).
+  4. On-call engineer triages the incident into Stage 2 (Design) or dismisses it.
+  5. When the bug is fixed, a regression test is permanently added to [`evals/eval-config.json`](file:///Users/chuancc/mywork/ai/project-start/evals/eval-config.json).
 
 ---
 
@@ -155,20 +157,20 @@ make verify && make eval
 ```
 Act as the Product Owner. I have an idea: [describe idea in 2 sentences].
 Interview me using /grill-me until all edge cases, user personas, success metrics, and constraints are clear.
-Then write the result to intent/NNN-[feature-slug].md using templates/intent.template.md.
+Then write the result to docs/intent/NNN-[feature-slug].md using docs/templates/intent.template.md.
 ```
 
 #### Recipe 2: Stage 2 (Spec Generation with Standards)
 ```
-Read intent/NNN-[feature-slug].md.
-Apply our `spec-architect` and `secure-api-design` skills to generate specs/NNN-[feature-slug].md.
+Read docs/intent/NNN-[feature-slug].md.
+Apply our `spec-architect` and `secure-api-design` skills to generate docs/specs/NNN-[feature-slug].md.
 Include Gherkin acceptance scenarios for happy path, unauthorized access, invalid input, and timeout failure.
 Flag any conflicting policies or open architectural questions.
 ```
 
 #### Recipe 3: Stage 3 (TDD Implementation)
 ```
-Read plans/NNN-[feature-slug].md.
+Read docs/plans/NNN-[feature-slug].md.
 Implement Execution Group [N] following strict Test-Driven Development:
 1. Write the failing unit test in tests/unit/ and run it to verify failure.
 2. Implement minimum code in src/ to make it pass.
@@ -178,12 +180,13 @@ Update the plan checkboxes as you complete each step.
 
 #### Recipe 4: Stage 5 (Adversarial Code Review)
 ```
-Act as the Auditor subagent. Review our current git diff against specs/NNN-[feature-slug].md and REVIEW.md.
+Act as the ReviewAgent. Review our current git diff against docs/specs/NNN-[feature-slug].md and REVIEW.md:
+`make review-pr`
 Classify all findings into:
 - 🚨 Blocker (functional defect, security leak, gutted test)
 - ⚠️ Important (unhandled edge case, plan deviation)
 - 💡 Nit (readability suggestion)
-Output the audit report to templates/review.template.md format.
+Output the audit report to docs/reviews/NNN-[feature-slug].md.
 ```
 
 ---
@@ -216,13 +219,17 @@ Keep `GEMINI.md` under one page so that it acts as high-signal working memory ra
 | :--- | :--- | :--- | :--- |
 | [`GEMINI.md`](file:///Users/chuancc/mywork/ai/project-start/GEMINI.md) | Universal | Core agent directives, conventions, commands | Agent Working Context |
 | [`REVIEW.md`](file:///Users/chuancc/mywork/ai/project-start/REVIEW.md) | Stage 5: Deploy | Review policies, severity tiers, approval rules | Code Review Standard |
-| [`intent/`](file:///Users/chuancc/mywork/ai/project-start/intent) | Stage 1: Plan | Raw problem statements & originator requirements | Problem Definition |
-| [`specs/`](file:///Users/chuancc/mywork/ai/project-start/specs) | Stage 2: Design | Gherkin acceptance criteria, API contracts | Functional & Technical Contract |
-| [`plans/`](file:///Users/chuancc/mywork/ai/project-start/plans) | Stage 3: Build | Micro-stepped TDD execution groups & roadmaps | Implementation Strategy |
-| [`src/`](file:///Users/chuancc/mywork/ai/project-start/src) | Stage 3: Build | Core application source code | Production Implementation |
-| [`tests/`](file:///Users/chuancc/mywork/ai/project-start/tests) | Stage 4: Test | Automated unit, integration, and contract tests | Behavioral Verification |
+| [`bands.yaml`](file:///Users/chuancc/mywork/ai/project-start/bands.yaml) | Stage 6: Maintain | Statistical control bands configuration ($\sigma$ tiers) | Anomaly Thresholds |
+| [`hooks.json`](file:///Users/chuancc/mywork/ai/project-start/hooks.json) | Governance | Jetski lifecycle hooks (`PreToolUse`, `Stop`) | Agent Tool Guardrails |
+| [`docs/intent/`](file:///Users/chuancc/mywork/ai/project-start/docs/intent) | Stage 1: Plan | Raw problem statements & originator requirements | Problem Definition |
+| [`docs/specs/`](file:///Users/chuancc/mywork/ai/project-start/docs/specs) | Stage 2: Design | Gherkin acceptance criteria, API contracts | Functional & Technical Contract |
+| [`docs/plans/`](file:///Users/chuancc/mywork/ai/project-start/docs/plans) | Stage 3: Build | Micro-stepped TDD execution groups & roadmaps (with Shipped SHAs) | Implementation Strategy |
+| [`docs/reviews/`](file:///Users/chuancc/mywork/ai/project-start/docs/reviews) | Stage 5: Deploy | PR Review audit reports & sign-offs | Governance Records |
+| [`docs/templates/`](file:///Users/chuancc/mywork/ai/project-start/docs/templates) | Templates | Standard markdown templates for all lifecycle stages | Artifact Schemas |
+| [`src/`](file:///Users/chuancc/mywork/ai/project-start/src) | Stage 3: Build | Core application source code & review agent | Production Implementation |
+| [`tests/`](file:///Users/chuancc/mywork/ai/project-start/tests) | Stage 4: Test | Automated unit, integration, and contract tests (33 tests) | Behavioral Verification |
 | [`evals/`](file:///Users/chuancc/mywork/ai/project-start/evals) | Stage 4: Test | Continuous AI evaluation regression suite | Agent Instruction Testing |
-| [`scripts/`](file:///Users/chuancc/mywork/ai/project-start/scripts) | Developer Tooling | `verify.sh`, `new-intent.sh`, `check-artifacts.sh` | Local Toolchain |
+| [`scripts/`](file:///Users/chuancc/mywork/ai/project-start/scripts) | Developer Tooling | `verify.sh`, `new-intent.sh`, `check-artifacts.sh`, `jetski_guard.py` | Local Toolchain |
 | [`.gemini/skills/`](file:///Users/chuancc/mywork/ai/project-start/.gemini/skills) | Knowledge | Versioned enterprise knowledge & policies | Institutional Memory |
 | [`.gemini/agents/`](file:///Users/chuancc/mywork/ai/project-start/.gemini/agents) | Swarm | Subagent definitions (`product-owner`, `architect`, etc.) | Role Specialization |
 
