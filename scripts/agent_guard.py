@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Jetski Lifecycle Guard Hook (PreToolUse & Stop).
+Autonomous Agent Lifecycle Guard Hook (PreToolUse & Stop).
 Intercepts tool executions and completion attempts to enforce non-negotiable SDLC safety rules.
 """
 

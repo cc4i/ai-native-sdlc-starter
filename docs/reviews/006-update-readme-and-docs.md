@@ -8,7 +8,7 @@
 ---
 
 ## 1. Executive Summary
-Review PASSED: All documentation updates accurately reflect the current system architecture, test suite (33 tests), control bands (`bands.yaml`), Jetski lifecycle hooks (`hooks.json`), and unified `docs/` hierarchy.
+Review PASSED: All documentation updates accurately reflect the current system architecture, test suite (33 tests), control bands (`bands.yaml`), agent lifecycle hooks (`hooks.json`), and unified `docs/` hierarchy.
 
 ## 2. Findings by Severity Tier
 

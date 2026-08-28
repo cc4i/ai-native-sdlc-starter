@@ -9,7 +9,7 @@
 
 ## 1. Overview & Scope
 
-Design and package a comprehensive repository template and standalone CLI bootstrapper for the AI-Native SDLC using Google Jetski and Antigravity.
+Design and package a comprehensive repository template and standalone CLI bootstrapper for the AI-Native SDLC using Google Antigravity.
 
 - **In Scope**:
   - Core directory architecture (`intent/`, `specs/`, `plans/`, `evals/`, `templates/`, `.gemini/`, `scripts/`).

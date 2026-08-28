@@ -1,4 +1,4 @@
-# Intent: AI-Native SDLC Starter Template for Antigravity & Jetski
+# Intent: AI-Native SDLC Starter Template for Antigravity
 
 **Author**: Antigravity SDLC Lead  
 **Date**: 2026-08-27  
@@ -10,7 +10,7 @@
 ## 1. Problem Statement
 - **Current State**: Traditional software development lifecycles (PRDs, sprint planning meetings, manual code review queues) were designed for an era where writing code was the bottleneck. With AI-native coding tools, implementation time has collapsed, making traditional processes the primary impediment to developer velocity.
 - **User Pain / Friction**: Teams attempting to adopt AI coding without structured, version-controlled artifacts suffer from context drift, unvalidated design assumptions, missed security policies, and unmanageable code review backlogs.
-- **Impact & Urgency**: A standardized, reusable starter template and zero-clone bootstrap tool will enable any engineering team to adopt an asynchronous, artifact-driven SDLC loop powered by Google Jetski and Antigravity.
+- **Impact & Urgency**: A standardized, reusable starter template and zero-clone bootstrap tool will enable any engineering team to adopt an asynchronous, artifact-driven SDLC loop powered by Google Antigravity.
 
 ---
 

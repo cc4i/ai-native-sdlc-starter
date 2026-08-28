@@ -1,4 +1,4 @@
-# AI-Native SDLC Starter Template (Jetski & Antigravity Edition)
+# AI-Native SDLC Starter Template (Antigravity Edition)
 
 [![CI Build](https://github.com/cc4i/ai-native-sdlc-starter/actions/workflows/ai-evals.yml/badge.svg)](https://github.com/cc4i/ai-native-sdlc-starter/actions)
 [![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
@@ -7,7 +7,7 @@
 [![SDLC: AI-Native](https://img.shields.io/badge/SDLC-AI--Native-brightgreen.svg)](#-the-6-stages-at-a-glance)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> An enterprise-grade, stage-by-stage starter template for the **AI-Native Software Development Life Cycle (SDLC)**, adapted from Anthropic's AI-Native SDLC Playbook and powered by **Google Jetski / Antigravity**.
+> An enterprise-grade, stage-by-stage starter template for the **AI-Native Software Development Life Cycle (SDLC)**, adapted from Anthropic's AI-Native SDLC Playbook and powered by **Google Antigravity**.
 
 👉 **New to this repo? Start with the [Team & Developer Onboarding Guide](ONBOARDING.md).**
 
@@ -70,7 +70,7 @@ Every stage produces a version-controlled, human-readable, and machine-actionabl
 
 ## 🔄 The 6 Stages at a Glance
 
-| Stage | Traditional SDLC | AI-Native SDLC (Jetski / Antigravity) | Primary Artifact |
+| Stage | Traditional SDLC | AI-Native SDLC (Antigravity) | Primary Artifact |
 | :--- | :--- | :--- | :--- |
 | **1. Plan** | Requirements gathered across weeks by committee | Originator brainstorms with AI via `/grill-me` into a structured proto-spec | [`docs/intent/NNN-title.md`](docs/intent) |
 | **2. Design** | Analyst specs handed off to designers and architects | Requirements + Architecture compressed into one session with brand, UX & security skills | [`docs/specs/NNN-title.md`](docs/specs) |

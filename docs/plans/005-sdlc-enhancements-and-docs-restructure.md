@@ -13,7 +13,7 @@
 - **Group 1**: Migrate artifact directories under `docs/` (`docs/intent/`, `docs/specs/`, `docs/plans/`, `docs/reviews/`, `docs/templates/`) and update all path references in scripts, make targets, hooks, and guidelines.
 - **Group 2**: Implement `shipped: <SHA>` tracking in `docs/plans/` and verify in `scripts/check-artifacts.sh`.
 - **Group 3**: Build Stage 6 Control Bands engine (`bands.yaml`, `src/tools/band_detector.py`, `tests/unit/test_band_detector.py`).
-- **Group 4**: Build Jetski Lifecycle Hook (`hooks.json`, `scripts/jetski_guard.py`, `tests/unit/test_jetski_guard.py`).
+- **Group 4**: Build Agent Lifecycle Hook (`hooks.json`, `scripts/agent_guard.py`, `tests/unit/test_agent_guard.py`).
 - **Group 5**: Run full verification loop (`make verify`, `make eval`), generate Stage 5 review audit, open Pull Request, and merge!
 
 ---
@@ -38,10 +38,10 @@
 - [x] Implement `src/tools/band_detector.py` calculating mean, standard deviation, and sigma tier.
 - [x] Create `scripts/check-control-bands.py` CLI utility.
 
-### Group 4: Jetski Lifecycle Hook (TDD)
+### Group 4: Agent Lifecycle Hook (TDD)
 - [x] Create `hooks.json` mapping `PreToolUse` and `Stop` events.
-- [x] Write unit tests `tests/unit/test_jetski_guard.py`.
-- [x] Implement `scripts/jetski_guard.py` processing stdin JSON and returning structured decision on stdout.
+- [x] Write unit tests `tests/unit/test_agent_guard.py`.
+- [x] Implement `scripts/agent_guard.py` processing stdin JSON and returning structured decision on stdout.
 
 ### Group 5: Review, PR & Merge
 - [x] Run `make verify` and `make eval` (33 unit/integration tests passing).

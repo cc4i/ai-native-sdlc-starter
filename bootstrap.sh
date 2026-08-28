@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# AI-Native SDLC Standalone Bootstrap Script (Jetski & Antigravity Edition)
+# AI-Native SDLC Standalone Bootstrap Script (Antigravity Edition)
 # ==============================================================================
 # This script initializes ANY new or existing repository with the full
 # AI-Native SDLC architecture (intent, specs, plans, evals, skills, agents,
@@ -38,7 +38,7 @@ FORCE=false
 print_banner() {
     echo -e "${CYAN}${BOLD}"
     echo "================================================================================"
-    echo "  🚀 AI-Native SDLC Project Bootstrapper (Jetski / Antigravity)"
+    echo "  🚀 AI-Native SDLC Project Bootstrapper (Antigravity)"
     echo "================================================================================"
     echo -e "${RESET}"
 }
@@ -1132,7 +1132,7 @@ echo -e "${GREEN}${BOLD}========================================================
 echo -e "${GREEN}${BOLD}✅ AI-Native SDLC Bootstrap Complete!${RESET}"
 echo -e "${GREEN}${BOLD}================================================================================${RESET}"
 echo ""
-echo -e "🚀 Next Steps to start building with Antigravity / Jetski:"
+echo -e "🚀 Next Steps to start building with Antigravity:"
 echo -e "  1. Review & customize ${BOLD}GEMINI.md${RESET} for project-specific rules."
 echo -e "  2. Scaffold your first feature: ${CYAN}make new-intent TITLE=\"Your Feature Name\"${RESET}"
 echo -e "  3. Open Antigravity and prompt: ${CYAN}\"/grill-me let's brainstorm intent/001-*.md\"${RESET}"
