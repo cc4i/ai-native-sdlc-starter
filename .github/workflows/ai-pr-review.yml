@@ -31,23 +31,55 @@ jobs:
 
       - name: Execute Autonomous ReviewAgent on PR Diff
         id: run_review
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL || 'gemini-3.7-flash' }}
         run: |
           mkdir -p docs/reviews reviews
           REPORT_DIR="reviews"
           if [ -d "docs/reviews" ]; then REPORT_DIR="docs/reviews"; fi
-          python3 -m src.cli review-pr --base origin/${{ github.base_ref }} --output "${REPORT_DIR}/pr-audit.md" || echo "REVIEW_FAILED=true" >> $GITHUB_ENV
+          python3 -m src.cli review-pr \
+            --base origin/${{ github.base_ref }} \
+            --output "${REPORT_DIR}/pr-audit.md" \
+            --inline-json "${REPORT_DIR}/inline-review.json" \
+            --use-gemini \
+            --model "$GEMINI_MODEL" || echo "REVIEW_FAILED=true" >> $GITHUB_ENV
 
-      - name: Post Review Audit Report Comment to PR
+      - name: Publish Inline PR Review Comments & Audit Report
         uses: actions/github-script@v7
         if: always() && steps.run_review.outcome != 'skipped'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            let reportPath = 'docs/reviews/pr-audit.md';
-            if (!fs.existsSync(reportPath)) {
-              reportPath = 'reviews/pr-audit.md';
+            const path = require('path');
+
+            let reportDir = fs.existsSync('docs/reviews') ? 'docs/reviews' : 'reviews';
+            let inlineJsonPath = path.join(reportDir, 'inline-review.json');
+            let reportPath = path.join(reportDir, 'pr-audit.md');
+
+            // 1. If inline comments exist, publish via Pull Request Review API
+            if (fs.existsSync(inlineJsonPath)) {
+              try {
+                const payload = JSON.parse(fs.readFileSync(inlineJsonPath, 'utf8'));
+                if (payload.comments && payload.comments.length > 0) {
+                  console.log(`Publishing ${payload.comments.length} inline review comment(s)...`);
+                  await github.rest.pulls.createReview({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    pull_number: context.issue.number,
+                    body: payload.body,
+                    event: 'COMMENT',
+                    comments: payload.comments,
+                  });
+                  return;
+                }
+              } catch (err) {
+                console.warn('Notice: Failed to submit inline review, falling back to discussion comment:', err);
+              }
             }
+
+            // 2. Fallback / Clean PR: Post or update single discussion comment
             if (fs.existsSync(reportPath)) {
               const body = fs.readFileSync(reportPath, 'utf8');
               const { data: comments } = await github.rest.issues.listComments({
