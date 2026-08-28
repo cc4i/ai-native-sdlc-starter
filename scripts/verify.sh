@@ -38,7 +38,7 @@ done
 if [ "$USE_UV" = true ]; then
     uv run ruff check .
 else
-    python3 -m py_compile $(git ls-files 'src/*.py' 'tests/*.py')
+    python3 -m py_compile $(git ls-files 'src/**/*.py' 'src/*.py' 'tests/**/*.py' 'tests/*.py')
 fi
 echo "  ✓ Scripts and Python syntax valid."
 

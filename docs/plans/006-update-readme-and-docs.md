@@ -1,6 +1,6 @@
 # Plan: Align README.md and Onboarding Docs with Codebase Reality
 
-**Linked Spec**: [`docs/specs/006-update-readme-and-docs.md`](../../docs/specs/006-update-readme-and-docs.md)  
+**Linked Spec**: [`docs/specs/006-update-readme-and-docs.md`](../specs/006-update-readme-and-docs.md)  
 **Author**: Antigravity Staff Architect  
 **Date**: 2026-08-28  
 **Status**: Ready for Construction  

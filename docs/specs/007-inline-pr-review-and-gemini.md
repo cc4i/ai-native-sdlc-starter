@@ -1,6 +1,6 @@
 # Specification: Autonomous PR Inline Review Engine with Gemini 3.7 Flash
 
-**Linked Intent**: [`docs/intent/007-inline-pr-review-and-gemini.md`](../../docs/intent/007-inline-pr-review-and-gemini.md)  
+**Linked Intent**: [`docs/intent/007-inline-pr-review-and-gemini.md`](../intent/007-inline-pr-review-and-gemini.md)  
 **Author**: Antigravity Staff Architect  
 **Date**: 2026-08-28  
 **Status**: Ready for Planning  

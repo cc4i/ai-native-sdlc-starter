@@ -1,6 +1,6 @@
 # Plan: Modern Packaging (uv, Python 3.14+), CodeGraph Scalability Guidance, Release Lifecycle & Repo Polish
 
-**Linked Spec**: [`docs/specs/008-modern-tooling-codegraph-and-release.md`](../../docs/specs/008-modern-tooling-codegraph-and-release.md)  
+**Linked Spec**: [`docs/specs/008-modern-tooling-codegraph-and-release.md`](../specs/008-modern-tooling-codegraph-and-release.md)  
 **Author**: @antigravity  
 **Status**: Complete  
 **Shipped**: `4a1cf80`  

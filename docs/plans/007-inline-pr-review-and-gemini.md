@@ -1,6 +1,6 @@
 # Plan: Autonomous PR Inline Review Engine with Gemini 3.7 Flash
 
-**Linked Spec**: [`docs/specs/007-inline-pr-review-and-gemini.md`](../../docs/specs/007-inline-pr-review-and-gemini.md)  
+**Linked Spec**: [`docs/specs/007-inline-pr-review-and-gemini.md`](../specs/007-inline-pr-review-and-gemini.md)  
 **Author**: Antigravity Staff Architect  
 **Date**: 2026-08-28  
 **Status**: Completed  
