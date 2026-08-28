@@ -14,7 +14,7 @@
   - Root `pyproject.toml` conforming to PEP 621 with `requires-python = ">=3.14"`, `ruff` configuration (py314 target), `pytest`, and `ai-sdlc` CLI console script entry point.
   - Enhanced `Makefile` and `scripts/verify.sh` with `uv` detection and standard Python fallback.
   - Automated codebase growth analyzer in `scripts/verify.sh` and `scripts/check-artifacts.sh` (>25 files or >2,500 LOC triggers non-blocking advisory to initialize CodeGraph).
-  - Antigravity/Jetski subagent directives in `GEMINI.md` for querying `codegraph_explore` MCP tool.
+  - Antigravity subagent directives in `GEMINI.md` for querying `codegraph_explore` MCP tool.
   - Streamlined `README.md`: removal of the ASCII repository structure tree, addition of open-source badges (CI, Python 3.14+, uv, CodeGraph, AI-Native SDLC, License), and repo "About" metadata recommendations.
   - Release automation script `scripts/release.sh`, `make release VERSION=v1.X.X`, `.github/workflows/release.yml`, and `docs/RELEASES.md`.
   - Architecture scaling documentation: `docs/architecture/SCALING_AND_CODEGRAPH.md`.

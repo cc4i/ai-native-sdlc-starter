@@ -13,7 +13,7 @@ This specification covers four interconnected system enhancements:
 1. **Restructure Artifact Hierarchy**: Move `intent/`, `specs/`, `plans/`, `templates/`, `reviews/` under `docs/`.
 2. **`shipped: <SHA>` Verification**: Ensure all `COMPLETED` milestones in `plans/` (or `docs/plans/`) record the resolving git commit SHA.
 3. **Stage 6 Control Bands Engine**: Add `bands.yaml` and `src/tools/band_detector.py` providing statistical $\sigma$-deviation tracking and tier actions (`log`, `diagnose`, `act`).
-4. **Jetski Lifecycle Hook**: Add `hooks.json` and `scripts/jetski_guard.py` implementing `PreToolUse` tool call interception and `Stop` loop validation.
+4. **Agent Lifecycle Hook**: Add `hooks.json` and `scripts/agent_guard.py` implementing `PreToolUse` tool call interception and `Stop` loop validation.
 
 ---
 
@@ -60,16 +60,16 @@ Scenario: Metric exceeding tier 3 threshold
   Then it assigns tier "act" with action "open_intent_pr".
 ```
 
-### Feature: Jetski PreToolUse Guard
+### Feature: Agent PreToolUse Guard
 ```gherkin
 Scenario: Agent attempts git add -A or git commit -a
   Given hooks.json is active with PreToolUse matcher "run_command"
   When the agent sends tool call "git add -A" or "git commit -am 'message'"
-  Then scripts/jetski_guard.py outputs decision "deny" with a descriptive reason.
+  Then scripts/agent_guard.py outputs decision "deny" with a descriptive reason.
 
 Scenario: Agent runs valid verification command
   When the agent sends tool call "make verify"
-  Then scripts/jetski_guard.py outputs decision "allow".
+  Then scripts/agent_guard.py outputs decision "allow".
 ```
 
 ---
@@ -100,10 +100,10 @@ metrics:
     tier_3_action: open_intent_pr
 ```
 
-### 3.2 Jetski Hook Specification (`hooks.json`)
+### 3.2 Agent Hook Specification (`hooks.json`)
 ```json
 {
-  "jetski-guard": {
+  "agent-guard": {
     "enabled": true,
     "PreToolUse": [
       {
@@ -111,7 +111,7 @@ metrics:
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ./scripts/jetski_guard.py",
+            "command": "python3 ./scripts/agent_guard.py",
             "timeout": 15
           }
         ]

@@ -1,7 +1,7 @@
 # Team & Developer Onboarding Guide: The AI-Native SDLC
 
 > **Welcome to the AI-Native Software Development Life Cycle (SDLC) Starter Template.**  
-> This guide is designed for developers, product managers, architects, and engineering leads who want to bootstrap new projects or adapt existing codebases to the AI-native workflow using **Google Jetski & Antigravity**.
+> This guide is designed for developers, product managers, architects, and engineering leads who want to bootstrap new projects or adapt existing codebases to the AI-native workflow using **Google Antigravity**.
 
 ---
 
@@ -272,7 +272,7 @@ Keep `GEMINI.md` under one page so that it acts as high-signal working memory ra
 | [`src/`](src) | Stage 3: Build | Core application source code & review agent | Production Implementation |
 | [`tests/`](tests) | Stage 4: Test | Automated unit, integration, and contract tests (33 tests) | Behavioral Verification |
 | [`evals/`](evals) | Stage 4: Test | Continuous AI evaluation regression suite | Agent Instruction Testing |
-| [`scripts/`](scripts) | Developer Tooling | `verify.sh`, `new-intent.sh`, `check-artifacts.sh`, `jetski_guard.py` | Local Toolchain |
+| [`scripts/`](scripts) | Developer Tooling | `verify.sh`, `new-intent.sh`, `check-artifacts.sh`, `agent_guard.py` | Local Toolchain |
 | [`.gemini/skills/`](.gemini/skills) | Knowledge | Versioned enterprise knowledge & policies | Institutional Memory |
 | [`.gemini/agents/`](.gemini/agents) | Swarm | Subagent definitions (`product-owner`, `architect`, etc.) | Role Specialization |
 

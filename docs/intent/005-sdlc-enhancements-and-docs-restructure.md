@@ -9,12 +9,12 @@
 
 ## 1. Problem Statement
 
-Following our comprehensive comparative analysis between the **Jetski/Antigravity AI-Native SDLC** and the **Claude Code AI-Native SDLC in Coda**, four key opportunities were identified to advance this template to parity with production-grade practices:
+Following our comprehensive comparative analysis between the **Antigravity AI-Native SDLC** and the **Claude Code AI-Native SDLC in Coda**, four key opportunities were identified to advance this template to parity with production-grade practices:
 
 1. **Repository Root Clutter**: Currently, five separate artifact folders (`intent/`, `specs/`, `plans/`, `templates/`, `reviews/`) sit at the repository root. Grouping them cleanly under a unified `docs/` hierarchy (`docs/intent/`, `docs/specs/`, `docs/plans/`, `docs/reviews/`, `docs/templates/`) simplifies the repository structure, separating operational documentation from application code and build scripts.
 2. **Missing Shipped Commit Traceability**: In `plans/00-ROADMAP.md` and phase plans, plans are marked `COMPLETED` without recording the exact Git commit SHA that delivered them. Tracking `shipped: <SHA>` ensures historical auditability.
 3. **Absence of Stage 6 Operational Feedback Loop**: The AI SDLC loop should close after deployment. Without automated control bands (`bands.yaml` and anomaly detection), production incidents or metric deviations cannot automatically trigger Stage 1 intents.
-4. **Agent Guardrail Interception (`PreToolUse` & `Stop` Hooks)**: While git hooks catch issues at commit/push time, lifecycle hooks in Jetski (`hooks.json` & `jetski_guard.py`) can intercept unsafe agent commands (e.g. `git add -A`, `git commit -a`, editing protected files) *before* tool execution, and enforce verification before completion.
+4. **Agent Guardrail Interception (`PreToolUse` & `Stop` Hooks)**: While git hooks catch issues at commit/push time, lifecycle hooks in Antigravity (`hooks.json` & `agent_guard.py`) can intercept unsafe agent commands (e.g. `git add -A`, `git commit -a`, editing protected files) *before* tool execution, and enforce verification before completion.
 
 ---
 
@@ -30,8 +30,8 @@ Following our comprehensive comparative analysis between the **Jetski/Antigravit
    - Create `bands.yaml` declaring operational metrics, baseline parameters, and threshold tiers (`log`, `diagnose`, `act`).
    - Create `src/tools/band_detector.py` and `scripts/check-control-bands.py` to evaluate metrics against rolling baselines.
    - Include automated tests for the detector.
-4. **Jetski Lifecycle Hook Integration**:
-   - Provide `hooks.json` and `scripts/jetski_guard.py` implementing `PreToolUse` (blocking broad staging, protected paths) and `Stop` hooks.
+4. **Agent Lifecycle Hook Integration**:
+   - Provide `hooks.json` and `scripts/agent_guard.py` implementing `PreToolUse` (blocking broad staging, protected paths) and `Stop` hooks.
 
 ---
 

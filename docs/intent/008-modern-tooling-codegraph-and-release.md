@@ -13,7 +13,7 @@ To establish this repository as a gold-standard, high-bar open-source project on
 
 - **Current State & Gaps**:
   1. **Python Version & Packaging**: The repo lacks a formal `pyproject.toml` manifest and does not mandate modern Python (3.14+). Modern developers expect lightning-fast package management via [`uv`](https://github.com/astral-sh/uv) (sub-second resolution, lockfiles, and `ruff`).
-  2. **Codebase Scalability & Context Blindness**: As repositories grow past 20–30 files, AI agents waste tokens and make errors grepping flat files without symbol dependency awareness. Mature tools like [`colbymchenry/codegraph`](https://github.com/colbymchenry/codegraph) (68k+ ⭐) exist with 20+ language support and native Antigravity/Jetski MCP integration, but our starter currently provides zero growth detection or proactive guidance when code outgrows simple search.
+  2. **Codebase Scalability & Context Blindness**: As repositories grow past 20–30 files, AI agents waste tokens and make errors grepping flat files without symbol dependency awareness. Mature tools like [`colbymchenry/codegraph`](https://github.com/colbymchenry/codegraph) (68k+ ⭐) exist with 20+ language support and native Antigravity MCP integration, but our starter currently provides zero growth detection or proactive guidance when code outgrows simple search.
   3. **Repository Polish & Clutter**: `README.md` is bogged down by a 45-line ASCII directory tree (`## 📁 Repository Structure`) that creates maintenance friction and clutters the front page. The repository also lacks standard open-source promotion polish (badges, standardized "About" metadata, topic tags, and a crisp, high-signal value proposition).
   4. **Formal Release Lifecycle**: There is no structured process or tooling for regular releases (semantic version bumping, changelog notes, git release tagging, and automated GitHub releases).
   5. **Documentation Architecture**: As the repo grows more complex, comprehensive documentation must be properly folded into dedicated architecture and release guides rather than overloading single markdown files.
@@ -44,7 +44,7 @@ To establish this repository as a gold-standard, high-bar open-source project on
 3. **Streamline README & High-Bar Repository Polish**:
    - **Remove the verbose ASCII repository structure tree** from `README.md` to keep the front page clean, punchy, and focused on value proposition and workflow loops.
    - Add standard GitHub badges (CI Build, Python 3.14+, uv, CodeGraph Integrated, AI-Native SDLC, License).
-   - Provide recommended GitHub "About" description and topic tags (`ai-sdlc`, `antigravity`, `jetski`, `code-review`, `codegraph`, `uv`, `developer-tools`) in documentation.
+   - Provide recommended GitHub "About" description and topic tags (`ai-sdlc`, `antigravity`, `code-review`, `codegraph`, `uv`, `developer-tools`) in documentation.
    - Keep detailed repository anatomy inside `ONBOARDING.md` where developers deep-dive.
 
 4. **Regular Release Automation & Governance**:
@@ -60,7 +60,7 @@ To establish this repository as a gold-standard, high-bar open-source project on
 
 ## 3. Affected Users & Systems
 
-- **Target Personas / Users**: Software developers, tech leads, engineering maintainers, autonomous AI agents (Antigravity, Jetski, ReviewAgent).
+- **Target Personas / Users**: Software developers, tech leads, engineering maintainers, autonomous AI agents (Antigravity, ReviewAgent).
 - **Affected Systems / Services**: Local CLI, verification harness, git hooks, CI/CD workflows, documentation, release scripts.
 - **Third-Party Dependencies / Integrations**: `uv`, `colbymchenry/codegraph` (MCP / CLI integration).
 

@@ -1,13 +1,13 @@
 """
-Unit tests for Jetski lifecycle hook guard (scripts/jetski_guard.py).
+Unit tests for agent lifecycle hook guard (scripts/agent_guard.py).
 """
 
 import unittest
 
-from scripts.jetski_guard import evaluate_pre_tool_use, evaluate_stop
+from scripts.agent_guard import evaluate_pre_tool_use, evaluate_stop
 
 
-class TestJetskiGuard(unittest.TestCase):
+class TestAgentGuard(unittest.TestCase):
     def test_allow_safe_command(self):
         payload = {"toolCall": {"name": "run_command", "args": {"CommandLine": "make verify"}}}
         res = evaluate_pre_tool_use(payload)
