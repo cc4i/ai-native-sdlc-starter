@@ -8,7 +8,7 @@ This roadmap tracks all active and planned milestones for the repository across 
 
 | Milestone | Linked Spec | Linked Plan | Status | Shipped Commit | Owner |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **008: Modern Tooling (uv), CodeGraph & Release Workflow** | [`specs/008-modern-tooling-codegraph-and-release.md`](file:///Users/chuancc/mywork/ai/project-start/docs/specs/008-modern-tooling-codegraph-and-release.md) | [`plans/008-modern-tooling-codegraph-and-release.md`](file:///Users/chuancc/mywork/ai/project-start/docs/plans/008-modern-tooling-codegraph-and-release.md) | COMPLETED | `4a1cf80` | @antigravity |
+| **008: Modern Tooling (uv), CodeGraph & Release Workflow** | [`specs/008-modern-tooling-codegraph-and-release.md`](../specs/008-modern-tooling-codegraph-and-release.md) | [`plans/008-modern-tooling-codegraph-and-release.md`](008-modern-tooling-codegraph-and-release.md) | COMPLETED | `4a1cf80` | @antigravity |
 
 ---
 
@@ -18,14 +18,14 @@ This roadmap tracks all active and planned milestones for the repository across 
 
 | Milestone | Linked Spec | Linked Plan | Status | Shipped Commit | Owner |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **000: AI-Native SDLC Template & Engine** | [`specs/000-ai-sdlc-starter-template.md`](file:///Users/chuancc/mywork/ai/project-start/docs/specs/000-ai-sdlc-starter-template.md) | [`plans/000-ai-sdlc-starter-template.md`](file:///Users/chuancc/mywork/ai/project-start/docs/plans/000-ai-sdlc-starter-template.md) | COMPLETED | `92c63bc` | @antigravity |
-| **001: Autonomous AI Code Review Agent** | [`specs/001-code-review-agent.md`](file:///Users/chuancc/mywork/ai/project-start/docs/specs/001-code-review-agent.md) | [`plans/001-code-review-agent.md`](file:///Users/chuancc/mywork/ai/project-start/docs/plans/001-code-review-agent.md) | COMPLETED | `92c63bc` | @antigravity |
-| **002: Insurance Claims Status Reference** | [`specs/002-claims-status-example.md`](file:///Users/chuancc/mywork/ai/project-start/docs/specs/002-claims-status-example.md) | [`plans/002-claims-status-example.md`](file:///Users/chuancc/mywork/ai/project-start/docs/plans/002-claims-status-example.md) | COMPLETED | `92c63bc` | @alex-chen |
-| **003: Strict SDLC Lifecycle Enforcement & Git Hooks** | [`specs/003-sdlc-lifecycle-enforcement-hooks.md`](file:///Users/chuancc/mywork/ai/project-start/docs/specs/003-sdlc-lifecycle-enforcement-hooks.md) | [`plans/003-sdlc-lifecycle-enforcement-hooks.md`](file:///Users/chuancc/mywork/ai/project-start/docs/plans/003-sdlc-lifecycle-enforcement-hooks.md) | COMPLETED | `ab40c52` | @product-owner |
-| **004: Automated AI PR Review & Branch Protection** | [`specs/004-pr-review-and-branch-enforcement.md`](file:///Users/chuancc/mywork/ai/project-start/docs/specs/004-pr-review-and-branch-enforcement.md) | [`plans/004-pr-review-and-branch-enforcement.md`](file:///Users/chuancc/mywork/ai/project-start/docs/plans/004-pr-review-and-branch-enforcement.md) | COMPLETED | `4a0e5c4` | @product-owner |
-| **005: SDLC Enhancements & Docs Restructure** | [`specs/005-sdlc-enhancements-and-docs-restructure.md`](file:///Users/chuancc/mywork/ai/project-start/docs/specs/005-sdlc-enhancements-and-docs-restructure.md) | [`plans/005-sdlc-enhancements-and-docs-restructure.md`](file:///Users/chuancc/mywork/ai/project-start/docs/plans/005-sdlc-enhancements-and-docs-restructure.md) | COMPLETED | `ce6b60b` | @antigravity |
-| **006: README & Onboarding Documentation Alignment** | [`specs/006-update-readme-and-docs.md`](file:///Users/chuancc/mywork/ai/project-start/docs/specs/006-update-readme-and-docs.md) | [`plans/006-update-readme-and-docs.md`](file:///Users/chuancc/mywork/ai/project-start/docs/plans/006-update-readme-and-docs.md) | COMPLETED | `f9770f8` | @antigravity |
-| **007: Autonomous PR Inline Review Engine (Gemini 3.7 Flash)** | [`specs/007-inline-pr-review-and-gemini.md`](file:///Users/chuancc/mywork/ai/project-start/docs/specs/007-inline-pr-review-and-gemini.md) | [`plans/007-inline-pr-review-and-gemini.md`](file:///Users/chuancc/mywork/ai/project-start/docs/plans/007-inline-pr-review-and-gemini.md) | COMPLETED | `0ee3921` | @antigravity |
+| **000: AI-Native SDLC Template & Engine** | [`specs/000-ai-sdlc-starter-template.md`](../specs/000-ai-sdlc-starter-template.md) | [`plans/000-ai-sdlc-starter-template.md`](000-ai-sdlc-starter-template.md) | COMPLETED | `92c63bc` | @antigravity |
+| **001: Autonomous AI Code Review Agent** | [`specs/001-code-review-agent.md`](../specs/001-code-review-agent.md) | [`plans/001-code-review-agent.md`](001-code-review-agent.md) | COMPLETED | `92c63bc` | @antigravity |
+| **002: Insurance Claims Status Reference** | [`specs/002-claims-status-example.md`](../specs/002-claims-status-example.md) | [`plans/002-claims-status-example.md`](002-claims-status-example.md) | COMPLETED | `92c63bc` | @alex-chen |
+| **003: Strict SDLC Lifecycle Enforcement & Git Hooks** | [`specs/003-sdlc-lifecycle-enforcement-hooks.md`](../specs/003-sdlc-lifecycle-enforcement-hooks.md) | [`plans/003-sdlc-lifecycle-enforcement-hooks.md`](003-sdlc-lifecycle-enforcement-hooks.md) | COMPLETED | `ab40c52` | @product-owner |
+| **004: Automated AI PR Review & Branch Protection** | [`specs/004-pr-review-and-branch-enforcement.md`](../specs/004-pr-review-and-branch-enforcement.md) | [`plans/004-pr-review-and-branch-enforcement.md`](004-pr-review-and-branch-enforcement.md) | COMPLETED | `4a0e5c4` | @product-owner |
+| **005: SDLC Enhancements & Docs Restructure** | [`specs/005-sdlc-enhancements-and-docs-restructure.md`](../specs/005-sdlc-enhancements-and-docs-restructure.md) | [`plans/005-sdlc-enhancements-and-docs-restructure.md`](005-sdlc-enhancements-and-docs-restructure.md) | COMPLETED | `ce6b60b` | @antigravity |
+| **006: README & Onboarding Documentation Alignment** | [`specs/006-update-readme-and-docs.md`](../specs/006-update-readme-and-docs.md) | [`plans/006-update-readme-and-docs.md`](006-update-readme-and-docs.md) | COMPLETED | `f9770f8` | @antigravity |
+| **007: Autonomous PR Inline Review Engine (Gemini 3.7 Flash)** | [`specs/007-inline-pr-review-and-gemini.md`](../specs/007-inline-pr-review-and-gemini.md) | [`plans/007-inline-pr-review-and-gemini.md`](007-inline-pr-review-and-gemini.md) | COMPLETED | `0ee3921` | @antigravity |
 
 ---
 

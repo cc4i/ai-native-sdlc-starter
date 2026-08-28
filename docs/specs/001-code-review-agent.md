@@ -1,6 +1,6 @@
 # Spec: Autonomous AI Code Review & Security Auditor Agent
 
-**Linked Intent**: [`intent/001-code-review-agent.md`](file:///Users/chuancc/mywork/ai/project-start/intent/001-code-review-agent.md)  
+**Linked Intent**: [`intent/001-code-review-agent.md`](../../intent/001-code-review-agent.md)  
 **Author**: Antigravity SDLC Architect  
 **Date**: 2026-08-27  
 **Status**: Approved  

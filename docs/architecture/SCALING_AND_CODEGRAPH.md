@@ -88,7 +88,7 @@ The autonomous `ReviewAgent` cross-checks diffs against caller signatures in `.c
 
 ## 5. Repository Scalability Growth Triggers
 
-Our verification harness ([`scripts/verify.sh`](file:///Users/chuancc/mywork/ai/project-start/scripts/verify.sh)) automatically counts tracked source files and lines of code.
+Our verification harness ([`scripts/verify.sh`](../../scripts/verify.sh)) automatically counts tracked source files and lines of code.
 
 When your codebase exceeds **25 source files or 2,500 LOC** and `.codegraph/` is not present, `make verify` surfaces an advisory notice:
 ```

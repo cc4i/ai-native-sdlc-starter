@@ -9,7 +9,7 @@
 
 > An enterprise-grade, stage-by-stage starter template for the **AI-Native Software Development Life Cycle (SDLC)**, adapted from Anthropic's AI-Native SDLC Playbook and powered by **Google Jetski / Antigravity**.
 
-👉 **New to this repo? Start with the [Team & Developer Onboarding Guide](file:///Users/chuancc/mywork/ai/project-start/ONBOARDING.md).**
+👉 **New to this repo? Start with the [Team & Developer Onboarding Guide](ONBOARDING.md).**
 
 ---
 

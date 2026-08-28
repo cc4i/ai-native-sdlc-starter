@@ -1,7 +1,7 @@
 # PR Review Audit Report: Milestone 003
 
 **Pull Request**: #4 (Strict SDLC Pre-Commit/Pre-Push Hooks & Quality Gates)  
-**Linked Plan**: [`plans/003-sdlc-lifecycle-enforcement-hooks.md`](file:///Users/chuancc/mywork/ai/project-start/plans/003-sdlc-lifecycle-enforcement-hooks.md)  
+**Linked Plan**: [`plans/003-sdlc-lifecycle-enforcement-hooks.md`](../../plans/003-sdlc-lifecycle-enforcement-hooks.md)  
 **Reviewer**: Autonomous Antigravity ReviewAgent & Security Auditor  
 **Date**: 2026-08-27  
 **Verdict**: `PASS`  

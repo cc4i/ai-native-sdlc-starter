@@ -1,6 +1,6 @@
 # Plan: Automated AI PR Review & Branch Protection Enforcement
 
-**Linked Spec**: [`specs/004-pr-review-and-branch-enforcement.md`](file:///Users/chuancc/mywork/ai/project-start/specs/004-pr-review-and-branch-enforcement.md)  
+**Linked Spec**: [`specs/004-pr-review-and-branch-enforcement.md`](../../specs/004-pr-review-and-branch-enforcement.md)  
 **Author**: Staff Engineer & DevOps  
 **Date**: 2026-08-28  
 **Status**: Completed  

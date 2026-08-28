@@ -1,6 +1,6 @@
 # Spec: User Claims Status Self-Service
 
-**Linked Intent**: [`intent/002-claims-status-example.md`](file:///Users/chuancc/mywork/ai/project-start/intent/002-claims-status-example.md)  
+**Linked Intent**: [`intent/002-claims-status-example.md`](../../intent/002-claims-status-example.md)  
 **Author**: Alex Chen (Staff Architect)  
 **Date**: 2026-08-27  
 **Status**: Approved  

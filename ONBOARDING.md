@@ -86,7 +86,7 @@ make verify && make eval
   1. **Scaffold Intent**: Run `make new-intent TITLE="My Feature Name"` (or `./scripts/new-intent.sh`).
   2. **Brainstorm with Antigravity**: Use the slash command `/grill-me` or invoke the `product-owner` subagent:
      > *"I want to add self-service invoice downloads for billing customers. Grill me on requirements, constraints, security, and edge cases."*
-  3. **Refine & Commit**: Antigravity populates [`docs/intent/00X-feature.md`](file:///Users/chuancc/mywork/ai/project-start/docs/intent) using [`docs/templates/intent.template.md`](file:///Users/chuancc/mywork/ai/project-start/docs/templates/intent.template.md).
+  3. **Refine & Commit**: Antigravity populates [`docs/intent/00X-feature.md`](docs/intent) using [`docs/templates/intent.template.md`](docs/templates/intent.template.md).
   4. **Sign-off**: Review the generated artifact and commit it to git on a feature branch.
 
 ---
@@ -98,7 +98,7 @@ make verify && make eval
      > *"Read `docs/intent/00X-feature.md` and generate `docs/specs/00X-feature.md` using our `spec-architect` and `secure-api-design` skills."*
   2. **Adversarial Spec Validation**: Run the `spec-validator` subagent (3-skeptic panel) to hunt for ambiguities, missing status codes, and security flaws:
      > *"Run spec-validator on `docs/specs/00X-feature.md`. Poke holes in these requirements before we plan."*
-  3. **Approve**: Once validated, update status in [`docs/plans/00-ROADMAP.md`](file:///Users/chuancc/mywork/ai/project-start/docs/plans/00-ROADMAP.md) to `SPEC_VALIDATED`.
+  3. **Approve**: Once validated, update status in [`docs/plans/00-ROADMAP.md`](docs/plans/00-ROADMAP.md) to `SPEC_VALIDATED`.
 
 ---
 
@@ -169,11 +169,11 @@ EOF
 ### 3.5 SRE & On-Call Engineers
 * **Your Goal**: Close the loop by converting production anomalies and metric breaches into actionable intent artifacts automatically.
 * **Workflow**:
-  1. Statistical control bands in [`bands.yaml`](file:///Users/chuancc/mywork/ai/project-start/bands.yaml) continuously monitor metric variance.
+  1. Statistical control bands in [`bands.yaml`](bands.yaml) continuously monitor metric variance.
   2. Run `python3 scripts/check-control-bands.py` to evaluate metrics.
-  3. Critical breaches ($\ge 3\sigma$) automatically draft a new intent artifact: [`docs/intent/incident-NNN.md`](file:///Users/chuancc/mywork/ai/project-start/docs/templates/incident-intent.template.md).
+  3. Critical breaches ($\ge 3\sigma$) automatically draft a new intent artifact: [`docs/intent/incident-NNN.md`](docs/templates/incident-intent.template.md).
   4. On-call engineer triages the incident into Stage 2 (Design) or dismisses it.
-  5. When the bug is fixed, a regression test is permanently added to [`evals/eval-config.json`](file:///Users/chuancc/mywork/ai/project-start/evals/eval-config.json).
+  5. When the bug is fixed, a regression test is permanently added to [`evals/eval-config.json`](evals/eval-config.json).
 
 ---
 
@@ -249,7 +249,7 @@ When a test fails, fix the implementation in `src/`, not the test assertion in `
 A task is never complete until `make verify` exits with code `0` and attaches proof in the summary.
 
 ### 4. The Two-Strike Rule for `GEMINI.md`
-**When the AI agent makes the same mistake twice, add a concise single-bullet directive to [`GEMINI.md`](file:///Users/chuancc/mywork/ai/project-start/GEMINI.md).**  
+**When the AI agent makes the same mistake twice, add a concise single-bullet directive to [`GEMINI.md`](GEMINI.md).**  
 Keep `GEMINI.md` under one page so that it acts as high-signal working memory rather than bloated context.
 
 ---
@@ -258,23 +258,23 @@ Keep `GEMINI.md` under one page so that it acts as high-signal working memory ra
 
 | Directory / File | Lifecycle Stage | Description | Single Source of Truth |
 | :--- | :--- | :--- | :--- |
-| [`GEMINI.md`](file:///Users/chuancc/mywork/ai/project-start/GEMINI.md) | Universal | Core agent directives, conventions, commands | Agent Working Context |
-| [`REVIEW.md`](file:///Users/chuancc/mywork/ai/project-start/REVIEW.md) | Stage 5: Deploy | Review policies, severity tiers, approval rules | Code Review Standard |
-| [`bands.yaml`](file:///Users/chuancc/mywork/ai/project-start/bands.yaml) | Stage 6: Maintain | Statistical control bands configuration ($\sigma$ tiers) | Anomaly Thresholds |
-| [`pyproject.toml`](file:///Users/chuancc/mywork/ai/project-start/pyproject.toml) | Packaging | PEP 621 metadata, Python >=3.14, `uv` dependency management | Dependency Specification |
-| [`docs/architecture/`](file:///Users/chuancc/mywork/ai/project-start/docs/architecture) | Architecture | Codebase scaling guide & CodeGraph (`colbymchenry/codegraph`) integration | Scalability Architecture |
-| [`docs/RELEASES.md`](file:///Users/chuancc/mywork/ai/project-start/docs/RELEASES.md) | Governance | Semantic versioning policy, release checklist, and automation | Release Governance |
-| [`docs/intent/`](file:///Users/chuancc/mywork/ai/project-start/docs/intent) | Stage 1: Plan | Raw problem statements & originator requirements | Problem Definition |
-| [`docs/specs/`](file:///Users/chuancc/mywork/ai/project-start/docs/specs) | Stage 2: Design | Gherkin acceptance criteria, API contracts | Functional & Technical Contract |
-| [`docs/plans/`](file:///Users/chuancc/mywork/ai/project-start/docs/plans) | Stage 3: Build | Micro-stepped TDD execution groups & roadmaps (with Shipped SHAs) | Implementation Strategy |
-| [`docs/reviews/`](file:///Users/chuancc/mywork/ai/project-start/docs/reviews) | Stage 5: Deploy | PR Review audit reports & sign-offs | Governance Records |
-| [`docs/templates/`](file:///Users/chuancc/mywork/ai/project-start/docs/templates) | Templates | Standard markdown templates for all lifecycle stages | Artifact Schemas |
-| [`src/`](file:///Users/chuancc/mywork/ai/project-start/src) | Stage 3: Build | Core application source code & review agent | Production Implementation |
-| [`tests/`](file:///Users/chuancc/mywork/ai/project-start/tests) | Stage 4: Test | Automated unit, integration, and contract tests (33 tests) | Behavioral Verification |
-| [`evals/`](file:///Users/chuancc/mywork/ai/project-start/evals) | Stage 4: Test | Continuous AI evaluation regression suite | Agent Instruction Testing |
-| [`scripts/`](file:///Users/chuancc/mywork/ai/project-start/scripts) | Developer Tooling | `verify.sh`, `new-intent.sh`, `check-artifacts.sh`, `jetski_guard.py` | Local Toolchain |
-| [`.gemini/skills/`](file:///Users/chuancc/mywork/ai/project-start/.gemini/skills) | Knowledge | Versioned enterprise knowledge & policies | Institutional Memory |
-| [`.gemini/agents/`](file:///Users/chuancc/mywork/ai/project-start/.gemini/agents) | Swarm | Subagent definitions (`product-owner`, `architect`, etc.) | Role Specialization |
+| [`GEMINI.md`](GEMINI.md) | Universal | Core agent directives, conventions, commands | Agent Working Context |
+| [`REVIEW.md`](REVIEW.md) | Stage 5: Deploy | Review policies, severity tiers, approval rules | Code Review Standard |
+| [`bands.yaml`](bands.yaml) | Stage 6: Maintain | Statistical control bands configuration ($\sigma$ tiers) | Anomaly Thresholds |
+| [`pyproject.toml`](pyproject.toml) | Packaging | PEP 621 metadata, Python >=3.14, `uv` dependency management | Dependency Specification |
+| [`docs/architecture/`](docs/architecture) | Architecture | Codebase scaling guide & CodeGraph (`colbymchenry/codegraph`) integration | Scalability Architecture |
+| [`docs/RELEASES.md`](docs/RELEASES.md) | Governance | Semantic versioning policy, release checklist, and automation | Release Governance |
+| [`docs/intent/`](docs/intent) | Stage 1: Plan | Raw problem statements & originator requirements | Problem Definition |
+| [`docs/specs/`](docs/specs) | Stage 2: Design | Gherkin acceptance criteria, API contracts | Functional & Technical Contract |
+| [`docs/plans/`](docs/plans) | Stage 3: Build | Micro-stepped TDD execution groups & roadmaps (with Shipped SHAs) | Implementation Strategy |
+| [`docs/reviews/`](docs/reviews) | Stage 5: Deploy | PR Review audit reports & sign-offs | Governance Records |
+| [`docs/templates/`](docs/templates) | Templates | Standard markdown templates for all lifecycle stages | Artifact Schemas |
+| [`src/`](src) | Stage 3: Build | Core application source code & review agent | Production Implementation |
+| [`tests/`](tests) | Stage 4: Test | Automated unit, integration, and contract tests (33 tests) | Behavioral Verification |
+| [`evals/`](evals) | Stage 4: Test | Continuous AI evaluation regression suite | Agent Instruction Testing |
+| [`scripts/`](scripts) | Developer Tooling | `verify.sh`, `new-intent.sh`, `check-artifacts.sh`, `jetski_guard.py` | Local Toolchain |
+| [`.gemini/skills/`](.gemini/skills) | Knowledge | Versioned enterprise knowledge & policies | Institutional Memory |
+| [`.gemini/agents/`](.gemini/agents) | Swarm | Subagent definitions (`product-owner`, `architect`, etc.) | Role Specialization |
 
 ---
 

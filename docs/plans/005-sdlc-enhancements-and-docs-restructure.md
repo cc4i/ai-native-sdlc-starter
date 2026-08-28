@@ -1,6 +1,6 @@
 # Plan: SDLC Enhancements and Docs Directory Restructure
 
-**Linked Spec**: [`specs/005-sdlc-enhancements-and-docs-restructure.md`](file:///Users/chuancc/mywork/ai/project-start/docs/specs/005-sdlc-enhancements-and-docs-restructure.md)  
+**Linked Spec**: [`specs/005-sdlc-enhancements-and-docs-restructure.md`](../../docs/specs/005-sdlc-enhancements-and-docs-restructure.md)  
 **Author**: Antigravity Staff Architect  
 **Date**: 2026-08-28  
 **Status**: Completed  

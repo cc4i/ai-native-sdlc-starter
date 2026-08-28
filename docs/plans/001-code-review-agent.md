@@ -1,6 +1,6 @@
 # Plan: AI Code Review & Security Auditor Agent Implementation
 
-**Linked Spec**: [`specs/001-code-review-agent.md`](file:///Users/chuancc/mywork/ai/project-start/specs/001-code-review-agent.md)  
+**Linked Spec**: [`specs/001-code-review-agent.md`](../../specs/001-code-review-agent.md)  
 **Author**: Antigravity Builder Agent  
 **Date**: 2026-08-27  
 **Status**: Completed  

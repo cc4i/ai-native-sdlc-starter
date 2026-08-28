@@ -45,7 +45,7 @@ We strictly adhere to [Semantic Versioning 2.0.0](https://semver.org/):
 Before cutting a release:
 
 1. **Verify Active Milestones**:
-   - Check [`docs/plans/00-ROADMAP.md`](file:///Users/chuancc/mywork/ai/project-start/docs/plans/00-ROADMAP.md). Ensure all milestones under the target release are marked `COMPLETED` with valid shipped commit hashes (`Shipped: <SHA>`).
+   - Check [`docs/plans/00-ROADMAP.md`](plans/00-ROADMAP.md). Ensure all milestones under the target release are marked `COMPLETED` with valid shipped commit hashes (`Shipped: <SHA>`).
 2. **Run Local Verification**:
    ```bash
    make verify && make eval
@@ -66,5 +66,5 @@ Before cutting a release:
 
 ## 🔄 Post-Release Actions
 
-1. Update [`docs/plans/00-ROADMAP.md`](file:///Users/chuancc/mywork/ai/project-start/docs/plans/00-ROADMAP.md): Move the shipped release to `Previous Releases` and open a new `Active Release` header for the next iteration.
+1. Update [`docs/plans/00-ROADMAP.md`](plans/00-ROADMAP.md): Move the shipped release to `Previous Releases` and open a new `Active Release` header for the next iteration.
 2. Announce release highlights in community channels.

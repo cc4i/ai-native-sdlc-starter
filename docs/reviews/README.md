@@ -6,7 +6,7 @@ This directory houses version-controlled, evidence-based **Stage 5 PR Review Aud
 
 ## 📋 Schema & Structure
 
-Each review report follows [`templates/review.template.md`](file:///Users/chuancc/mywork/ai/project-start/templates/review.template.md):
+Each review report follows [`templates/review.template.md`](../../templates/review.template.md):
 - **Linked Plan & Spec**: Full traceability to `plans/NNN-*.md` and `specs/NNN-*.md`.
 - **Verdict**: `PASS`, `CHANGES_REQUESTED`, or `BLOCKED`.
 - **Findings by Severity Tier**:

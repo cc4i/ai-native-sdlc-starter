@@ -1,6 +1,6 @@
 # Plan: Claims Status Self-Service Implementation
 
-**Linked Spec**: [`specs/002-claims-status-example.md`](file:///Users/chuancc/mywork/ai/project-start/specs/002-claims-status-example.md)  
+**Linked Spec**: [`specs/002-claims-status-example.md`](../../specs/002-claims-status-example.md)  
 **Author**: Alex Chen (Staff Engineer)  
 **Date**: 2026-08-27  
 **Status**: Completed  

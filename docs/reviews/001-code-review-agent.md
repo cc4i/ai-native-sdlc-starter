@@ -1,7 +1,7 @@
 # PR Review Audit Report: Milestone 001
 
 **Pull Request**: #2 (Autonomous AI Code Review Agent)  
-**Linked Plan**: [`plans/001-code-review-agent.md`](file:///Users/chuancc/mywork/ai/project-start/plans/001-code-review-agent.md)  
+**Linked Plan**: [`plans/001-code-review-agent.md`](../../plans/001-code-review-agent.md)  
 **Reviewer**: Autonomous Antigravity ReviewAgent & Security Auditor  
 **Date**: 2026-08-27  
 **Verdict**: `PASS`  
