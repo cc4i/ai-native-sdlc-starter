@@ -2,14 +2,16 @@
 ReviewAgent - Autonomous multi-pass code review orchestrator.
 """
 
-from typing import List, Optional
-from pathlib import Path
 from datetime import datetime, timezone
-from src.models.review import Finding, ReviewReport, Severity, Verdict
-from src.tools.secret_scanner import SecretScannerTool
-from src.tools.ast_checker import AstSecurityCheckerTool
-from src.tools.spec_matcher import SpecComplianceTool
+from pathlib import Path
+from typing import List, Optional
+
 from src.agent.gemini_reviewer import GeminiReviewer
+from src.models.review import Finding, ReviewReport, Severity, Verdict
+from src.tools.ast_checker import AstSecurityCheckerTool
+from src.tools.secret_scanner import SecretScannerTool
+from src.tools.spec_matcher import SpecComplianceTool
+
 
 class ReviewAgent:
     """Orchestrates security, AST, spec compliance, and Gemini 3.7 Flash semantic tools to produce code review audits."""
@@ -36,7 +38,9 @@ class ReviewAgent:
 
         # Pass 3: Spec Acceptance Compliance
         if spec_content:
-            findings.extend(self.spec_matcher.scan(code_content, spec_content=spec_content, file_path=file_path))
+            findings.extend(
+                self.spec_matcher.scan(code_content, spec_content=spec_content, file_path=file_path)
+            )
 
         # Compute Overall Verdict
         if any(f.severity == Severity.BLOCKER for f in findings):
@@ -78,7 +82,7 @@ class ReviewAgent:
                         spec_content=spec_content,
                     )
                     all_findings.extend(sub_report.findings)
-                except (OSError, UnicodeDecodeError):
+                except OSError, UnicodeDecodeError:
                     continue
 
         # Compute Overall Verdict
@@ -92,7 +96,11 @@ class ReviewAgent:
             verdict = Verdict.PASS
             summary = f"Review PASSED: Zero blockers or security issues detected across {valid_files_count} file(s)."
 
-        target_desc = f"PR Changes ({valid_files_count} files)" if valid_files_count > 1 else (file_paths[0] if file_paths else "PR Diff")
+        target_desc = (
+            f"PR Changes ({valid_files_count} files)"
+            if valid_files_count > 1
+            else (file_paths[0] if file_paths else "PR Diff")
+        )
         return ReviewReport(
             target_name=target_desc,
             verdict=verdict,
@@ -111,7 +119,7 @@ class ReviewAgent:
             "# PR Review Audit Report",
             "",
             f"**Target**: `{report.target_name}`  ",
-            f"**Reviewer**: Autonomous Antigravity ReviewAgent  ",
+            "**Reviewer**: Autonomous Antigravity ReviewAgent  ",
             f"**Date**: {date_str}  ",
             f"**Verdict**: `{report.verdict.value}`  ",
             "",
@@ -134,10 +142,12 @@ class ReviewAgent:
         else:
             lines.append("*None.*")
 
-        lines.extend([
-            "",
-            f"### ⚠️ Tier 2: Important ({len(importants)} found)",
-        ])
+        lines.extend(
+            [
+                "",
+                f"### ⚠️ Tier 2: Important ({len(importants)} found)",
+            ]
+        )
 
         if importants:
             for imp in importants:
@@ -149,10 +159,12 @@ class ReviewAgent:
             lines.append("*None.*")
 
         capped_nits = nits[:5]
-        lines.extend([
-            "",
-            f"### 💡 Tier 3: Nit / Suggestions ({len(capped_nits)} shown, cap 5)",
-        ])
+        lines.extend(
+            [
+                "",
+                f"### 💡 Tier 3: Nit / Suggestions ({len(capped_nits)} shown, cap 5)",
+            ]
+        )
 
         if capped_nits:
             for nit in capped_nits:
@@ -163,18 +175,22 @@ class ReviewAgent:
         else:
             lines.append("*None.*")
 
-        tally_line = f"Important: {len(blockers)}, Consider: {len(importants)}, Nit: {len(capped_nits)}"
+        tally_line = (
+            f"Important: {len(blockers)}, Consider: {len(importants)}, Nit: {len(capped_nits)}"
+        )
 
-        lines.extend([
-            "",
-            "---",
-            "## 3. Governance Sign-Off",
-            f"- **Automated Verification**: {report.verdict.value}",
-            "- **Human Code Owner Sign-Off**: [ ] Required for Blocker / Production Releases",
-            f"- **Severity Tally**: `{tally_line}`",
-            "",
-            f"*{tally_line}*",
-            "",
-        ])
+        lines.extend(
+            [
+                "",
+                "---",
+                "## 3. Governance Sign-Off",
+                f"- **Automated Verification**: {report.verdict.value}",
+                "- **Human Code Owner Sign-Off**: [ ] Required for Blocker / Production Releases",
+                f"- **Severity Tally**: `{tally_line}`",
+                "",
+                f"*{tally_line}*",
+                "",
+            ]
+        )
 
         return "\n".join(lines)

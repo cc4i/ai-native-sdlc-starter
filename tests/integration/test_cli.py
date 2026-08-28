@@ -2,10 +2,11 @@
 Integration tests for CLI entrypoint.
 """
 
-import unittest
+import os
 import subprocess
 import tempfile
-import os
+import unittest
+
 
 class TestCliIntegration(unittest.TestCase):
     def test_cli_review_clean_file(self):

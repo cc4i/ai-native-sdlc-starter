@@ -3,8 +3,10 @@ Diff parser and line anchor calculator for GitHub Pull Request inline reviews.
 """
 
 import re
-from typing import Dict, Set, List, Tuple
+from typing import Dict, List, Set, Tuple
+
 from src.models.review import Finding
+
 
 class DiffParser:
     """Parses unified git diffs and maps valid diff hunk lines for inline PR commenting."""
@@ -22,7 +24,7 @@ class DiffParser:
         """
         self.diff_text = diff_text
         self.file_hunks = {}
-        
+
         current_file = None
         current_new_line = 0
 
@@ -65,7 +67,11 @@ class DiffParser:
         """Returns True if the line number is part of an active diff hunk for the file."""
         normalized_path = file_path.lstrip("./")
         for path, lines in self.file_hunks.items():
-            if path == normalized_path or path.endswith(normalized_path) or normalized_path.endswith(path):
+            if (
+                path == normalized_path
+                or path.endswith(normalized_path)
+                or normalized_path.endswith(path)
+            ):
                 return line_number in lines
         return False
 
@@ -79,7 +85,9 @@ class DiffParser:
         summary: List[Finding] = []
 
         for finding in findings:
-            if finding.line_number > 0 and self.is_line_in_diff(finding.file_path, finding.line_number):
+            if finding.line_number > 0 and self.is_line_in_diff(
+                finding.file_path, finding.line_number
+            ):
                 inline.append(finding)
             else:
                 summary.append(finding)

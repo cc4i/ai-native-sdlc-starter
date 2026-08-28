@@ -4,9 +4,10 @@ Autonomous Semantic Code Reviewer powered by Gemini 3.7 Flash.
 
 import json
 import os
-import urllib.request
 import urllib.error
-from typing import Dict, Any, List, Optional
+import urllib.request
+from typing import Any, Dict, List, Optional
+
 from src.models.review import Finding, ReviewReport, Severity, Verdict
 
 DEFAULT_GEMINI_MODEL = "gemini-3.7-flash"
@@ -42,6 +43,7 @@ Output valid JSON matching this schema:
   ]
 }
 """
+
 
 class GeminiReviewer:
     """Invokes Gemini 3.7 Flash to perform deep semantic code reviews."""
@@ -82,20 +84,14 @@ Perform the 3-pass review and return JSON.
 """
 
         endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent?key={self.api_key}"
-        
+
         payload = {
-            "system_instruction": {
-                "parts": [{"text": GEMINI_REVIEW_SYSTEM_PROMPT}]
-            },
-            "contents": [
-                {
-                    "parts": [{"text": prompt}]
-                }
-            ],
+            "system_instruction": {"parts": [{"text": GEMINI_REVIEW_SYSTEM_PROMPT}]},
+            "contents": [{"parts": [{"text": prompt}]}],
             "generationConfig": {
                 "response_mime_type": "application/json",
                 "temperature": 0.2,
-            }
+            },
         }
 
         try:
@@ -103,15 +99,15 @@ Perform the 3-pass review and return JSON.
                 endpoint,
                 data=json.dumps(payload).encode("utf-8"),
                 headers={"Content-Type": "application/json"},
-                method="POST"
+                method="POST",
             )
             with urllib.request.urlopen(req, timeout=30) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
-                
+
             candidates = data.get("candidates", [])
             if not candidates:
                 return None
-                
+
             raw_text = candidates[0]["content"]["parts"][0]["text"]
             result = json.loads(raw_text)
             return self._parse_json_result(result)
@@ -134,7 +130,7 @@ Perform the 3-pass review and return JSON.
 
         findings: List[Finding] = []
         raw_findings = result.get("findings", [])
-        
+
         nit_count = 0
         for f in raw_findings:
             sev_str = str(f.get("severity", "Consider")).upper()

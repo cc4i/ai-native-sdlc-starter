@@ -3,9 +3,11 @@ GitHub Pull Request Review Publisher & Formatter.
 Constructs batch inline comments and summary payloads for GitHub's Pull Request Review API.
 """
 
-from typing import Dict, Any, List, Optional
-from src.models.review import Finding, ReviewReport, Severity, Verdict
+from typing import Any, Dict, List, Optional
+
+from src.models.review import Finding, ReviewReport, Severity
 from src.tools.diff_parser import DiffParser
+
 
 class GitHubReviewPublisher:
     """Formats review findings into GitHub PR Review payloads with inline comments."""
@@ -46,7 +48,11 @@ class GitHubReviewPublisher:
 
     def build_inline_comment_body(self, finding: Finding) -> str:
         """Formats an inline diff review comment with optional 1-click suggestion block."""
-        badge = "🚨 Important" if finding.severity == Severity.BLOCKER else ("⚠️ Consider" if finding.severity == Severity.IMPORTANT else "💡 Nit")
+        badge = (
+            "🚨 Important"
+            if finding.severity == Severity.BLOCKER
+            else ("⚠️ Consider" if finding.severity == Severity.IMPORTANT else "💡 Nit")
+        )
         body = f"### {badge}: {finding.title}\n\n{finding.message}"
         if finding.rule_id:
             body += f"\n\n*Rule: `{finding.rule_id}`*"
@@ -70,12 +76,14 @@ class GitHubReviewPublisher:
 
         comments: List[Dict[str, Any]] = []
         for f in inline_findings:
-            comments.append({
-                "path": f.file_path.lstrip("./"),
-                "line": f.line_number,
-                "side": "RIGHT",
-                "body": self.build_inline_comment_body(f),
-            })
+            comments.append(
+                {
+                    "path": f.file_path.lstrip("./"),
+                    "line": f.line_number,
+                    "side": "RIGHT",
+                    "body": self.build_inline_comment_body(f),
+                }
+            )
 
         # Build main review body
         tally_line = self.format_tally_line(report.findings)
@@ -93,8 +101,16 @@ class GitHubReviewPublisher:
         if summary_findings:
             body_lines.append("## Additional Findings (File / Global Scope)")
             for sf in summary_findings:
-                sev_icon = "🚨" if sf.severity == Severity.BLOCKER else ("⚠️" if sf.severity == Severity.IMPORTANT else "💡")
-                loc = f" (`{sf.file_path}:{sf.line_number}`)" if sf.line_number else f" (`{sf.file_path}`)"
+                sev_icon = (
+                    "🚨"
+                    if sf.severity == Severity.BLOCKER
+                    else ("⚠️" if sf.severity == Severity.IMPORTANT else "💡")
+                )
+                loc = (
+                    f" (`{sf.file_path}:{sf.line_number}`)"
+                    if sf.line_number
+                    else f" (`{sf.file_path}`)"
+                )
                 body_lines.append(f"- {sev_icon} **{sf.title}**{loc}: {sf.message}")
             body_lines.append("")
 

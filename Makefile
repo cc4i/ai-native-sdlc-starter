@@ -13,6 +13,7 @@ help:
 	@echo "  make format        - Format codebase according to project standards"
 	@echo "  make new-intent    - Scaffold a new Stage 1 intent artifact (Usage: make new-intent TITLE='...')"
 	@echo "  make review-pr     - Run AI code review on current branch diff against main"
+	@echo "  make release       - Cut and tag a new release (Usage: make release VERSION=v1.X.X)"
 	@echo "  make audit         - Check artifact chain linkages and anti-shortcuts"
 
 init: install-hooks
@@ -29,11 +30,18 @@ verify:
 
 test:
 	@echo "🧪 Running tests..."
-	@if [ -d "tests" ]; then echo "Running test suite..."; fi
+	@if command -v uv >/dev/null 2>&1; then \
+		uv run pytest tests/ -v; \
+	else \
+		python3 -m unittest discover tests -v; \
+	fi
 	@echo "✓ All tests green."
 
 lint:
 	@echo "🧹 Running linter..."
+	@if command -v uv >/dev/null 2>&1; then \
+		uv run ruff check .; \
+	fi
 	@bash ./scripts/check-artifacts.sh
 	@echo "✓ Lint passed."
 
@@ -42,6 +50,9 @@ eval:
 
 format:
 	@echo "✨ Formatting codebase..."
+	@if command -v uv >/dev/null 2>&1; then \
+		uv run ruff format .; \
+	fi
 	@echo "✓ Formatting complete."
 
 new-intent:
@@ -54,9 +65,16 @@ new-intent:
 review-pr:
 	@python3 -m src.cli review-pr --base origin/main
 
+release:
+	@if [ -z "$(VERSION)" ]; then \
+		echo "Usage: make release VERSION=v1.X.X"; \
+		exit 1; \
+	fi
+	@bash ./scripts/release.sh "$(VERSION)"
+
 audit:
 	@bash ./scripts/check-artifacts.sh
 
 clean:
 	@echo "🧹 Cleaning temporary files..."
-	@rm -rf .pytest_cache __pycache__ *.pyc
+	@rm -rf .pytest_cache .venv __pycache__ *.pyc

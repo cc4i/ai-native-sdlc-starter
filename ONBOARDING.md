@@ -261,7 +261,9 @@ Keep `GEMINI.md` under one page so that it acts as high-signal working memory ra
 | [`GEMINI.md`](file:///Users/chuancc/mywork/ai/project-start/GEMINI.md) | Universal | Core agent directives, conventions, commands | Agent Working Context |
 | [`REVIEW.md`](file:///Users/chuancc/mywork/ai/project-start/REVIEW.md) | Stage 5: Deploy | Review policies, severity tiers, approval rules | Code Review Standard |
 | [`bands.yaml`](file:///Users/chuancc/mywork/ai/project-start/bands.yaml) | Stage 6: Maintain | Statistical control bands configuration ($\sigma$ tiers) | Anomaly Thresholds |
-| [`hooks.json`](file:///Users/chuancc/mywork/ai/project-start/hooks.json) | Governance | Jetski lifecycle hooks (`PreToolUse`, `Stop`) | Agent Tool Guardrails |
+| [`pyproject.toml`](file:///Users/chuancc/mywork/ai/project-start/pyproject.toml) | Packaging | PEP 621 metadata, Python >=3.14, `uv` dependency management | Dependency Specification |
+| [`docs/architecture/`](file:///Users/chuancc/mywork/ai/project-start/docs/architecture) | Architecture | Codebase scaling guide & CodeGraph (`colbymchenry/codegraph`) integration | Scalability Architecture |
+| [`docs/RELEASES.md`](file:///Users/chuancc/mywork/ai/project-start/docs/RELEASES.md) | Governance | Semantic versioning policy, release checklist, and automation | Release Governance |
 | [`docs/intent/`](file:///Users/chuancc/mywork/ai/project-start/docs/intent) | Stage 1: Plan | Raw problem statements & originator requirements | Problem Definition |
 | [`docs/specs/`](file:///Users/chuancc/mywork/ai/project-start/docs/specs) | Stage 2: Design | Gherkin acceptance criteria, API contracts | Functional & Technical Contract |
 | [`docs/plans/`](file:///Users/chuancc/mywork/ai/project-start/docs/plans) | Stage 3: Build | Micro-stepped TDD execution groups & roadmaps (with Shipped SHAs) | Implementation Strategy |

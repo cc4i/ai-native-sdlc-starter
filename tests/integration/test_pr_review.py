@@ -6,6 +6,7 @@ import subprocess
 import unittest
 from pathlib import Path
 
+
 class TestPrReviewCliIntegration(unittest.TestCase):
     def setUp(self):
         self.root_dir = Path(__file__).resolve().parent.parent.parent
@@ -80,12 +81,14 @@ class TestPrReviewCliIntegration(unittest.TestCase):
         self.assertEqual(result.returncode, 0)
         self.assertTrue(out_json.exists())
         import json
+
         data = json.loads(out_json.read_text(encoding="utf-8"))
         self.assertIn("body", data)
         self.assertIn("event", data)
         self.assertEqual(data["event"], "COMMENT")
         self.assertIn("comments", data)
         out_json.unlink()
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -2,9 +2,10 @@
 Spec Compliance & Acceptance Criteria Matcher Tool.
 """
 
-import re
 from typing import List
+
 from src.models.review import Finding, Severity
+
 
 class SpecComplianceTool:
     """Verifies that code diffs satisfy key acceptance terms and Gherkin scenarios."""
@@ -16,7 +17,11 @@ class SpecComplianceTool:
 
         # Check for error handling scenarios (e.g. 404 / 403)
         if "404" in spec_content or "not found" in spec_content.lower():
-            if "404" not in code_content and "NotFound" not in code_content and "not_found" not in code_content.lower():
+            if (
+                "404" not in code_content
+                and "NotFound" not in code_content
+                and "not_found" not in code_content.lower()
+            ):
                 findings.append(
                     Finding(
                         severity=Severity.IMPORTANT,
@@ -28,8 +33,16 @@ class SpecComplianceTool:
                 )
 
         # Check for auth requirements
-        if "jwt" in spec_content.lower() or "bearer" in spec_content.lower() or "auth" in spec_content.lower():
-            if "auth" not in code_content.lower() and "token" not in code_content.lower() and "user" not in code_content.lower():
+        if (
+            "jwt" in spec_content.lower()
+            or "bearer" in spec_content.lower()
+            or "auth" in spec_content.lower()
+        ):
+            if (
+                "auth" not in code_content.lower()
+                and "token" not in code_content.lower()
+                and "user" not in code_content.lower()
+            ):
                 findings.append(
                     Finding(
                         severity=Severity.IMPORTANT,

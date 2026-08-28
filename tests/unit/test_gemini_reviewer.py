@@ -1,9 +1,10 @@
-import unittest
-from unittest.mock import patch, MagicMock
-import io
 import json
-from src.agent.gemini_reviewer import GeminiReviewer, DEFAULT_GEMINI_MODEL
+import unittest
+from unittest.mock import MagicMock, patch
+
+from src.agent.gemini_reviewer import GeminiReviewer
 from src.models.review import Severity, Verdict
+
 
 class TestGeminiReviewer(unittest.TestCase):
     def test_default_model_is_gemini_3_7_flash(self):
@@ -19,18 +20,32 @@ class TestGeminiReviewer(unittest.TestCase):
         mock_auth = "".join(["mock_", "token_val"])
         reviewer = GeminiReviewer(api_key=mock_auth)
         mock_findings = [
-            {"severity": "Important", "title": "Critical Bug", "message": "SQL Injection", "file_path": "src/db.py", "line_number": 10},
-            {"severity": "Consider", "title": "Edge Case", "message": "Unhandled None", "file_path": "src/api.py", "line_number": 25},
+            {
+                "severity": "Important",
+                "title": "Critical Bug",
+                "message": "SQL Injection",
+                "file_path": "src/db.py",
+                "line_number": 10,
+            },
+            {
+                "severity": "Consider",
+                "title": "Edge Case",
+                "message": "Unhandled None",
+                "file_path": "src/api.py",
+                "line_number": 25,
+            },
         ]
         # Add 7 Nits to test the 5-nit cap
         for i in range(1, 8):
-            mock_findings.append({
-                "severity": "Nit",
-                "title": f"Style {i}",
-                "message": f"Naming style issue {i}",
-                "file_path": "src/api.py",
-                "line_number": 30 + i
-            })
+            mock_findings.append(
+                {
+                    "severity": "Nit",
+                    "title": f"Style {i}",
+                    "message": f"Naming style issue {i}",
+                    "file_path": "src/api.py",
+                    "line_number": 30 + i,
+                }
+            )
 
         mock_result = {
             "summary": "Detected defects and suggestions",
@@ -40,7 +55,7 @@ class TestGeminiReviewer(unittest.TestCase):
 
         report = reviewer._parse_json_result(mock_result)
         self.assertEqual(report.verdict, Verdict.BLOCKED)
-        
+
         # Total findings: 1 Important + 1 Consider + 5 Nits (capped from 7) = 7 findings
         self.assertEqual(len(report.findings), 7)
         severities = [f.severity for f in report.findings]
@@ -59,11 +74,9 @@ class TestGeminiReviewer(unittest.TestCase):
                     "content": {
                         "parts": [
                             {
-                                "text": json.dumps({
-                                    "summary": "Clean diff",
-                                    "verdict": "PASS",
-                                    "findings": []
-                                })
+                                "text": json.dumps(
+                                    {"summary": "Clean diff", "verdict": "PASS", "findings": []}
+                                )
                             }
                         ]
                     }
@@ -82,6 +95,7 @@ class TestGeminiReviewer(unittest.TestCase):
         mock_urlopen.side_effect = Exception("Connection refused")
         report_fallback = reviewer.review_diff("diff --git a/file b/file")
         self.assertIsNone(report_fallback)
+
 
 if __name__ == "__main__":
     unittest.main()

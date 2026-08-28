@@ -4,7 +4,17 @@ This roadmap tracks all active and planned milestones for the repository across 
 
 ---
 
-## 🚀 Active Release: v1.0-mvp
+## 🚀 Active Release: v1.1-evolution
+
+| Milestone | Linked Spec | Linked Plan | Status | Shipped Commit | Owner |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **008: Modern Tooling (uv), CodeGraph & Release Workflow** | [`specs/008-modern-tooling-codegraph-and-release.md`](file:///Users/chuancc/mywork/ai/project-start/docs/specs/008-modern-tooling-codegraph-and-release.md) | [`plans/008-modern-tooling-codegraph-and-release.md`](file:///Users/chuancc/mywork/ai/project-start/docs/plans/008-modern-tooling-codegraph-and-release.md) | AUDITED | - | @antigravity |
+
+---
+
+## 📦 Previous Releases
+
+### v1.0-mvp (Completed)
 
 | Milestone | Linked Spec | Linked Plan | Status | Shipped Commit | Owner |
 | :--- | :--- | :--- | :--- | :--- | :--- |

@@ -1,6 +1,7 @@
 import unittest
-from src.tools.diff_parser import DiffParser
+
 from src.models.review import Finding, Severity
+from src.tools.diff_parser import DiffParser
 
 SAMPLE_DIFF = """diff --git a/src/example.py b/src/example.py
 index abc1234..def5678 100644
@@ -17,6 +18,7 @@ index abc1234..def5678 100644
 +    b = 20
      return a
 """
+
 
 class TestDiffParser(unittest.TestCase):
     def setUp(self):
@@ -77,6 +79,7 @@ class TestDiffParser(unittest.TestCase):
 
         self.assertEqual(len(summary), 2)
         self.assertEqual({f.rule_id for f in summary}, {"RULE-2", "RULE-3"})
+
 
 if __name__ == "__main__":
     unittest.main()

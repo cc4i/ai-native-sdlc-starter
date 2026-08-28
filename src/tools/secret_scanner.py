@@ -4,6 +4,7 @@ Secret and credential detection tool.
 
 import re
 from typing import List
+
 from src.models.review import Finding, Severity
 
 SECRET_PATTERNS = [
@@ -37,11 +38,15 @@ SECRET_PATTERNS = [
     ),
 ]
 
+
 class SecretScannerTool:
     """Scans code content for hardcoded secrets, passwords, and private keys."""
 
     def __init__(self):
-        self.patterns = [(name, re.compile(pat, re.IGNORECASE), sev, rule_id, desc) for name, pat, sev, rule_id, desc in SECRET_PATTERNS]
+        self.patterns = [
+            (name, re.compile(pat, re.IGNORECASE), sev, rule_id, desc)
+            for name, pat, sev, rule_id, desc in SECRET_PATTERNS
+        ]
 
     def scan(self, content: str, file_path: str = "") -> List[Finding]:
         findings: List[Finding] = []

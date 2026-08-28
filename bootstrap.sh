@@ -620,10 +620,10 @@ echo -e "${BLUE}⚙️  (4/6) Configuring stack-specific directives (Stack: $STA
 # Configure commands based on stack
 case "$STACK" in
     python)
-        VERIFY_CMD="pytest tests/ -v && ruff check ."
-        TEST_CMD="pytest tests/ -v"
-        LINT_CMD="ruff check ."
-        FORMAT_CMD="ruff format ."
+        VERIFY_CMD="uv run ruff check . && uv run pytest tests/ -v"
+        TEST_CMD="uv run pytest tests/ -v"
+        LINT_CMD="uv run ruff check ."
+        FORMAT_CMD="uv run ruff format ."
         ;;
     typescript)
         VERIFY_CMD="npm run lint && npm test && npm run build"
@@ -650,6 +650,30 @@ case "$STACK" in
         FORMAT_CMD="make format"
         ;;
 esac
+
+if [ "$STACK" = "python" ]; then
+    cat << EOF > pyproject.toml
+[project]
+name = "$(echo "$PROJECT_NAME" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
+version = "0.1.0"
+description = "$PROJECT_NAME"
+requires-python = ">=3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.5.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+EOF
+fi
 
 cat << EOF > GEMINI.md
 # Project Agent Directives (GEMINI.md)
