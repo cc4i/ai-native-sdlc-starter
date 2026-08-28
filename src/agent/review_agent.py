@@ -3,6 +3,7 @@ ReviewAgent - Autonomous multi-pass code review orchestrator.
 """
 
 from typing import List, Optional
+from pathlib import Path
 from datetime import datetime, timezone
 from src.models.review import Finding, ReviewReport, Severity, Verdict
 from src.tools.secret_scanner import SecretScannerTool
@@ -50,6 +51,50 @@ class ReviewAgent:
             target_name=file_path,
             verdict=verdict,
             findings=findings,
+            summary=summary,
+        )
+
+    def review_files(
+        self,
+        file_paths: List[str],
+        base_dir: str = ".",
+        spec_content: str = "",
+    ) -> ReviewReport:
+        """Reviews multiple files and aggregates findings into a single PR review report."""
+        all_findings: List[Finding] = []
+        valid_files_count = 0
+
+        for f in file_paths:
+            path = Path(base_dir) / f if not Path(f).is_absolute() else Path(f)
+            if path.exists() and path.is_file():
+                valid_files_count += 1
+                try:
+                    content = path.read_text(encoding="utf-8")
+                    sub_report = self.review_code(
+                        code_content=content,
+                        file_path=f,
+                        spec_content=spec_content,
+                    )
+                    all_findings.extend(sub_report.findings)
+                except (OSError, UnicodeDecodeError):
+                    continue
+
+        # Compute Overall Verdict
+        if any(f.severity == Severity.BLOCKER for f in all_findings):
+            verdict = Verdict.BLOCKED
+            summary = f"Review BLOCKED: Found {sum(1 for f in all_findings if f.severity == Severity.BLOCKER)} blocker issue(s) across {valid_files_count} file(s)."
+        elif any(f.severity == Severity.IMPORTANT for f in all_findings):
+            verdict = Verdict.CHANGES_REQUESTED
+            summary = f"Changes Requested: Found {sum(1 for f in all_findings if f.severity == Severity.IMPORTANT)} important issue(s) across {valid_files_count} file(s)."
+        else:
+            verdict = Verdict.PASS
+            summary = f"Review PASSED: Zero blockers or security issues detected across {valid_files_count} file(s)."
+
+        target_desc = f"PR Changes ({valid_files_count} files)" if valid_files_count > 1 else (file_paths[0] if file_paths else "PR Diff")
+        return ReviewReport(
+            target_name=target_desc,
+            verdict=verdict,
+            findings=all_findings,
             summary=summary,
         )
 

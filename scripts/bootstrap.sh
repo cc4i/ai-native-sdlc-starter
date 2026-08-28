@@ -129,6 +129,7 @@ mkdir -p \
     intent \
     specs \
     plans \
+    reviews \
     evals \
     templates \
     scripts \
@@ -843,6 +844,12 @@ EOF
 cat << 'EOF' > .githooks/pre-commit
 #!/usr/bin/env bash
 set -euo pipefail
+
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)
+if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
+    echo "❌ SDLC VIOLATION: Direct commits to '$CURRENT_BRANCH' are forbidden. Create a feature branch: git checkout -b feat/NNN-feature"
+    exit 1
+fi
 
 STAGED_SRC=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^src/' || true)
 if [ -n "$STAGED_SRC" ]; then
