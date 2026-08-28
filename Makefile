@@ -1,8 +1,4 @@
-# ==============================================================================
-# AI-Native SDLC Starter Makefile
-# ==============================================================================
-
-.PHONY: all help init install-hooks verify test lint eval format new-intent audit clean
+.PHONY: all help init install-hooks verify test lint eval format new-intent review-pr audit clean
 
 all: verify
 
@@ -16,6 +12,7 @@ help:
 	@echo "  make eval          - Run continuous AI regression evaluation suite"
 	@echo "  make format        - Format codebase according to project standards"
 	@echo "  make new-intent    - Scaffold a new Stage 1 intent artifact (Usage: make new-intent TITLE='...')"
+	@echo "  make review-pr     - Run AI code review on current branch diff against main"
 	@echo "  make audit         - Check artifact chain linkages and anti-shortcuts"
 
 init: install-hooks
@@ -53,6 +50,9 @@ new-intent:
 		exit 1; \
 	fi
 	@bash ./scripts/new-intent.sh "$(TITLE)"
+
+review-pr:
+	@python3 -m src.cli review-pr --base origin/main
 
 audit:
 	@bash ./scripts/check-artifacts.sh

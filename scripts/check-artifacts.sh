@@ -10,7 +10,7 @@ cd "${ROOT_DIR}"
 
 echo "  - Checking directory structure..."
 
-REQUIRED_DIRS=("intent" "specs" "plans" "evals" "templates" ".gemini/skills" ".gemini/agents")
+REQUIRED_DIRS=("intent" "specs" "plans" "reviews" "evals" "templates" ".gemini/skills" ".gemini/agents")
 
 for dir in "${REQUIRED_DIRS[@]}"; do
     if [ ! -d "$dir" ]; then

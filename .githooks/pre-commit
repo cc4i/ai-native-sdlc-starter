@@ -17,6 +17,16 @@ RESET="\033[0m"
 
 echo -e "${CYAN}${BOLD}🛡️  [SDLC Pre-Commit] Validating artifact chain and verification harness...${RESET}"
 
+# 0. Check Branch: Forbid direct commits on main/master
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)
+if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
+    echo -e "${RED}${BOLD}❌ SDLC VIOLATION: Direct commits to '$CURRENT_BRANCH' branch are forbidden.${RESET}"
+    echo -e "👉 Rule: All changes must go through a feature branch and Pull Request review loop."
+    echo -e "   Remediation: Create a feature branch first:"
+    echo -e "     ${CYAN}git checkout -b feat/NNN-your-feature-name${RESET}"
+    exit 1
+fi
+
 # 1. Identify staged files
 STAGED_SRC=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^src/' || true)
 STAGED_ALL=$(git diff --cached --name-only --diff-filter=ACMR || true)
