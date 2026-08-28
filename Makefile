@@ -17,7 +17,7 @@ help:
 
 init: install-hooks
 	@echo "🚀 Initializing AI-Native SDLC project repository..."
-	@mkdir -p intent specs plans evals templates .gemini/skills .gemini/agents scripts .githooks
+	@mkdir -p docs/intent docs/specs docs/plans docs/reviews docs/templates evals .gemini/skills .gemini/agents scripts .githooks
 	@chmod +x scripts/*.sh evals/*.py .githooks/* 2>/dev/null || true
 	@echo "✅ Initialization complete. Review GEMINI.md to tailor project instructions."
 

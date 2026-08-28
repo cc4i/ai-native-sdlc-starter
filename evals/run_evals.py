@@ -36,12 +36,16 @@ def run_eval_case(eval_case: dict, root_dir: Path) -> tuple[bool, list[str]]:
         return len(errors) == 0, errors
 
     # Static structural evals
+    templates_dir = root_dir / "docs" / "templates"
+    if not templates_dir.exists():
+        templates_dir = root_dir / "templates"
+
     if "intent" in eval_id:
-        target_file = root_dir / "templates" / "intent.template.md"
+        target_file = templates_dir / "intent.template.md"
     elif "spec" in eval_id:
-        target_file = root_dir / "templates" / "spec.template.md"
+        target_file = templates_dir / "spec.template.md"
     elif "plan" in eval_id:
-        target_file = root_dir / "templates" / "plan.template.md"
+        target_file = templates_dir / "plan.template.md"
     else:
         target_file = root_dir / "GEMINI.md"
 

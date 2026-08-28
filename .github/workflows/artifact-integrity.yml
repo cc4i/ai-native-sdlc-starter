@@ -38,11 +38,22 @@ jobs:
             echo "🔍 Source code modified in PR:"
             echo "$CHANGED_SRC"
             echo "Verifying presence of Stage 1 (intent), Stage 2 (spec), and Stage 3 (plan) artifacts..."
-            INTENT_COUNT=$(find intent -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" | wc -l | tr -d ' ')
-            SPEC_COUNT=$(find specs -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" | wc -l | tr -d ' ')
-            PLAN_COUNT=$(find plans -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" | wc -l | tr -d ' ')
+            INTENT_DIRS=()
+            [ -d "docs/intent" ] && INTENT_DIRS+=("docs/intent")
+            [ -d "intent" ] && INTENT_DIRS+=("intent")
+            INTENT_COUNT=$(find "${INTENT_DIRS[@]}" -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
+
+            SPEC_DIRS=()
+            [ -d "docs/specs" ] && SPEC_DIRS+=("docs/specs")
+            [ -d "specs" ] && SPEC_DIRS+=("specs")
+            SPEC_COUNT=$(find "${SPEC_DIRS[@]}" -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
+
+            PLAN_DIRS=()
+            [ -d "docs/plans" ] && PLAN_DIRS+=("docs/plans")
+            [ -d "plans" ] && PLAN_DIRS+=("plans")
+            PLAN_COUNT=$(find "${PLAN_DIRS[@]}" -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
             if [ "$INTENT_COUNT" -eq 0 ] || [ "$SPEC_COUNT" -eq 0 ] || [ "$PLAN_COUNT" -eq 0 ]; then
-              echo "❌ Error: PR modifies src/ but lacks complete artifact chain in intent/, specs/, or plans/."
+              echo "❌ Error: PR modifies src/ but lacks complete artifact chain in docs/intent/, docs/specs/, or docs/plans/."
               exit 1
             fi
             echo "✅ Source code changes are grounded in verified artifacts."

@@ -37,29 +37,38 @@ if [ -n "$STAGED_SRC" ]; then
     echo "$STAGED_SRC" | sed 's/^/  - /'
 
     # Check 1: Verify that intent artifacts exist
-    INTENT_COUNT=$(find intent -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
+    INTENT_DIRS=()
+    [ -d "docs/intent" ] && INTENT_DIRS+=("docs/intent")
+    [ -d "intent" ] && INTENT_DIRS+=("intent")
+    INTENT_COUNT=$(find "${INTENT_DIRS[@]}" -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
     if [ "$INTENT_COUNT" -eq 0 ]; then
-        echo -e "${RED}${BOLD}❌ SDLC VIOLATION: No Stage 1 (intent.md) artifacts found in intent/.${RESET}"
+        echo -e "${RED}${BOLD}❌ SDLC VIOLATION: No Stage 1 (intent.md) artifacts found in docs/intent/.${RESET}"
         echo -e "👉 Rule: You cannot modify production code in src/ without an approved intent artifact."
         echo -e "   Remediation: Run ${CYAN}make new-intent TITLE=\"Your Feature\"${RESET} and interview with /grill-me."
         exit 1
     fi
 
     # Check 2: Verify that spec artifacts exist
-    SPEC_COUNT=$(find specs -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
+    SPEC_DIRS=()
+    [ -d "docs/specs" ] && SPEC_DIRS+=("docs/specs")
+    [ -d "specs" ] && SPEC_DIRS+=("specs")
+    SPEC_COUNT=$(find "${SPEC_DIRS[@]}" -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
     if [ "$SPEC_COUNT" -eq 0 ]; then
-        echo -e "${RED}${BOLD}❌ SDLC VIOLATION: No Stage 2 (spec.md) artifacts found in specs/.${RESET}"
+        echo -e "${RED}${BOLD}❌ SDLC VIOLATION: No Stage 2 (spec.md) artifacts found in docs/specs/.${RESET}"
         echo -e "👉 Rule: You cannot modify production code without an approved Gherkin specification."
-        echo -e "   Remediation: Generate ${CYAN}specs/NNN-[feature].md${RESET} before writing code."
+        echo -e "   Remediation: Generate ${CYAN}docs/specs/NNN-[feature].md${RESET} before writing code."
         exit 1
     fi
 
     # Check 3: Verify that plan artifacts exist
-    PLAN_COUNT=$(find plans -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
+    PLAN_DIRS=()
+    [ -d "docs/plans" ] && PLAN_DIRS+=("docs/plans")
+    [ -d "plans" ] && PLAN_DIRS+=("plans")
+    PLAN_COUNT=$(find "${PLAN_DIRS[@]}" -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
     if [ "$PLAN_COUNT" -eq 0 ]; then
-        echo -e "${RED}${BOLD}❌ SDLC VIOLATION: No Stage 3 (plan.md) artifacts found in plans/.${RESET}"
+        echo -e "${RED}${BOLD}❌ SDLC VIOLATION: No Stage 3 (plan.md) artifacts found in docs/plans/.${RESET}"
         echo -e "👉 Rule: Never write non-trivial code without an approved plan.md with TDD execution groups."
-        echo -e "   Remediation: Create ${CYAN}plans/NNN-[feature].md${RESET} with TDD steps."
+        echo -e "   Remediation: Create ${CYAN}docs/plans/NNN-[feature].md${RESET} with TDD steps."
         exit 1
     fi
 fi
