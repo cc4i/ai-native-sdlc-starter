@@ -2,8 +2,8 @@
 
 **Linked Spec**: [`docs/specs/008-modern-tooling-codegraph-and-release.md`](file:///Users/chuancc/mywork/ai/project-start/docs/specs/008-modern-tooling-codegraph-and-release.md)  
 **Author**: @antigravity  
-**Date**: 2026-08-28  
 **Status**: Complete  
+**Shipped**: `4a1cf80`  
 
 ---
 
