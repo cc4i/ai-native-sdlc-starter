@@ -117,11 +117,52 @@ make verify && make eval
 ### 3.4 Reviewers & QA Gatekeepers
 * **Your Goal**: Ensure all pull requests satisfy acceptance criteria, pass security policies, and contain zero anti-shortcuts.
 * **Workflow**:
-  1. **Automated Audit**: Run `make review-pr` locally or invoke the `auditor` / `implementation-validator` subagents:
+  1. **Automated Local Audit**: Run `make review-pr` locally or invoke the `auditor` / `implementation-validator` subagents:
      > *"Audit this branch against `docs/specs/00X-feature.md` and `REVIEW.md`. Classify findings into Blocker, Important, Nit."*
-  2. **PR Comment Automation**: When a PR is opened, GitHub Actions runs `ReviewAgent` and posts an audit report comment automatically.
+  2. **PR Comment & Inline Diff Review Automation**: When a PR is opened or updated, `.github/workflows/ai-pr-review.yml` runs `ReviewAgent` automatically:
+     - **Tier 1 (Fast Deterministic)**: AST security analyzer and secret scanner execute in `<0.2s`.
+     - **Tier 2 (Gemini 3.7 Flash)**: Deep semantic 3-pass review (`Correctness`, `Security`, `Plan Compliance`).
+     - **Inline Diff Comments**: Findings inside active diff hunks are published as native GitHub line comments with 1-click ` ```suggestion ` replacement blocks.
+     - **Tally & 5-Nit Cap**: Outputs standardized `Important: n, Consider: n, Nit: n` and caps low-severity nits at 5.
   3. **Auto-Fix Loop**: Tag `@agent fix` on PR comments for automated remediation.
   4. **Human Approval**: The designated Code Owner reviews findings, verifies `make verify` and `make eval` are green, and merges the PR.
+
+#### 🔧 One-Time GitHub Configuration for Repository Admins
+
+To enable the autonomous review engine and enforce merge gates on your repository:
+
+##### Option A: Using GitHub CLI (`gh`) (Fastest)
+```bash
+# Step 1: Add Gemini API key for deep semantic reviews (from https://aistudio.google.com/apikey)
+gh secret set GEMINI_API_KEY --body "YOUR_GEMINI_API_KEY"
+
+# Step 2: Grant workflow write access to publish PR review comments
+gh api --method PUT /repos/:owner/:repo/actions/permissions/workflow \
+  -f default_workflow_permissions=write \
+  -F can_approve_pull_request_reviews=true
+
+# Step 3: Require AI Review & Artifact Integrity checks before merging to main
+gh api --method PUT /repos/:owner/:repo/branches/main/protection \
+  --input - << 'EOF'
+{
+  "required_status_checks": {
+    "strict": false,
+    "contexts": [
+      "Autonomous AI Code Review & Policy Gate",
+      "Verify Unbroken Artifact Chain & Quality Gates"
+    ]
+  },
+  "enforce_admins": false,
+  "required_pull_request_reviews": null,
+  "restrictions": null
+}
+EOF
+```
+
+##### Option B: Using GitHub Web UI
+1. **API Key Secret**: Go to **Settings** ➔ **Secrets and variables** ➔ **Actions** ➔ **New repository secret** ➔ Name: `GEMINI_API_KEY`, Value: `<your-key>`.
+2. **Workflow Permissions**: Go to **Settings** ➔ **Actions** ➔ **General** ➔ Under **Workflow permissions**, select **Read and write permissions** and check **"Allow GitHub Actions to create and approve pull requests"**.
+3. **Branch Protection**: Go to **Settings** ➔ **Branches** ➔ Edit rule for `main` ➔ Check **"Require status checks to pass before merging"** ➔ Select `Autonomous AI Code Review & Policy Gate` and `Verify Unbroken Artifact Chain & Quality Gates`.
 
 ---
 

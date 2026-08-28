@@ -164,9 +164,26 @@ Every stage produces a version-controlled, human-readable, and machine-actionabl
 * **How to run**:
   1. Run local review on branch diff: `make review-pr` (or `python3 -m src.cli review-pr --base origin/main`).
   2. Save persistent report to `docs/reviews/00X-feature-name.md`.
-  3. Open a Pull Request (`gh pr create`). GitHub Actions automatically runs `ReviewAgent` and comments the audit report directly on the PR.
+  3. Open a Pull Request (`gh pr create`). GitHub Actions automatically runs `ReviewAgent` (Tier 1 deterministic + Tier 2 Gemini 3.7 Flash) and posts inline diff comments with 1-click suggestions.
   4. Code owner approves and merges the Pull Request.
   5. Record the merge commit hash in the plan: `Shipped: <COMMIT_SHA>`.
+
+> [!TIP]
+> **One-Time GitHub Configuration for Autonomous PR Reviews**:
+> ```bash
+> # 1. Set Gemini API key for deep semantic reviews (optional but recommended):
+> gh secret set GEMINI_API_KEY --body "YOUR_GEMINI_API_KEY"
+>
+> # 2. Ensure GitHub Actions has write access to PRs:
+> gh api --method PUT /repos/:owner/:repo/actions/permissions/workflow \
+>   -f default_workflow_permissions=write -F can_approve_pull_request_reviews=true
+>
+> # 3. Enforce AI Review & Artifact Integrity status checks before merging:
+> gh api --method PUT /repos/:owner/:repo/branches/main/protection \
+>   --input - << 'EOF'
+> {"required_status_checks":{"strict":false,"contexts":["Autonomous AI Code Review & Policy Gate","Verify Unbroken Artifact Chain & Quality Gates"]},"enforce_admins":false,"required_pull_request_reviews":null,"restrictions":null}
+> EOF
+> ```
 
 ### 6. Stage 6: Maintain (Closing the Loop)
 * **Goal**: Production anomalies and metric breaches automatically generate new intent artifacts.
