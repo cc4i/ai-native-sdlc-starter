@@ -32,8 +32,10 @@ jobs:
       - name: Execute Autonomous ReviewAgent on PR Diff
         id: run_review
         run: |
-          mkdir -p reviews
-          python3 -m src.cli review-pr --base origin/${{ github.base_ref }} --output reviews/pr-audit.md || echo "REVIEW_FAILED=true" >> $GITHUB_ENV
+          mkdir -p docs/reviews reviews
+          REPORT_DIR="reviews"
+          if [ -d "docs/reviews" ]; then REPORT_DIR="docs/reviews"; fi
+          python3 -m src.cli review-pr --base origin/${{ github.base_ref }} --output "${REPORT_DIR}/pr-audit.md" || echo "REVIEW_FAILED=true" >> $GITHUB_ENV
 
       - name: Post Review Audit Report Comment to PR
         uses: actions/github-script@v7
@@ -42,7 +44,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            const reportPath = 'reviews/pr-audit.md';
+            let reportPath = 'docs/reviews/pr-audit.md';
+            if (!fs.existsSync(reportPath)) {
+              reportPath = 'reviews/pr-audit.md';
+            }
             if (fs.existsSync(reportPath)) {
               const body = fs.readFileSync(reportPath, 'utf8');
               const { data: comments } = await github.rest.issues.listComments({

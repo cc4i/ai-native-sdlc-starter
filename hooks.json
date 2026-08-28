@@ -1,0 +1,24 @@
+{
+  "sdlc-safety-guard": {
+    "enabled": true,
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ./scripts/jetski_guard.py",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "python3 ./scripts/jetski_guard.py",
+        "timeout": 10
+      }
+    ]
+  }
+}

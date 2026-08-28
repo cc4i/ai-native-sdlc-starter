@@ -126,12 +126,12 @@ echo ""
 # ------------------------------------------------------------------------------
 echo -e "${BLUE}📁 (1/6) Creating AI-Native SDLC directory hierarchy...${RESET}"
 mkdir -p \
-    intent \
-    specs \
-    plans \
-    reviews \
+    docs/intent \
+    docs/specs \
+    docs/plans \
+    docs/reviews \
+    docs/templates \
     evals \
-    templates \
     scripts \
     .githooks \
     .gemini/skills/intent-capture \
@@ -147,7 +147,7 @@ mkdir -p \
 # ------------------------------------------------------------------------------
 echo -e "${BLUE}📝 (2/6) Writing lifecycle Markdown templates...${RESET}"
 
-cat << 'EOF' > templates/intent.template.md
+cat << 'EOF' > docs/templates/intent.template.md
 # Intent: [Short Feature / Improvement Title]
 
 **Author**: [Name or Agent ID]  
@@ -207,7 +207,7 @@ cat << 'EOF' > templates/intent.template.md
 - **Ready for Stage 2 (Design)**: `specs/[NNN-title].md`
 EOF
 
-cat << 'EOF' > templates/spec.template.md
+cat << 'EOF' > docs/templates/spec.template.md
 # Spec: [Feature / Improvement Name]
 
 **Linked Intent**: [`intent/NNN-title.md`](file:///intent)  
@@ -292,7 +292,7 @@ And [no internal system details or stack traces are leaked]
 - **Ready for Stage 3 (Build)**: `plans/[NNN-title].md`
 EOF
 
-cat << 'EOF' > templates/plan.template.md
+cat << 'EOF' > docs/templates/plan.template.md
 # Plan: [Implementation Task / Milestone Name]
 
 **Linked Spec**: [`specs/NNN-title.md`](file:///specs)  
@@ -357,7 +357,7 @@ cat << 'EOF' > templates/plan.template.md
 - [ ] **Zero Anti-Shortcuts**: No `TODO`, `FIXME`, or mocked implementations remaining.
 EOF
 
-cat << 'EOF' > templates/review.template.md
+cat << 'EOF' > docs/templates/review.template.md
 # PR Review Audit Report
 
 **Pull Request**: # [PR Number / Branch Name]  
@@ -414,7 +414,7 @@ cat << 'EOF' > templates/review.template.md
 - **Human Code Owner Sign-Off**: [ ] Approved by @[username]
 EOF
 
-cat << 'EOF' > templates/incident-intent.template.md
+cat << 'EOF' > docs/templates/incident-intent.template.md
 # Intent: Incident Anomaly Remediation [INC-NNN]
 
 **Trigger Source**: [Automated Control Band Breach / Metric Alert / Sentry / Datadog / Cron]  
@@ -853,11 +853,11 @@ fi
 
 STAGED_SRC=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^src/' || true)
 if [ -n "$STAGED_SRC" ]; then
-    INTENT_COUNT=$(find intent -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
-    SPEC_COUNT=$(find specs -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
-    PLAN_COUNT=$(find plans -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
+    INTENT_COUNT=$(find docs/intent intent -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
+    SPEC_COUNT=$(find docs/specs specs -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
+    PLAN_COUNT=$(find docs/plans plans -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" 2>/dev/null | wc -l | tr -d ' ')
     if [ "$INTENT_COUNT" -eq 0 ] || [ "$SPEC_COUNT" -eq 0 ] || [ "$PLAN_COUNT" -eq 0 ]; then
-        echo "❌ SDLC VIOLATION: Source code modified in src/ without complete artifact chain (intent/spec/plan)."
+        echo "❌ SDLC VIOLATION: Source code modified in src/ without complete artifact chain (docs/intent, docs/specs, docs/plans)."
         exit 1
     fi
 fi

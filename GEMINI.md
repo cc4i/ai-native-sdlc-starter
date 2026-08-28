@@ -7,8 +7,8 @@ This file provides system instructions, conventions, and operational workflows f
 ## 🎯 Primary Directives & Workflow Loop
 
 We follow the **AI-Native SDLC** lifecycle:
-1. **Never write non-trivial code without an approved `plan.md`** (located under `plans/`).
-2. **Always ground planning in `spec.md`** (located under `specs/`) and `intent.md` (located under `intent/`).
+1. **Never write non-trivial code without an approved `plan.md`** (located under `docs/plans/` or `plans/`).
+2. **Always ground planning in `spec.md`** (located under `docs/specs/` or `specs/`) and `intent.md` (located under `docs/intent/` or `intent/`).
 3. **Strict Test-Driven Development (TDD)**:
    - For new features: Write failing interface test -> Implement minimum code -> Refactor -> Verify green.
    - For bug fixes: Write reproducing test that fails -> Fix implementation without modifying the test -> Verify green.
@@ -27,16 +27,19 @@ We follow the **AI-Native SDLC** lifecycle:
 | **Run Linter** | `make lint` | Runs code quality, type checks, and security scanners. |
 | **Run Evals** | `make eval` | Runs continuous AI regression tests (`evals/run_evals.py`). |
 | **Format Code** | `make format` | Automatically formats codebase according to standard style. |
+| **Review PR** | `make review-pr` | Runs ReviewAgent on branch diff and posts audit report. |
 
 ---
 
 ## 📋 Artifact Locations & Schema
 
-All project decisions are tracked in version-controlled Markdown artifacts:
+All project decisions are tracked in version-controlled Markdown artifacts under `docs/`:
 
-- **`intent/`**: Originator problem statement, desired outcome, constraints (`intent/NNN-title.md`).
-- **`specs/`**: Formal requirements, Gherkin acceptance criteria (`Given / When / Then`), edge cases, and security boundaries (`specs/NNN-title.md`).
-- **`plans/`**: Micro-stepped execution groups, files to change, risk matrix, proof harness (`plans/NNN-title.md`), plus release milestones in `plans/00-ROADMAP.md`.
+- **`docs/intent/`**: Originator problem statement, desired outcome, constraints (`docs/intent/NNN-title.md`).
+- **`docs/specs/`**: Formal requirements, Gherkin acceptance criteria (`Given / When / Then`), edge cases, and security boundaries (`docs/specs/NNN-title.md`).
+- **`docs/plans/`**: Micro-stepped execution groups, files to change, risk matrix, proof harness (`docs/plans/NNN-title.md`), plus release milestones in `docs/plans/00-ROADMAP.md`.
+- **`docs/reviews/`**: PR Review audit reports and governance sign-offs (`docs/reviews/NNN-title.md`).
+- **`docs/templates/`**: Standard markdown templates for each SDLC stage.
 - **`evals/`**: AI regression test prompts, assertions, and execution configs.
 - **`REVIEW.md`**: Standard PR review criteria, severity definitions, and human approval rules.
 

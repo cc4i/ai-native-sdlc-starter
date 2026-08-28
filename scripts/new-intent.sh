@@ -16,15 +16,23 @@ if [ -z "$TITLE" ]; then
     exit 1
 fi
 
+# Detect directory target: prefer docs/intent/
+INTENT_DIR="intent"
+TEMPLATE_FILE="templates/intent.template.md"
+
+if [ -d "docs/intent" ]; then
+    INTENT_DIR="docs/intent"
+    TEMPLATE_FILE="docs/templates/intent.template.md"
+fi
+
 # Generate slug
 SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/^-+|-+$//g')
 
-# Calculate next sequence number in intent/
-EXISTING_COUNT=$(find intent -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" | wc -l | tr -d ' ')
+# Calculate next sequence number
+EXISTING_COUNT=$(find "$INTENT_DIR" -maxdepth 1 -name "[0-9][0-9][0-9]-*.md" | wc -l | tr -d ' ')
 NEXT_NUM=$(printf "%03d" $((EXISTING_COUNT + 1)))
 
-TARGET_FILE="intent/${NEXT_NUM}-${SLUG}.md"
-TEMPLATE_FILE="templates/intent.template.md"
+TARGET_FILE="${INTENT_DIR}/${NEXT_NUM}-${SLUG}.md"
 
 if [ -f "$TARGET_FILE" ]; then
     echo "❌ Error: File $TARGET_FILE already exists."

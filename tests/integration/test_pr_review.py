@@ -30,7 +30,10 @@ class TestPrReviewCliIntegration(unittest.TestCase):
         self.assertIn("Verdict**: `PASS`", result.stdout)
 
     def test_cli_review_pr_output_file(self):
-        out_file = self.root_dir / "reviews" / "test_temp_audit.md"
+        reviews_dir = self.root_dir / "docs" / "reviews"
+        if not reviews_dir.exists():
+            reviews_dir = self.root_dir / "reviews"
+        out_file = reviews_dir / "test_temp_audit.md"
         cmd = [
             "python3",
             "-m",

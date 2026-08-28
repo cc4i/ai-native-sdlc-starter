@@ -1,0 +1,42 @@
+# ==============================================================================
+# Stage 6 Control Bands Specification (bands.yaml)
+# ==============================================================================
+# Defines operational metrics, rolling baseline defaults, and sigma tier thresholds
+# for automated Stage 6 anomaly detection and loop closing.
+#
+# Tiers:
+#   1  log       Normal variation (< 2.0 sigma) - Record point in metrics ledger.
+#   2  diagnose  Elevated deviation (>= 2.0 sigma) - Invoke AI agent in read-only mode to diagnose.
+#   3  act       Critical breach (>= 3.0 sigma) - Automated Stage 1 intent generation / PR.
+# ==============================================================================
+
+defaults:
+  baseline_days: 28
+  min_baseline_points: 14
+  sigma:
+    log: 1.0
+    diagnose: 2.0
+    act: 3.0
+  min_absolute_change: 0.0
+
+metrics:
+  - name: daily_llm_cost_usd
+    description: Total LLM inference cost in USD per day across agents
+    unit: USD
+    direction: increase
+    min_absolute_change: 5.0
+    tier_3_action: open_intent_pr
+
+  - name: daily_test_failure_rate_pct
+    description: Percentage of test or verification runs failing in CI
+    unit: percent
+    direction: increase
+    min_absolute_change: 2.0
+    tier_3_action: open_intent_pr
+
+  - name: daily_unhandled_exceptions
+    description: Count of unhandled exceptions logged in production
+    unit: count
+    direction: increase
+    min_absolute_change: 3.0
+    tier_3_action: open_intent_pr
