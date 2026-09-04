@@ -1,13 +1,14 @@
-# AI-Native SDLC Starter Template (Antigravity Edition)
+# AI-Native SDLC Starter Template (Multi-Agent Edition)
 
 [![CI Build](https://github.com/cc4i/ai-native-sdlc-starter/actions/workflows/ai-evals.yml/badge.svg)](https://github.com/cc4i/ai-native-sdlc-starter/actions)
 [![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
 [![Packaging: uv](https://img.shields.io/badge/packaging-uv-purple.svg)](https://github.com/astral-sh/uv)
 [![CodeGraph Integrated](https://img.shields.io/badge/codegraph-integrated-orange.svg)](https://github.com/colbymchenry/codegraph)
+[![Agents: Multi-Agent](https://img.shields.io/badge/agents-Claude%20Code%20%7C%20Antigravity%20%7C%20Codex%20%7C%20Cursor-blueviolet.svg)](#-universal-multi-agent-support)
 [![SDLC: AI-Native](https://img.shields.io/badge/SDLC-AI--Native-brightgreen.svg)](#-the-6-stages-at-a-glance)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> An enterprise-grade, stage-by-stage starter template for the **AI-Native Software Development Life Cycle (SDLC)**, adapted from Anthropic's AI-Native SDLC Playbook and powered by **Google Antigravity**.
+> An enterprise-grade, stage-by-stage starter template for the **AI-Native Software Development Life Cycle (SDLC)**, adapted from Anthropic's AI-Native SDLC Playbook with first-class support for **Anthropic Claude Code**, **Google Antigravity**, **OpenAI Codex**, **Cursor**, and **GitHub Copilot**.
 
 👉 **New to this repo? Start with the [Team & Developer Onboarding Guide](ONBOARDING.md).**
 
@@ -70,14 +71,34 @@ Every stage produces a version-controlled, human-readable, and machine-actionabl
 
 ## 🔄 The 6 Stages at a Glance
 
-| Stage | Traditional SDLC | AI-Native SDLC (Antigravity) | Primary Artifact |
+| Stage | Traditional SDLC | AI-Native SDLC (Multi-Agent) | Primary Artifact |
 | :--- | :--- | :--- | :--- |
 | **1. Plan** | Requirements gathered across weeks by committee | Originator brainstorms with AI via `/grill-me` into a structured proto-spec | [`docs/intent/NNN-title.md`](docs/intent) |
 | **2. Design** | Analyst specs handed off to designers and architects | Requirements + Architecture compressed into one session with brand, UX & security skills | [`docs/specs/NNN-title.md`](docs/specs) |
-| **3. Build** | Developer starts coding blindly from tickets; tribal knowledge | Plan-first mode (`plan.md`), TDD execution with subagents, shared rules in `GEMINI.md` | [`docs/plans/NNN-title.md`](docs/plans) + Code |
+| **3. Build** | Developer starts coding blindly from tickets; tribal knowledge | Plan-first mode (`plan.md`), TDD execution, shared rules in `CLAUDE.md` / `GEMINI.md` / `AGENTS.md` | [`docs/plans/NNN-title.md`](docs/plans) + Code |
 | **4. Test** | QA testing at release boundaries | Tight inner feedback loop (`make verify`), test-first bug reproduction, continuous CI evals | Test suites + [`evals/`](evals) |
 | **5. Deploy** | Humans manually review every line of agent diffs | Automated PR review in CI (`make review-pr`), policy in `REVIEW.md`, human release gate | [`REVIEW.md`](REVIEW.md) + [`docs/reviews/`](docs/reviews) |
 | **6. Maintain** | Reactive 3 AM on-call triage and stale postmortems | Statistical control bands (`bands.yaml`), metric anomaly detector triggers Stage 1 intent | [`bands.yaml`](bands.yaml) + `docs/intent/incident-NNN.md` |
+
+---
+
+## 🤖 Universal Multi-Agent Support
+
+This repository works natively across all leading AI engineering assistants and terminal agents:
+
+| Coding Tool / Agent | Directives File | Slash Commands & Workflow | Configuration & Launch |
+| :--- | :--- | :--- | :--- |
+| **Anthropic Claude Code** | `CLAUDE.md` | `.claude/commands/` (`/grill-me`, `/spec-architect`, `/verify`, `/review-pr`) | Run `claude` in project root |
+| **Google Antigravity** | `GEMINI.md` | `.gemini/skills/`, `.gemini/agents/`, `.gemini/hooks.json` | Open project in Antigravity |
+| **OpenAI Codex / CLI** | `CODEX.md` & `AGENTS.md` | Standard prompt workflows adhering to `AGENTS.md` | Launch Codex CLI or OpenAI Agent |
+| **Cursor IDE** | `.cursorrules` & `.cursor/rules/sdlc.mdc` | Composer / Agent Mode prompts | Open repository in Cursor |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | Copilot Workspace & Copilot Chat | Open in VS Code or GitHub |
+
+All coding tools share the exact same SDLC contracts:
+1. **Unbroken Chain**: `intent.md ➔ spec.md ➔ plan.md` required before modifying `src/`.
+2. **Strict TDD**: Write failing tests before implementation; never weaken test assertions.
+3. **Single-Command Verification**: Run `make verify` before declaring any task complete.
+4. **Autonomous Review**: Run `make review-pr` using Claude, OpenAI, or Gemini backends.
 
 ---
 
@@ -131,14 +152,18 @@ Detailed operational guides, scalability patterns, and complete file anatomy:
 * **How to run**:
   1. Run local review on branch diff: `make review-pr` (or `python3 -m src.cli review-pr --base origin/main`).
   2. Save persistent report to `docs/reviews/00X-feature-name.md`.
-  3. Open a Pull Request (`gh pr create`). GitHub Actions automatically runs `ReviewAgent` (Tier 1 deterministic + Tier 2 Gemini 3.7 Flash) and posts inline diff comments with 1-click suggestions.
+  3. Open a Pull Request (`gh pr create`). GitHub Actions automatically runs `ReviewAgent` (Tier 1 deterministic security passes + Tier 2 multi-provider semantic review with Claude, OpenAI, or Gemini) and posts inline diff comments with 1-click suggestions.
   4. Code owner approves and merges the Pull Request.
   5. Record the merge commit hash in the plan: `Shipped: <COMMIT_SHA>`.
 
 > [!TIP]
 > **One-Time GitHub Configuration for Autonomous PR Reviews**:
 > ```bash
-> # 1. Set Gemini API key for deep semantic reviews (optional but recommended):
+> # 1. Set an LLM API key for semantic review (Anthropic Claude, OpenAI, or Gemini):
+> gh secret set ANTHROPIC_API_KEY --body "YOUR_ANTHROPIC_API_KEY"
+> # OR:
+> gh secret set OPENAI_API_KEY --body "YOUR_OPENAI_API_KEY"
+> # OR:
 > gh secret set GEMINI_API_KEY --body "YOUR_GEMINI_API_KEY"
 >
 > # 2. Ensure GitHub Actions has write access to PRs:

@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from src.agent.gemini_reviewer import GeminiReviewer
+from src.agent.semantic_reviewer import BaseSemanticReviewer, get_semantic_reviewer
 from src.models.review import Finding, ReviewReport, Severity, Verdict
 from src.tools.ast_checker import AstSecurityCheckerTool
 from src.tools.secret_scanner import SecretScannerTool
@@ -14,13 +15,24 @@ from src.tools.spec_matcher import SpecComplianceTool
 
 
 class ReviewAgent:
-    """Orchestrates security, AST, spec compliance, and Gemini 3.7 Flash semantic tools to produce code review audits."""
+    """Orchestrates security, AST, spec compliance, and multi-provider semantic LLM tools to produce code review audits."""
 
-    def __init__(self, model: Optional[str] = None, api_key: Optional[str] = None):
+    def __init__(
+        self,
+        provider: Optional[str] = None,
+        model: Optional[str] = None,
+        api_key: Optional[str] = None,
+    ):
         self.secret_scanner = SecretScannerTool()
         self.ast_checker = AstSecurityCheckerTool()
         self.spec_matcher = SpecComplianceTool()
-        self.gemini_reviewer = GeminiReviewer(model=model, api_key=api_key)
+        self.semantic_reviewer: Optional[BaseSemanticReviewer] = get_semantic_reviewer(
+            provider=provider, model=model, api_key=api_key
+        )
+        if isinstance(self.semantic_reviewer, GeminiReviewer):
+            self.gemini_reviewer = self.semantic_reviewer
+        else:
+            self.gemini_reviewer = GeminiReviewer(model=model, api_key=api_key)
 
     def review_code(
         self,
@@ -82,7 +94,7 @@ class ReviewAgent:
                         spec_content=spec_content,
                     )
                     all_findings.extend(sub_report.findings)
-                except (OSError, UnicodeDecodeError):
+                except OSError, UnicodeDecodeError:
                     continue
 
         # Compute Overall Verdict
@@ -119,7 +131,7 @@ class ReviewAgent:
             "# PR Review Audit Report",
             "",
             f"**Target**: `{report.target_name}`  ",
-            "**Reviewer**: Autonomous Antigravity ReviewAgent  ",
+            "**Reviewer**: Autonomous AI ReviewAgent  ",
             f"**Date**: {date_str}  ",
             f"**Verdict**: `{report.verdict.value}`  ",
             "",

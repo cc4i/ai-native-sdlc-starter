@@ -11,6 +11,7 @@ This roadmap tracks all active and planned milestones for the repository across 
 | **008: Modern Tooling (uv), CodeGraph & Release Workflow** | [`specs/008-modern-tooling-codegraph-and-release.md`](../specs/008-modern-tooling-codegraph-and-release.md) | [`plans/008-modern-tooling-codegraph-and-release.md`](008-modern-tooling-codegraph-and-release.md) | COMPLETED | `2661740` | @antigravity |
 | **009: Streamlined Release Workflow (Tag & Cmd Triggered)** | [`specs/009-streamlined-git-release-workflow.md`](../specs/009-streamlined-git-release-workflow.md) | [`plans/009-streamlined-git-release-workflow.md`](009-streamlined-git-release-workflow.md) | COMPLETED | `52c3fd1` | @antigravity |
 | **010: Remove Legacy Branding References** | [`specs/010-remove-legacy-branding.md`](../specs/010-remove-legacy-branding.md) | [`plans/010-remove-legacy-branding.md`](010-remove-legacy-branding.md) | COMPLETED | `a5b3d51` | @antigravity |
+| **011: Multi-Agent AI SDLC Expansion (Claude Code, Codex, Cursor, Copilot)** | [`specs/011-multi-agent-sdlc-expansion.md`](../specs/011-multi-agent-sdlc-expansion.md) | [`plans/011-multi-agent-sdlc-expansion.md`](011-multi-agent-sdlc-expansion.md) | COMPLETED | - | @antigravity |
 
 ---
 
