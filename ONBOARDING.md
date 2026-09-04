@@ -1,7 +1,7 @@
 # Team & Developer Onboarding Guide: The AI-Native SDLC
 
 > **Welcome to the AI-Native Software Development Life Cycle (SDLC) Starter Template.**  
-> This guide is designed for developers, product managers, architects, and engineering leads who want to bootstrap new projects or adapt existing codebases to the AI-native workflow using **Google Antigravity**.
+> This guide is designed for developers, product managers, architects, and engineering leads who want to bootstrap new projects or adapt existing codebases to the AI-native workflow using **Anthropic Claude Code**, **Google Antigravity**, **OpenAI Codex**, **Cursor**, or **GitHub Copilot**.
 
 ---
 
@@ -179,7 +179,17 @@ EOF
 
 ## 4. Prompt Recipes & Slash Command Cheat Sheet
 
-### 🎯 Slash Commands Available in Antigravity
+### ⚡ Slash Commands Available in Anthropic Claude Code
+
+| Command | Lifecycle Stage | Action Performed |
+| :--- | :--- | :--- |
+| **`/grill-me`** | Stage 1: Plan | Socratic requirements interview; synthesizes output into `docs/intent/` |
+| **`/spec-architect`** | Stage 2: Design | Transforms approved `intent.md` into Gherkin-compliant `docs/specs/` |
+| **`/verify`** | Stage 4: Test | Runs single-command quality verification (`make verify`) |
+| **`/review-pr`** | Stage 5: Deploy | Runs autonomous multi-pass code review audit on current branch diff |
+| **`/new-intent`** | Stage 1: Plan | Scaffolds a new intent document from standard template |
+
+### 🎯 Slash Commands Available in Google Antigravity
 
 | Command | When to Use | Example |
 | :--- | :--- | :--- |
@@ -188,7 +198,13 @@ EOF
 | **`/goal`** | For long-running, autonomous multi-step execution | `"/goal Implement all execution groups in plans/001-feature.md until make verify is green"` |
 | **`/owl`** | For complex refactoring, multi-perspective strategic analysis & proof | `"/owl Review our data migration plan and find edge cases"` |
 | **`/schedule`** | To set one-time reminders or recurring background tasks | `"/schedule @hourly run evals and check test status"` |
-| **`/learn`** | When you correct the agent and want to persist the rule in `GEMINI.md` | `"/learn Always use Decimal for currency calculations in this repo"` |
+| **`/learn`** | When you correct the agent and want to persist the rule in directives | `"/learn Always use Decimal for currency calculations in this repo"` |
+
+### 🤖 OpenAI Codex, Cursor & GitHub Copilot Workflows
+
+- **OpenAI Codex CLI**: Loads system instructions from [`CODEX.md`](CODEX.md) and [`AGENTS.md`](AGENTS.md). Prompt directly: `"Read docs/intent/001-feature.md and implement the plan following strict TDD."`
+- **Cursor IDE**: Directives automatically loaded from [`.cursorrules`](.cursorrules) and [`.cursor/rules/sdlc.mdc`](.cursor/rules/sdlc.mdc). Use Composer or Agent mode.
+- **GitHub Copilot**: Context loaded from [`.github/copilot-instructions.md`](.github/copilot-instructions.md).
 
 ---
 
@@ -258,7 +274,12 @@ Keep `GEMINI.md` under one page so that it acts as high-signal working memory ra
 
 | Directory / File | Lifecycle Stage | Description | Single Source of Truth |
 | :--- | :--- | :--- | :--- |
-| [`GEMINI.md`](GEMINI.md) | Universal | Core agent directives, conventions, commands | Agent Working Context |
+| [`CLAUDE.md`](CLAUDE.md) | Universal | System instructions and commands for Anthropic Claude Code | Claude Code Working Context |
+| [`GEMINI.md`](GEMINI.md) | Universal | System instructions and directives for Google Antigravity | Antigravity Working Context |
+| [`AGENTS.md`](AGENTS.md) | Universal | Universal cross-agent directives standard | Open Agent Specification |
+| [`CODEX.md`](CODEX.md) | Universal | System instructions for OpenAI Codex | Codex Working Context |
+| [`.cursorrules`](.cursorrules) | Universal | IDE directives and lifecycle rules for Cursor | Cursor IDE Rules |
+| [`.claude/commands/`](.claude/commands) | Tooling | Custom slash commands for Claude Code (`/grill-me`, `/verify`, etc.) | Claude Workflow Tools |
 | [`REVIEW.md`](REVIEW.md) | Stage 5: Deploy | Review policies, severity tiers, approval rules | Code Review Standard |
 | [`bands.yaml`](bands.yaml) | Stage 6: Maintain | Statistical control bands configuration ($\sigma$ tiers) | Anomaly Thresholds |
 | [`pyproject.toml`](pyproject.toml) | Packaging | PEP 621 metadata, Python >=3.14, `uv` dependency management | Dependency Specification |
@@ -270,7 +291,7 @@ Keep `GEMINI.md` under one page so that it acts as high-signal working memory ra
 | [`docs/reviews/`](docs/reviews) | Stage 5: Deploy | PR Review audit reports & sign-offs | Governance Records |
 | [`docs/templates/`](docs/templates) | Templates | Standard markdown templates for all lifecycle stages | Artifact Schemas |
 | [`src/`](src) | Stage 3: Build | Core application source code & review agent | Production Implementation |
-| [`tests/`](tests) | Stage 4: Test | Automated unit, integration, and contract tests (33 tests) | Behavioral Verification |
+| [`tests/`](tests) | Stage 4: Test | Automated unit, integration, and contract tests | Behavioral Verification |
 | [`evals/`](evals) | Stage 4: Test | Continuous AI evaluation regression suite | Agent Instruction Testing |
 | [`scripts/`](scripts) | Developer Tooling | `verify.sh`, `new-intent.sh`, `check-artifacts.sh`, `agent_guard.py` | Local Toolchain |
 | [`.gemini/skills/`](.gemini/skills) | Knowledge | Versioned enterprise knowledge & policies | Institutional Memory |
@@ -281,5 +302,8 @@ Keep `GEMINI.md` under one page so that it acts as high-signal working memory ra
 ## 🚀 Ready to Build?
 
 1. Scaffold your first feature: `make new-intent TITLE="My First Feature"`
-2. Tell Antigravity: `"/grill-me let's brainstorm this feature!"`
+2. Launch your coding agent of choice:
+   - **Claude Code**: Run `claude` and type `/grill-me let's brainstorm this feature!`
+   - **Google Antigravity**: Prompt `/grill-me let's brainstorm this feature!`
+   - **OpenAI Codex / Cursor**: Ask the agent to review `docs/intent/` and generate the spec following `AGENTS.md`.
 3. Happy building in the AI-Native SDLC!

@@ -1,6 +1,6 @@
-# Project Agent Directives (GEMINI.md)
+# Anthropic Claude Code Agent Directives (CLAUDE.md)
 
-This file provides system instructions, conventions, and operational workflows for **Antigravity** and any autonomous subagents working on this repository.
+This file provides system instructions, conventions, and operational workflows for **Anthropic Claude Code** and autonomous agents operating in this repository.
 
 ---
 
@@ -32,6 +32,17 @@ We follow the **AI-Native SDLC** lifecycle:
 
 ---
 
+## ⚡ Custom Claude Code Slash Commands
+
+Custom slash commands are available under `.claude/commands/`:
+- `/grill-me`: Socratic interview to interrogate requirements and formulate an `intent.md` artifact.
+- `/spec-architect`: Transform approved `intent.md` into Gherkin-compliant `spec.md`.
+- `/verify`: Execute the full single-command verification suite (`make verify`).
+- `/review-pr`: Run multi-pass automated code review audit on current git diff.
+- `/new-intent`: Scaffold a new feature intent document in `docs/intent/`.
+
+---
+
 ## 📋 Artifact Locations & Schema
 
 All project decisions are tracked in version-controlled Markdown artifacts under `docs/`:
@@ -49,8 +60,8 @@ All project decisions are tracked in version-controlled Markdown artifacts under
 ## 🏗️ Architecture & Conventions
 
 1. **Clean Separation of Concerns**:
-   - `src/` (or equivalent application directory): Core business logic isolated from presentation and network drivers.
-   - `scripts/`: Tooling, build scripts, and developer productivity utilities.
+   - `src/`: Core business logic isolated from presentation and network drivers.
+   - `scripts/`: Tooling, build scripts, verification, and developer productivity utilities.
    - `tests/`: Automated unit, integration, and contract tests.
 2. **Security & Privacy Guardrails**:
    - No hardcoded API keys, JWT secrets, or sensitive tokens. Always use environment variables or secret managers.
@@ -65,15 +76,15 @@ All project decisions are tracked in version-controlled Markdown artifacts under
 ## 🧠 Codebase Intelligence & Scalability (CodeGraph)
 
 - If `.codegraph/` exists or the `codegraph_explore` MCP tool is available:
-  1. **Before editing or refactoring**: Query `codegraph_explore` to inspect callers, callees, and the change's blast radius instead of manually grepping files.
-  2. **In Stage 2 (Design) & Stage 3 (Build)**: Use CodeGraph to populate the "Affected Callers & Blast Radius" section in `plan.md`.
-  3. **In Stage 5 (Deploy / PR Review)**: Cross-check diffs against CodeGraph to catch breaking signature changes across un-staged files.
+  1. **Before editing or refactoring**: Inspect callers, callees, and the change's blast radius.
+  2. **In Stage 2 (Design) & Stage 3 (Build)**: Populate "Affected Callers & Blast Radius" in `plan.md`.
+  3. **In Stage 5 (Deploy / PR Review)**: Cross-check diffs against CodeGraph to catch breaking signature changes.
 - Refer to `docs/architecture/SCALING_AND_CODEGRAPH.md` for full guidance.
 
 ---
 
-## 🚨 Troubleshooting & Gotchas
+## 🚨 Troubleshooting & Rules of Engagement
 
 - **Do not modify test files during bug fixing** unless the test itself was proven to be incorrectly specified in `spec.md`.
 - **If a task touches generated files** or vendor dependencies, verify against schema definitions rather than manual edits.
-- **Keep `GEMINI.md` concise**: When a mistake happens twice, add a single bullet point here so future agent sessions don't repeat it.
+- Always run `make verify` before declaring completion.

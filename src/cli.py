@@ -72,16 +72,28 @@ def main():
         "--inline-json", help="Path to output GitHub PR review JSON payload", default=None
     )
     review_pr_parser.add_argument(
+        "--provider",
+        choices=["gemini", "claude", "openai", "auto"],
+        default=None,
+        help="LLM provider for semantic review (gemini, claude, openai, auto)",
+    )
+    review_pr_parser.add_argument(
         "--use-gemini", action="store_true", help="Enable semantic review with Gemini 3.7 Flash"
     )
     review_pr_parser.add_argument(
-        "--model", help="Gemini model name (default: gemini-3.7-flash)", default="gemini-3.7-flash"
+        "--semantic",
+        action="store_true",
+        help="Enable semantic review with configured LLM provider",
     )
+    review_pr_parser.add_argument("--model", help="LLM model name (optional)", default=None)
 
     args = parser.parse_args()
 
-    model_name = getattr(args, "model", "gemini-3.7-flash")
-    agent = ReviewAgent(model=model_name)
+    provider = getattr(args, "provider", None)
+    if getattr(args, "use_gemini", False):
+        provider = "gemini"
+    model_name = getattr(args, "model", None)
+    agent = ReviewAgent(provider=provider, model=model_name)
     spec_content = ""
     if args.spec:
         spec_path = Path(args.spec)
@@ -143,25 +155,31 @@ def main():
                 spec_content=spec_content,
             )
 
-            # Pass 2: Optional Gemini 3.7 Flash semantic analysis
-            if args.use_gemini and agent.gemini_reviewer.is_available() and diff_text.strip():
+            # Pass 2: Optional multi-provider semantic analysis (Gemini, Claude, OpenAI)
+            enable_semantic = (
+                getattr(args, "use_gemini", False)
+                or getattr(args, "semantic", False)
+                or (getattr(args, "provider", None) is not None)
+            )
+            reviewer = agent.semantic_reviewer
+            if enable_semantic and reviewer and reviewer.is_available() and diff_text.strip():
                 review_policy = ""
                 policy_file = Path("REVIEW.md")
                 if policy_file.exists():
                     review_policy = policy_file.read_text(encoding="utf-8")
 
-                gemini_report = agent.gemini_reviewer.review_diff(
+                semantic_report = reviewer.review_diff(
                     diff_text=diff_text,
                     review_policy=review_policy,
                     spec_content=spec_content,
                 )
-                if gemini_report and gemini_report.findings:
-                    report.findings.extend(gemini_report.findings)
-                    # Recompute verdict if gemini found blockers
-                    if any(f.severity == Severity.BLOCKER for f in gemini_report.findings):
+                if semantic_report and semantic_report.findings:
+                    report.findings.extend(semantic_report.findings)
+                    # Recompute verdict if semantic reviewer found blockers
+                    if any(f.severity == Severity.BLOCKER for f in semantic_report.findings):
                         report.verdict = Verdict.BLOCKED
                     elif (
-                        any(f.severity == Severity.IMPORTANT for f in gemini_report.findings)
+                        any(f.severity == Severity.IMPORTANT for f in semantic_report.findings)
                         and report.verdict == Verdict.PASS
                     ):
                         report.verdict = Verdict.CHANGES_REQUESTED

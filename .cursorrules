@@ -1,0 +1,18 @@
+# Cursor IDE Agent Rules (.cursorrules)
+
+You are operating within an AI-Native SDLC repository. Abide by these non-negotiable guidelines:
+
+1. ARTIFACTS BEFORE CODE:
+   - Do not write code in src/ without an approved plan in docs/plans/ matching an approved spec in docs/specs/.
+   - Check docs/intent/, docs/specs/, and docs/plans/ before generating or refactoring code.
+
+2. TEST-DRIVEN DEVELOPMENT (TDD):
+   - Always write failing tests first in tests/ before implementing application logic in src/.
+   - Never skip, comment out, or delete failing assertions. Fix the production code.
+
+3. MANDATORY VERIFICATION:
+   - Before completing any task, run `make verify`. It must exit with code 0 (zero lint errors, all tests passing).
+
+4. NO ANTI-SHORTCUTS:
+   - Do not use TODO comments, unimplemented stubs, or fake mocks in production files.
+   - Respect security: zero hardcoded secrets or sensitive tokens.

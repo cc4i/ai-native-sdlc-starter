@@ -45,7 +45,7 @@ class TestReleaseScript(unittest.TestCase):
         lines = [line.strip() for line in content.splitlines() if not line.strip().startswith("#")]
         self.assertFalse(
             any("git commit" in line for line in lines),
-            "scripts/release.sh must not execute 'git commit' on protected branches"
+            "scripts/release.sh must not execute 'git commit' on protected branches",
         )
 
     def test_release_script_supports_push_flag_in_help(self):

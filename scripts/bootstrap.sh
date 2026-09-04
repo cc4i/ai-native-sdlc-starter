@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# AI-Native SDLC Standalone Bootstrap Script (Antigravity Edition)
+# AI-Native SDLC Standalone Bootstrap Script (Multi-Agent Edition)
 # ==============================================================================
 # This script initializes ANY new or existing repository with the full
 # AI-Native SDLC architecture (intent, specs, plans, evals, skills, agents,
@@ -38,7 +38,7 @@ FORCE=false
 print_banner() {
     echo -e "${CYAN}${BOLD}"
     echo "================================================================================"
-    echo "  🚀 AI-Native SDLC Project Bootstrapper (Antigravity)"
+    echo "  🚀 AI-Native SDLC Project Bootstrapper (Multi-Agent Edition)"
     echo "================================================================================"
     echo -e "${RESET}"
 }
@@ -627,6 +627,150 @@ cat << 'EOF' > .gemini/agents/auditor.md
 Perform evidence-based checks against `spec.md` and `REVIEW.md`. Scan for anti-shortcuts and TODO stubs.
 EOF
 
+# Claude Code Custom Slash Commands (.claude/commands/)
+mkdir -p .claude/commands
+cat << 'EOF' > .claude/commands/grill-me.md
+---
+description: Interactively grill requirements, uncover edge cases, and capture intent into docs/intent/
+---
+
+You are the Product Owner and Guardian of the Spec conducting an interactive "Grill Loop".
+
+1. Ask targeted Socratic questions about the user's idea or feature request (maximum 3 questions at a time to avoid cognitive overload):
+   - Problem statement & target personas
+   - Success metrics & expected outcome
+   - Out-of-scope boundaries
+   - Critical edge cases, security constraints, and data flows
+2. Once ambiguity is resolved, synthesize the requirements into a structured intent document conforming to docs/templates/intent.template.md.
+3. Save the document to docs/intent/NNN-[feature-slug].md.
+4. Prompt the user to review and sign off before moving to Stage 2 (Spec Architecture).
+EOF
+
+cat << 'EOF' > .claude/commands/spec-architect.md
+---
+description: Transform an approved intent.md into an unambiguous Gherkin-compliant technical specification
+---
+
+You are the Spec Architect. Your mission is to take an approved intent artifact from docs/intent/ and transform it into a formal specification:
+
+1. Read the linked docs/intent/NNN-[feature-slug].md.
+2. Extract user stories, data flows, and security constraints.
+3. Formulate rigorous Gherkin acceptance scenarios (Given / When / Then) covering:
+   - Primary happy path
+   - Boundary inputs & edge cases
+   - Authentication, authorization, and error handling
+   - Performance and timeouts
+4. Structure the document strictly according to docs/templates/spec.template.md.
+5. Save the output to docs/specs/NNN-[feature-slug].md.
+6. Inform the user that the spec is ready for adversarial review and implementation planning.
+EOF
+
+cat << 'EOF' > .claude/commands/verify.md
+---
+description: Run the single-command verification suite (make verify) and validate zero regressions
+---
+
+Run make verify in the terminal to execute the full quality verification suite:
+- Linting and type checks
+- Code format validation
+- Unit and integration tests
+- Build checks
+
+If any check fails, analyze the failure and fix the implementation code. Never alter failing test assertions to mask a bug. Report the final test count and verification status clearly.
+EOF
+
+cat << 'EOF' > .claude/commands/review-pr.md
+---
+description: Run the autonomous ReviewAgent audit on branch diff and produce a PR review report
+---
+
+Execute make review-pr or python3 -m src.cli review-pr --base origin/main to run the autonomous multi-pass review agent:
+1. Pass 1: Secret & Credential Scanning (no hardcoded tokens or keys).
+2. Pass 2: AST Security & Anti-Pattern Analysis (eval, exec, shell injection).
+3. Pass 3: Spec Acceptance Compliance (checks Gherkin criteria in docs/specs/).
+4. Pass 4: Semantic Review (Gemini, Claude, or OpenAI review if API keys are configured).
+
+Report the verdict (PASS, CHANGES_REQUESTED, BLOCKED) and findings categorized by severity (Blocker, Important, Nit).
+EOF
+
+cat << 'EOF' > .claude/commands/new-intent.md
+---
+description: Scaffold a new intent artifact in docs/intent/ from the standard template
+---
+
+Run ./scripts/new-intent.sh "$ARGUMENTS" to scaffold a new intent file in docs/intent/NNN-[feature-slug].md.
+Then open the newly created file and prompt the user to begin the requirements interview loop (/grill-me).
+EOF
+
+# Universal Agent Directives (AGENTS.md & CODEX.md)
+cat << 'EOF' > AGENTS.md
+# Universal Agent Directives (AGENTS.md)
+
+This file defines universal system instructions, engineering standards, and lifecycle guardrails for all autonomous and pair-programming AI agents operating within this repository (OpenAI Codex, Cursor, Devin, GitHub Copilot, Anthropic Claude, and Google Antigravity).
+
+---
+
+## 🎯 Universal AI-Native SDLC Lifecycle
+
+1. **Artifact Chain Before Code**:
+   - Never write non-trivial code in src/ without an approved implementation plan in plans/.
+   - All planning must trace back to a validated specification (specs/) and feature intent (intent/).
+2. **Strict Test-Driven Development (TDD)**:
+   - Red: Failing test -> Green: Minimum code -> Refactor: Clean up while keeping green.
+   - Never gut or bypass failing tests.
+3. **Single-Command Verification**:
+   - Always run make verify (or ./scripts/verify.sh) before declaring any task complete.
+4. **Zero Anti-Shortcuts**:
+   - No TODO stubs or fake mocks in production code. Every step must be fully implemented and covered by tests.
+EOF
+
+cat << 'EOF' > CODEX.md
+# OpenAI Codex Directives (CODEX.md)
+
+This file provides system instructions, conventions, and operational workflows for OpenAI Codex and OpenAI-powered coding agents in this repository.
+
+---
+
+## 🎯 Primary Workflow & Lifecycle Rules
+1. Spec & Plan First: Never generate non-trivial code in src/ without an approved plan.md in plans/ grounded in specs/ and intent/.
+2. Strict TDD: Write failing tests in tests/ before implementing application logic in src/.
+3. Verification: Always run make verify before completing any task.
+4. No Placeholders: Zero TODO comments or unimplemented stubs in production files.
+EOF
+
+cat << 'EOF' > .cursorrules
+# Cursor IDE Agent Rules (.cursorrules)
+
+1. ARTIFACTS BEFORE CODE: Do not write code in src/ without an approved plan in plans/ matching an approved spec in specs/.
+2. TEST-DRIVEN DEVELOPMENT: Always write failing tests first in tests/ before implementing application logic in src/.
+3. MANDATORY VERIFICATION: Always run make verify before declaring completion. Zero lint errors and all tests must pass.
+4. NO ANTI-SHORTCUTS: Zero TODO comments, empty stubs, or hardcoded secrets.
+EOF
+
+mkdir -p .cursor/rules
+cat << 'EOF' > .cursor/rules/sdlc.mdc
+---
+description: AI-Native SDLC lifecycle guardrails, TDD requirements, and verification commands
+globs: ["src/**/*", "tests/**/*", "docs/**/*", "scripts/**/*"]
+alwaysApply: true
+---
+
+# AI-Native SDLC Lifecycle Rules
+1. Unbroken Chain: Ensure changes to src/ correspond to an approved artifact chain in intent/, specs/, and plans/.
+2. Strict TDD: Write or update tests in tests/ before implementing code in src/.
+3. Verification: Always execute make verify before submitting a change.
+EOF
+
+mkdir -p .github
+cat << 'EOF' > .github/copilot-instructions.md
+# GitHub Copilot Instructions (.github/copilot-instructions.md)
+
+You are an AI coding assistant working in this repository. Follow the AI-Native SDLC methodology:
+1. Specification & Planning Precedence: Check intent/, specs/, and plans/ before modifying code in src/.
+2. Test-Driven Development (TDD): Generate test cases in tests/ first. Never relax assertions.
+3. Verification: Run make verify to ensure code quality. No TODO placeholders or mock stubs.
+EOF
+
 # ------------------------------------------------------------------------------
 # 4. Generate Stack-Specific Directives & Scripts
 # ------------------------------------------------------------------------------
@@ -712,6 +856,48 @@ We follow the **AI-Native SDLC** lifecycle:
 ## 🚨 Gotchas & Rules
 - **Two-Strike Rule**: If the AI makes a mistake twice, add a single concise bullet point here so future agent sessions don't repeat it.
 - **Keep GEMINI.md concise**: Maximum 1 page of high-signal rules.
+EOF
+
+cat << EOF > CLAUDE.md
+# Anthropic Claude Code Agent Directives (CLAUDE.md)
+
+Project: **$PROJECT_NAME**  
+Stack: **$STACK**
+
+---
+
+## 🎯 Primary Directives & Workflow Loop
+
+We follow the **AI-Native SDLC** lifecycle:
+1. **Never write non-trivial code without an approved \`plan.md\`** (located under \`plans/\`).
+2. **Always ground planning in \`spec.md\`** (located under \`specs/\`) and \`intent.md\` (located under \`intent/\`).
+3. **Strict Test-Driven Development (TDD)**:
+   - For new features: Write failing interface test -> Implement minimum code -> Refactor -> Verify green.
+   - For bug fixes: Write reproducing test that fails -> Fix implementation without modifying the test -> Verify green.
+4. **Never Gut or Skip Failing Tests**: When a test fails, fix the code, not the test assertion.
+5. **Single-Command Verification**: Run \`make verify\` (or \`./scripts/verify.sh\`) before reporting any task complete.
+
+---
+
+## 🛠️ Essential Commands
+
+| Target | Command | Expected Output / Contract |
+| :--- | :--- | :--- |
+| **Verify All** | \`make verify\` | Runs lint, format check, unit tests, and build. Must exit 0. |
+| **Run Tests** | \`make test\` | Executes unit and integration test suite. Zero failures allowed. |
+| **Run Linter** | \`make lint\` | Runs code quality, type checks, and security scanners. |
+| **Run Evals** | \`make eval\` | Runs continuous AI regression tests (\`evals/run_evals.py\`). |
+| **Format Code** | \`make format\` | Automatically formats codebase according to standard style. |
+
+---
+
+## ⚡ Claude Code Slash Commands
+
+- \`/grill-me\`: Socratic interview to formulate \`intent.md\`
+- \`/spec-architect\`: Transform intent into Gherkin \`spec.md\`
+- \`/verify\`: Execute single-command verification (\`make verify\`)
+- \`/review-pr\`: Run autonomous code review audit
+- \`/new-intent\`: Scaffold a new feature intent artifact
 EOF
 
 cat << 'EOF' > REVIEW.md
@@ -1132,9 +1318,10 @@ echo -e "${GREEN}${BOLD}========================================================
 echo -e "${GREEN}${BOLD}✅ AI-Native SDLC Bootstrap Complete!${RESET}"
 echo -e "${GREEN}${BOLD}================================================================================${RESET}"
 echo ""
-echo -e "🚀 Next Steps to start building with Antigravity:"
-echo -e "  1. Review & customize ${BOLD}GEMINI.md${RESET} for project-specific rules."
-echo -e "  2. Scaffold your first feature: ${CYAN}make new-intent TITLE=\"Your Feature Name\"${RESET}"
-echo -e "  3. Open Antigravity and prompt: ${CYAN}\"/grill-me let's brainstorm intent/001-*.md\"${RESET}"
-echo -e "  4. Run verification harness: ${CYAN}make verify && make eval${RESET}"
+echo -e "🚀 Next Steps to start building with your AI coding tool:"
+echo -e "  • Claude Code:        Run ${CYAN}claude${RESET} and prompt ${CYAN}/grill-me${RESET} or ${CYAN}/verify${RESET}"
+echo -e "  • Google Antigravity: Open Antigravity and prompt: ${CYAN}\"/grill-me let's brainstorm intent/001-*.md\"${RESET}"
+echo -e "  • OpenAI Codex:       Directives loaded from ${BOLD}CODEX.md${RESET} and ${BOLD}AGENTS.md${RESET}"
+echo -e "  • Cursor / Copilot:   Directives loaded from ${BOLD}.cursorrules${RESET} and ${BOLD}.github/copilot-instructions.md${RESET}"
+echo -e "  • Verify harness:     Run ${CYAN}make verify${RESET} to test your setup anytime"
 echo ""

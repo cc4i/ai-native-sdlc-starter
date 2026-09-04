@@ -1,0 +1,13 @@
+---
+description: AI-Native SDLC lifecycle guardrails, TDD requirements, and verification commands
+globs: ["src/**/*", "tests/**/*", "docs/**/*", "scripts/**/*"]
+alwaysApply: true
+---
+
+# AI-Native SDLC Lifecycle Rules
+
+## Core Directives
+1. **Unbroken Chain**: Always ensure changes to `src/` correspond to an approved artifact chain in `docs/intent/`, `docs/specs/`, and `docs/plans/`.
+2. **Strict TDD**: Write or update tests in `tests/` before implementing code in `src/`. Keep test assertions intact.
+3. **Verification**: Always execute `make verify` before submitting a change.
+4. **Code Quality**: Follow PEP 8 and project style enforced by `ruff`. No anti-shortcuts or empty stubs.
