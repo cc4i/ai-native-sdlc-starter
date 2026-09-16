@@ -108,6 +108,7 @@ All coding tools share the exact same SDLC contracts:
 Detailed operational guides, scalability patterns, and complete file anatomy:
 
 - 📖 **[Developer & Team Onboarding Guide](ONBOARDING.md)**: Role-by-role practical workflows, prompt recipes, and complete repository anatomy.
+- 🦖 **[End-to-End Walkthrough: Dinosaur Runner Case Study](ONBOARDING.md#4-end-to-end-walkthrough-the-dinosaur-runner-case-study)**: Real-world walkthrough showing greenfield build, feature expansion, bug fixing (reproducing test first), and telemetry remediation.
 - 🧠 **[Codebase Intelligence & Scalability Guide](docs/architecture/SCALING_AND_CODEGRAPH.md)**: Integrating CodeGraph (`colbymchenry/codegraph`) to eliminate context bloat on large codebases.
 - 🚀 **[Release Management & Governance](docs/RELEASES.md)**: Semantic versioning, verification checklists, and release automation.
 - 🛡️ **[Code Review Policy (REVIEW.md)](REVIEW.md)**: PR review severity ladder (Blocker/Important/Nit) and human governance rules.
