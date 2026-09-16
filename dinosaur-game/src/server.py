@@ -6,8 +6,8 @@ Usage:
 """
 
 import argparse
+import functools
 import http.server
-import os
 import socketserver
 import webbrowser
 from pathlib import Path
@@ -20,9 +20,7 @@ def run_server(port: int = 8080, host: str = "127.0.0.1", open_browser: bool = T
     if not web_dir.exists():
         raise FileNotFoundError(f"Static web directory not found: {web_dir}")
 
-    os.chdir(web_dir)
-
-    handler = http.server.SimpleHTTPRequestHandler
+    handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(web_dir))
     socketserver.TCPServer.allow_reuse_address = True
 
     # Attempt to bind, fallback to alternative ports if occupied
