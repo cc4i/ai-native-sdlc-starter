@@ -11,6 +11,9 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${ROOT_DIR}"
 
+# Enforce project-local UV cache to avoid touching external environment or ~/.cache
+export UV_CACHE_DIR="${ROOT_DIR}/.uv_cache"
+
 echo "=================================================="
 echo "🚀 [SDLC Verify] Running Local Verification Loop..."
 echo "=================================================="

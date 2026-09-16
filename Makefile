@@ -1,5 +1,8 @@
 .DEFAULT_GOAL := help
 
+# Enforce project-local UV cache to avoid touching external environment or ~/.cache
+export UV_CACHE_DIR ?= $(CURDIR)/.uv_cache
+
 .PHONY: default all help init install-hooks verify test lint eval format new-intent review-pr release release-push release-remote audit clean
 
 default: help
@@ -26,9 +29,9 @@ help:
 
 init: install-hooks
 	@echo "🚀 Initializing AI-Native SDLC project repository..."
-	@mkdir -p docs/intent docs/specs docs/plans docs/reviews docs/templates evals .gemini/skills .gemini/agents .claude/commands .cursor/rules scripts .githooks
+	@mkdir -p docs/intent docs/specs docs/plans docs/reviews docs/templates evals .gemini/skills .gemini/agents .agents/skills .claude/commands .cursor/rules scripts .githooks
 	@chmod +x scripts/*.sh evals/*.py .githooks/* 2>/dev/null || true
-	@echo "✅ Initialization complete. Review CLAUDE.md, GEMINI.md, and AGENTS.md to tailor project instructions."
+	@echo "✅ Initialization complete. Review CLAUDE.md, GEMINI.md, AGENTS.md, and DSH.md to tailor project instructions."
 
 install-hooks:
 	@bash ./scripts/install-hooks.sh
@@ -101,4 +104,4 @@ audit:
 
 clean:
 	@echo "🧹 Cleaning temporary files..."
-	@rm -rf .pytest_cache .venv __pycache__ *.pyc
+	@rm -rf .pytest_cache .venv .uv_cache __pycache__ *.pyc

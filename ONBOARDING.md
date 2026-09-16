@@ -1,7 +1,7 @@
 # Team & Developer Onboarding Guide: The AI-Native SDLC
 
 > **Welcome to the AI-Native Software Development Life Cycle (SDLC) Starter Template.**  
-> This guide is designed for developers, product managers, architects, and engineering leads who want to bootstrap new projects or adapt existing codebases to the AI-native workflow using **Anthropic Claude Code**, **Google Antigravity**, **OpenAI Codex**, **Cursor**, or **GitHub Copilot**.
+> This guide is designed for developers, product managers, architects, and engineering leads who want to bootstrap new projects or adapt existing codebases to the AI-native workflow using **DeepSeek Harness**, **Anthropic Claude Code**, **Google Antigravity**, **OpenAI Codex**, **Cursor**, or **GitHub Copilot**.
 
 ---
 
@@ -15,9 +15,15 @@
    - [Software Engineers / Builders](#33-software-engineers--builders)
    - [Reviewers & QA Gatekeepers](#34-reviewers--qa-gatekeepers)
    - [SRE & On-Call Engineers](#35-sre--on-call-engineers)
-4. [Prompt Recipes & Slash Command Cheat Sheet](#4-prompt-recipes--slash-command-cheat-sheet)
-5. [Governance, Guardrails & The "Two-Strike Rule"](#5-governance-guardrails--the-two-strike-rule)
-6. [Repository Anatomy & Traceability Map](#6-repository-anatomy--traceability-map)
+4. [End-to-End Walkthrough: The Dinosaur Runner Case Study](#4-end-to-end-walkthrough-the-dinosaur-runner-case-study)
+   - [Action 1: Greenfield MVP Build](#41-action-1-greenfield-mvp-build)
+   - [Action 2: New Feature Flow](#42-action-2-new-feature-flow)
+   - [Action 3: Strict Bug-Fix Flow](#43-action-3-strict-bug-fix-flow-reproducing-test-first)
+   - [Action 4: SRE Anomaly Remediation Flow](#44-action-4-sre-anomaly-remediation-flow-stage-6-maintain)
+   - [Action 5: Quality Guardrails & Zero Error Swallowing](#45-action-5-quality-guardrails--zero-error-swallowing)
+5. [Prompt Recipes & Slash Command Cheat Sheet](#5-prompt-recipes--slash-command-cheat-sheet)
+6. [Governance, Guardrails & The "Two-Strike Rule"](#6-governance-guardrails--the-two-strike-rule)
+7. [Repository Anatomy & Traceability Map](#7-repository-anatomy--traceability-map)
 
 ---
 
@@ -177,7 +183,199 @@ EOF
 
 ---
 
-## 4. Prompt Recipes & Slash Command Cheat Sheet
+## 4. End-to-End Walkthrough: The Dinosaur Runner Case Study
+
+To understand how the AI-Native SDLC operates in practice across real development scenarios, this section walks through the complete lifecycle of building, expanding, fixing, and maintaining an offline **HTML5 Canvas Dinosaur Endless Runner Game** (inspired by Chromium's T-Rex runner).
+
+Every action follows the non-negotiable chain: **Intent ➔ Spec ➔ Plan ➔ TDD (Red/Green/Refactor) ➔ Verification ➔ Review**.
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        AI-NATIVE SDLC LIFECYCLE                        │
+│ Intent (docs/intent/) ──► Spec (docs/specs/) ──► Plan (docs/plans/)    │
+│           ▲                                            │               │
+│           │                                            ▼               │
+│ Maintain (bands.yaml) ◄── Review (docs/reviews/) ◄── TDD & make verify │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 4.1 Action 1: Greenfield MVP Build (`001: Core MVP`)
+
+* **Objective**: Build a responsive offline 2D canvas runner with jumping, ducking, procedural cacti and pterodactyl obstacles, score progression, and zero external image/audio assets.
+
+#### Stage 1: Capture Intent
+1. Scaffold intent:
+   ```bash
+   make new-intent TITLE="Dinosaur Runner Game"
+   ```
+2. Conduct the Socratic "Grill Loop" with the agent (using DSH `intent-capture` or Claude `/grill-me`):
+   - **Problem**: Users need an offline, ad-free retro arcade runner.
+   - **Constraints**: Pure HTML5/Canvas/CSS + Python standard library; zero external CDNs; procedural 8-bit sound synthesis via Web Audio API (`AudioContext`).
+3. Output: `docs/intent/001-dinosaur-runner-game.md`. Human Product Owner approves.
+
+#### Stage 2: Technical Specification & Gherkin
+1. Dispatch `spec-architect` to convert intent into formal requirements and testable acceptance criteria.
+2. Define Gherkin scenarios:
+   ```gherkin
+   Scenario: Jumping and gravity curve
+     Given a dinosaur running on the ground baseline (y = 0)
+     When the player presses Space, Up arrow, or taps the screen
+     Then a vertical upward impulse is applied (-vy)
+     And gravity gradually pulls the dinosaur back to the ground baseline (y = 0)
+     And the dinosaur cannot jump again while mid-air
+
+   Scenario: Axis-Aligned Bounding Box (AABB) Collision
+     Given a dinosaur at position (x, y) with hitbox D
+     And an obstacle at position (ox, oy) with hitbox O
+     When D intersects with O
+     Then a collision is detected and game state transitions to GAMEOVER
+   ```
+3. Output: `docs/specs/001-dinosaur-runner-game.md`.
+
+#### Stage 3: Micro-Stepped TDD Plan
+1. Dispatch `architect` to design execution groups and safety harness.
+2. Record milestone in `docs/plans/00-ROADMAP.md` (`001: Initial Core MVP`).
+3. Output: `docs/plans/001-dinosaur-runner-game.md` with 3 sequential groups:
+   - Group 1: Core physics & AABB collision engine.
+   - Group 2: Canvas renderer, sprites, and Web Audio API synthesizer.
+   - Group 3: Built-in Python static server and verification.
+
+#### Stage 4: Strict TDD Implementation
+1. **Red**: Write unit tests first in `tests/test_game_engine.py` asserting jump trajectory, gravity clamp, ducking hitbox reduction, and AABB intersection. Run `make test` ➔ **Fails** (`ModuleNotFoundError: No module named 'src'`).
+2. **Green**: Implement minimal code in `src/engine/physics.py` satisfying all assertions. Run `make test` ➔ **7/7 tests pass**.
+3. **Frontend & Server**: Implement `public/index.html`, `public/game.js`, `public/style.css`, and `src/server.py`.
+4. **Single-Command Verification**: Run `make verify` ➔ exits 0 with zero warnings.
+
+---
+
+### 4.2 Action 2: New Feature Flow (`002: Pause & Audio Mute`)
+
+* **Objective**: Add pause/resume controls (<kbd>P</kbd> or HUD button) and audio mute toggles (<kbd>M</kbd> or HUD icon) persisted in `localStorage`.
+
+1. **Scaffold Intent**:
+   ```bash
+   make new-intent TITLE="Pause and Audio Mute Controls"
+   ```
+   Author problem statement and constraints in `docs/intent/002-pause-and-audio-mute-controls.md`.
+2. **Author Spec**:
+   Define `docs/specs/002-pause-and-audio-mute-controls.md` with Gherkin criteria:
+   ```gherkin
+   Scenario: Pausing freezes game updates
+     Given a running game with score S and dinosaur velocity VY
+     When the player presses "P" or clicks the pause button
+     Then the game transitions to PAUSED state
+     And advancing time (dt) does not change score S, dinosaur y, or obstacle positions
+   ```
+3. **Create Plan**:
+   Write `docs/plans/002-pause-and-audio-mute-controls.md` and set Roadmap status to `IN_CONSTRUCTION`.
+4. **TDD Build**:
+   - **Red**: Add `test_session_pause_freezes_state` and `test_session_mute_toggle` in `tests/test_game_engine.py`. Run test ➔ **Fails** (`ImportError: cannot import name 'GameSession'`).
+   - **Green**: Implement `GameSession` in `src/engine/physics.py` and wire `togglePause()` / `toggleMute()` in `public/game.js`. Run test ➔ **9/9 tests pass**.
+5. **PR Review & Audit**:
+   Run `make review-pr` and save report to `docs/reviews/002-pause-and-audio-mute-controls.md`. Mark plan and roadmap status `COMPLETED`.
+
+---
+
+### 4.3 Action 3: Strict Bug-Fix Flow (Reproducing Test First!)
+
+* **Objective**: Fix a physics state-machine glitch where pressing jump while ducking resulted in a squashed dinosaur flying through mid-air (`is_jumping=True` AND `is_ducking=True`).
+
+> ⚠️ **The Non-Negotiable Bug-Fix Rule**:  
+> Always write a reproducing test that fails first. Fix the code to make it pass. **Never modify or weaken test assertions to force a pass.**
+
+1. **Capture Bug Intent**:
+   Document root cause in `docs/intent/003-fix-duck-jump-glitch.md`: `jump()` fails to clear `is_ducking`.
+2. **Draft Spec**:
+   `docs/specs/003-fix-duck-jump-glitch.md` defines state mutual exclusion: `jump()` cancels ducking; airborne ducking initiates fast-drop.
+3. **Plan**:
+   `docs/plans/003-fix-duck-jump-glitch.md`.
+4. **Reproducing Test (Red)**:
+   Add reproducing assertion in `tests/test_game_engine.py`:
+   ```python
+   def test_jumping_cancels_ducking_state(self):
+       self.dino.duck(True)
+       self.dino.jump()
+       self.assertTrue(self.dino.is_jumping)
+       self.assertFalse(self.dino.is_ducking, "Dinosaur must not be ducking while jumping")
+   ```
+   Run `make test` ➔ **FAILS**:
+   ```
+   AssertionError: True is not false : Dinosaur must not be ducking while jumping
+   ```
+5. **Fix Implementation (Green)**:
+   Update `Dinosaur.jump()` in `src/engine/physics.py` and `public/game.js` to set `self.is_ducking = False`.
+   Run `make test` ➔ **PASSED cleanly without touching the test assertion!**
+6. **Verification**: Run `make verify` (all 10 tests green). Record review audit in `docs/reviews/003-fix-duck-jump-glitch.md`.
+
+---
+
+### 4.4 Action 4: SRE Anomaly Remediation Flow (Stage 6 Maintain)
+
+* **Objective**: Detect and remediate telemetry breaches using statistical control bands.
+
+1. **Telemetry & Control Bands (`bands.yaml`)**:
+   Define metric thresholds:
+   ```yaml
+   metrics:
+     obstacle_min_spacing:
+       description: Minimum distance in pixels between consecutive obstacles
+       target: 140.0
+       lower_threshold_3sigma: 95.0
+       action: escalate_to_intent
+   ```
+2. **Metric Breach Detected (`INC-001`)**:
+   At high scroll speeds, random interval generation allowed obstacles to spawn within ~60px of each other (< 95px lower 3σ threshold), creating impossible-to-jump clusters.
+3. **Triage & Incident Intent**:
+   SRE sidecar files `docs/intent/004-incident-INC-001-obstacle-spacing-clamping.md` from `docs/templates/incident-intent.template.md`.
+4. **Spec & Plan**:
+   `docs/specs/004-obstacle-spacing-clamping.md` specifies `calculate_min_safe_gap(speed) >= 140.0px`.
+5. **TDD Remediation**:
+   - Red: Author `test_min_safe_obstacle_spacing` across speed tiers (200 to 680 px/s). Fails.
+   - Green: Implement `calculate_min_safe_gap` in `src/engine/physics.py` and clamp in `public/game.js`.
+6. **Operational Proof**:
+   ```bash
+   make check-bands  # Reports: ALL CONTROL BANDS NORMAL
+   make verify       # Exits 0 with all checks green
+   ```
+
+---
+
+### 4.5 Action 5: Quality Guardrails & Zero Error Swallowing
+
+A critical engineering standard in the AI-Native SDLC is **foolproof verification**:
+
+1. **Zero Error Swallowing (No `|| true`)**:
+   Never append `|| true` or `2>/dev/null` to test runners in verification scripts or Makefiles. Any failed assertion or unhandled exception must immediately halt execution with exit code `1`.
+2. **Web Asset & JavaScript Syntax Compilation**:
+   Python unit tests alone cannot detect frontend runtime errors. All web projects must enforce syntax checking:
+   ```bash
+   # Validate JavaScript syntax during make verify:
+   if command -v node >/dev/null 2>&1; then
+       for jsfile in $(find public src -name "*.js" 2>/dev/null); do
+           node -c "$jsfile"
+       done
+   fi
+   ```
+3. **Automated Server & Asset Integration Tests (`tests/test_web_assets.py`)**:
+   Automated tests spin up an ephemeral HTTP server, fetch `GET /` and `GET /game.js`, and verify HTTP 200 responses and valid MIME types.
+
+---
+
+### 4.6 Case Study Summary & Command Matrix
+
+| Scenario | Command to Trigger | Primary Artifact | Verification Gate |
+| :--- | :--- | :--- | :--- |
+| **New Feature** | `make new-intent TITLE="..."` | `docs/intent/00X-*.md` ➔ `docs/specs/00X-*.md` | `make verify` (Red ➔ Green) |
+| **Bug Fix** | Author bug intent & reproducing test | `docs/intent/fix-*.md` + `tests/test_*.py` | Reproducing test fails ➔ code fix ➔ green |
+| **SRE Anomaly** | `make check-bands` | `bands.yaml` ➔ `docs/intent/incident-*.md` | Telemetry threshold restored |
+| **PR Audit** | `make review-pr` | `docs/reviews/00X-*.md` | ReviewAgent verdict `PASS` |
+| **Play Game** | `make run` (in game project) | `http://127.0.0.1:8080/` | Interactive browser canvas |
+
+---
+
+## 5. Prompt Recipes & Slash Command Cheat Sheet
 
 ### ⚡ Slash Commands Available in Anthropic Claude Code
 
@@ -248,7 +446,7 @@ Output the audit report to docs/reviews/NNN-[feature-slug].md.
 
 ---
 
-## 5. Governance, Guardrails & The "Two-Strike Rule"
+## 6. Governance, Guardrails & The "Two-Strike Rule"
 
 To maintain velocity while preserving high code quality, enforce these 4 golden rules:
 
@@ -270,15 +468,17 @@ Keep `GEMINI.md` under one page so that it acts as high-signal working memory ra
 
 ---
 
-## 6. Repository Anatomy & Traceability Map
+## 7. Repository Anatomy & Traceability Map
 
 | Directory / File | Lifecycle Stage | Description | Single Source of Truth |
 | :--- | :--- | :--- | :--- |
+| [`DSH.md`](DSH.md) | Universal | System instructions and multi-agent mapping for DeepSeek Harness | DSH Working Context |
 | [`CLAUDE.md`](CLAUDE.md) | Universal | System instructions and commands for Anthropic Claude Code | Claude Code Working Context |
 | [`GEMINI.md`](GEMINI.md) | Universal | System instructions and directives for Google Antigravity | Antigravity Working Context |
 | [`AGENTS.md`](AGENTS.md) | Universal | Universal cross-agent directives standard | Open Agent Specification |
 | [`CODEX.md`](CODEX.md) | Universal | System instructions for OpenAI Codex | Codex Working Context |
 | [`.cursorrules`](.cursorrules) | Universal | IDE directives and lifecycle rules for Cursor | Cursor IDE Rules |
+| [`.agents/skills/`](.agents/skills) | Knowledge | Open Agent standard skills auto-discovered by DSH | Institutional Memory |
 | [`.claude/commands/`](.claude/commands) | Tooling | Custom slash commands for Claude Code (`/grill-me`, `/verify`, etc.) | Claude Workflow Tools |
 | [`REVIEW.md`](REVIEW.md) | Stage 5: Deploy | Review policies, severity tiers, approval rules | Code Review Standard |
 | [`bands.yaml`](bands.yaml) | Stage 6: Maintain | Statistical control bands configuration ($\sigma$ tiers) | Anomaly Thresholds |
@@ -303,6 +503,7 @@ Keep `GEMINI.md` under one page so that it acts as high-signal working memory ra
 
 1. Scaffold your first feature: `make new-intent TITLE="My First Feature"`
 2. Launch your coding agent of choice:
+   - **DeepSeek Harness (DSH)**: Open project in DSH, load `intent-capture` skill to brainstorm!
    - **Claude Code**: Run `claude` and type `/grill-me let's brainstorm this feature!`
    - **Google Antigravity**: Prompt `/grill-me let's brainstorm this feature!`
    - **OpenAI Codex / Cursor**: Ask the agent to review `docs/intent/` and generate the spec following `AGENTS.md`.

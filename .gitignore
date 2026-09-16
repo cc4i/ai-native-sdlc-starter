@@ -3,6 +3,11 @@ node_modules/
 vendor/
 .venv/
 env/
+.uv_cache/
+.gh_cache/
+
+# Local test & demo projects
+dinosaur-game/
 
 # Build & Test outputs
 dist/

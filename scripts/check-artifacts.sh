@@ -14,9 +14,9 @@ echo "  - Checking directory structure..."
 DOCS_PREFIX=""
 if [ -d "docs/intent" ]; then
     DOCS_PREFIX="docs/"
-    REQUIRED_DIRS=("docs/intent" "docs/specs" "docs/plans" "docs/reviews" "docs/templates" "evals" ".gemini/skills" ".gemini/agents")
+    REQUIRED_DIRS=("docs/intent" "docs/specs" "docs/plans" "docs/reviews" "docs/templates" "evals" ".agents/skills" ".gemini/skills" ".gemini/agents")
 else
-    REQUIRED_DIRS=("intent" "specs" "plans" "reviews" "evals" "templates" ".gemini/skills" ".gemini/agents")
+    REQUIRED_DIRS=("intent" "specs" "plans" "reviews" "evals" "templates" ".agents/skills" ".gemini/skills" ".gemini/agents")
 fi
 
 for dir in "${REQUIRED_DIRS[@]}"; do
