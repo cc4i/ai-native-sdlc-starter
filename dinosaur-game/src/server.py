@@ -50,8 +50,8 @@ def run_server(port: int = 8080, host: str = "127.0.0.1", open_browser: bool = T
     if open_browser:
         try:
             webbrowser.open(url)
-        except Exception:
-            pass
+        except Exception as err:
+            print(f"Notice: Could not auto-launch browser ({err}). Please open manually: {url}")
 
     with httpd:
         try:

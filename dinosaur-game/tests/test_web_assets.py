@@ -44,8 +44,7 @@ class TestWebAssets(unittest.TestCase):
                 f"JavaScript syntax error in game.js:\n{res.stderr}",
             )
         except FileNotFoundError:
-            # Fallback if node binary is not installed in the environment
-            pass
+            self.skipTest("node binary is not installed in the test environment")
 
     def test_server_serves_game_assets(self):
         """Spins up a lightweight server thread to verify HTTP 200 on / and /game.js."""

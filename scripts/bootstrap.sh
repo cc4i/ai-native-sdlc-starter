@@ -1380,24 +1380,29 @@ EOF
 fi
 
 cat << 'EOF' > scripts/check-control-bands.py
-#!/usr/bin/env bash
-set -euo pipefail
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-cd "${ROOT_DIR}"
+#!/usr/bin/env python3
+import sys
+from pathlib import Path
 
-if [ ! -f "bands.yaml" ]; then
-    echo "❌ Error: bands.yaml not found."
-    exit 1
-fi
 
-echo "📊 [Telemetry Guardrails] Checking Control Bands..."
-if grep -q "test_failure_count" bands.yaml; then
-    echo "  ✓ All metrics within healthy control bands."
-    exit 0
-else
-    echo "🚨 Control band anomaly detected."
-    exit 1
-fi
+def main():
+    root_dir = Path(__file__).resolve().parent.parent
+    bands_file = root_dir / "bands.yaml"
+    if not bands_file.exists():
+        print("❌ Error: bands.yaml not found.")
+        sys.exit(1)
+    print("📊 [Telemetry Guardrails] Checking Control Bands...")
+    content = bands_file.read_text(encoding="utf-8")
+    if "test_failure_count" in content:
+        print("  ✓ All metrics within healthy control bands.")
+        sys.exit(0)
+    else:
+        print("🚨 Control band anomaly detected.")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
 EOF
 chmod +x scripts/check-control-bands.py
 

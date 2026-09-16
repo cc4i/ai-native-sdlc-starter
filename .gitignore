@@ -4,6 +4,7 @@ vendor/
 .venv/
 env/
 .uv_cache/
+.gh_cache/
 
 # Build & Test outputs
 dist/
