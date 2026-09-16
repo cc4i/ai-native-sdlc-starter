@@ -1,6 +1,9 @@
 .DEFAULT_GOAL := help
 
-.PHONY: default all help init install-hooks verify test lint eval format new-intent review-pr release release-push release-remote audit clean
+# Enforce project-local UV cache to avoid touching external environment or ~/.cache
+export UV_CACHE_DIR ?= $(CURDIR)/.uv_cache
+
+.PHONY: default all help init install-hooks verify test lint eval format new-intent review-pr release release-push release-remote audit run clean
 
 default: help
 
@@ -13,6 +16,7 @@ help:
 	@echo "  make install-hooks  - Configure .githooks as git core.hooksPath"
 	@echo "  make verify         - Run full local feedback verification (test + lint + artifacts)"
 	@echo "  make test           - Run unit & integration test suite"
+	@echo "  make run            - Launch Dinosaur Game browser server"
 	@echo "  make lint           - Run syntax & code style linters"
 	@echo "  make eval           - Run continuous AI regression evaluation suite"
 	@echo "  make format         - Format codebase according to project standards"
@@ -24,11 +28,19 @@ help:
 	@echo "  make audit          - Check artifact chain linkages and anti-shortcuts"
 	@echo "  make clean          - Remove temporary caches and virtual environment artifacts"
 
+run:
+	@if [ -d "dinosaur-game" ]; then \
+		$(MAKE) -C dinosaur-game run; \
+	else \
+		echo "❌ dinosaur-game directory not found."; \
+		exit 1; \
+	fi
+
 init: install-hooks
 	@echo "🚀 Initializing AI-Native SDLC project repository..."
-	@mkdir -p docs/intent docs/specs docs/plans docs/reviews docs/templates evals .gemini/skills .gemini/agents .claude/commands .cursor/rules scripts .githooks
+	@mkdir -p docs/intent docs/specs docs/plans docs/reviews docs/templates evals .gemini/skills .gemini/agents .agents/skills .claude/commands .cursor/rules scripts .githooks
 	@chmod +x scripts/*.sh evals/*.py .githooks/* 2>/dev/null || true
-	@echo "✅ Initialization complete. Review CLAUDE.md, GEMINI.md, and AGENTS.md to tailor project instructions."
+	@echo "✅ Initialization complete. Review CLAUDE.md, GEMINI.md, AGENTS.md, and DSH.md to tailor project instructions."
 
 install-hooks:
 	@bash ./scripts/install-hooks.sh
@@ -101,4 +113,4 @@ audit:
 
 clean:
 	@echo "🧹 Cleaning temporary files..."
-	@rm -rf .pytest_cache .venv __pycache__ *.pyc
+	@rm -rf .pytest_cache .venv .uv_cache __pycache__ *.pyc

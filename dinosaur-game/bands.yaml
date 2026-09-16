@@ -1,0 +1,21 @@
+version: 1.0.0
+description: Statistical control bands and telemetry guardrails for Dinosaur Runner Game
+
+metrics:
+  obstacle_min_spacing:
+    description: Minimum distance in pixels between consecutive obstacles on the track
+    target: 140.0
+    lower_threshold_3sigma: 95.0
+    action: escalate_to_intent
+
+  max_scroll_speed:
+    description: Maximum speed multiplier for obstacle scrolling
+    target: 16.0
+    upper_threshold_3sigma: 18.0
+    action: alert_and_clamp
+
+  test_failure_count:
+    description: Automated test suite failures
+    target: 0
+    upper_threshold_3sigma: 0
+    action: block_deployment

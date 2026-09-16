@@ -1,6 +1,6 @@
 # Universal Agent Directives (AGENTS.md)
 
-This file defines the universal system instructions, engineering standards, and lifecycle guardrails for all autonomous and pair-programming AI agents operating within this repository (including OpenAI Codex, Cursor, Devin, GitHub Copilot, Anthropic Claude, and Google Antigravity).
+This file defines the universal system instructions, engineering standards, and lifecycle guardrails for all autonomous and pair-programming AI agents operating within this repository (including DeepSeek Harness, Anthropic Claude, Google Antigravity, OpenAI Codex, Cursor, Devin, and GitHub Copilot).
 
 ---
 

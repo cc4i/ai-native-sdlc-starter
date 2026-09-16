@@ -3,6 +3,7 @@ node_modules/
 vendor/
 .venv/
 env/
+.uv_cache/
 
 # Build & Test outputs
 dist/

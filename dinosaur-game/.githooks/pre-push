@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if command -v make >/dev/null 2>&1; then
+    make eval
+else
+    python3 ./evals/run_evals.py
+fi

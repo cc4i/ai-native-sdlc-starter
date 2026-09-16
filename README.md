@@ -4,11 +4,11 @@
 [![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
 [![Packaging: uv](https://img.shields.io/badge/packaging-uv-purple.svg)](https://github.com/astral-sh/uv)
 [![CodeGraph Integrated](https://img.shields.io/badge/codegraph-integrated-orange.svg)](https://github.com/colbymchenry/codegraph)
-[![Agents: Multi-Agent](https://img.shields.io/badge/agents-Claude%20Code%20%7C%20Antigravity%20%7C%20Codex%20%7C%20Cursor-blueviolet.svg)](#-universal-multi-agent-support)
+[![Agents: Multi-Agent](https://img.shields.io/badge/agents-DSH%20%7C%20Claude%20Code%20%7C%20Antigravity%20%7C%20Codex%20%7C%20Cursor-blueviolet.svg)](#-universal-multi-agent-support)
 [![SDLC: AI-Native](https://img.shields.io/badge/SDLC-AI--Native-brightgreen.svg)](#-the-6-stages-at-a-glance)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> An enterprise-grade, stage-by-stage starter template for the **AI-Native Software Development Life Cycle (SDLC)**, adapted from Anthropic's AI-Native SDLC Playbook with first-class support for **Anthropic Claude Code**, **Google Antigravity**, **OpenAI Codex**, **Cursor**, and **GitHub Copilot**.
+> An enterprise-grade, stage-by-stage starter template for the **AI-Native Software Development Life Cycle (SDLC)**, adapted from Anthropic's AI-Native SDLC Playbook with first-class support for **DeepSeek Harness (DSH)**, **Anthropic Claude Code**, **Google Antigravity**, **OpenAI Codex**, **Cursor**, and **GitHub Copilot**.
 
 👉 **New to this repo? Start with the [Team & Developer Onboarding Guide](ONBOARDING.md).**
 
@@ -88,6 +88,7 @@ This repository works natively across all leading AI engineering assistants and 
 
 | Coding Tool / Agent | Directives File | Slash Commands & Workflow | Configuration & Launch |
 | :--- | :--- | :--- | :--- |
+| **DeepSeek Harness (DSH)** | `DSH.md` & `AGENTS.md` | `.agents/skills/` (`skill` tool, `subagent`, `workflow`, `ralph`) | Open project in DSH Web GUI or CLI |
 | **Anthropic Claude Code** | `CLAUDE.md` | `.claude/commands/` (`/grill-me`, `/spec-architect`, `/verify`, `/review-pr`) | Run `claude` in project root |
 | **Google Antigravity** | `GEMINI.md` | `.gemini/skills/`, `.gemini/agents/`, `.gemini/hooks.json` | Open project in Antigravity |
 | **OpenAI Codex / CLI** | `CODEX.md` & `AGENTS.md` | Standard prompt workflows adhering to `AGENTS.md` | Launch Codex CLI or OpenAI Agent |

@@ -1,0 +1,12 @@
+# Dependencies & Build
+node_modules/
+vendor/
+.venv/
+.uv_cache/
+dist/
+build/
+*.pyc
+__pycache__/
+.DS_Store
+.env
+.env.local

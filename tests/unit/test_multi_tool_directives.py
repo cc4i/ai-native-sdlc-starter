@@ -14,6 +14,7 @@ class TestMultiToolDirectives(unittest.TestCase):
     def test_all_tool_directive_files_exist(self):
         """Verifies that directive files exist for all major coding tools."""
         expected_files = [
+            "DSH.md",  # DeepSeek Harness
             "CLAUDE.md",  # Claude Code
             "GEMINI.md",  # Google Antigravity
             "AGENTS.md",  # Universal open agent standard
@@ -41,7 +42,7 @@ class TestMultiToolDirectives(unittest.TestCase):
         4. Branch-first development (feat/ or branch)
         5. Zero anti-shortcuts (TODO stubs)
         """
-        primary_directives = ["CLAUDE.md", "GEMINI.md", "AGENTS.md", "CODEX.md"]
+        primary_directives = ["DSH.md", "CLAUDE.md", "GEMINI.md", "AGENTS.md", "CODEX.md"]
         for rel_path in primary_directives:
             content = (self.root_dir / rel_path).read_text(encoding="utf-8").lower()
             self.assertIn("plan", content, f"{rel_path} missing plan requirement")
@@ -88,6 +89,44 @@ class TestMultiToolDirectives(unittest.TestCase):
         self.assertIn("globs:", content)
         self.assertIn("alwaysApply: true", content)
         self.assertIn("make verify", content)
+
+    def test_dsh_directives_and_skills_exist(self):
+        """Verifies that DSH.md exists and .agents/skills contains all 5 open agent skills."""
+        dsh_file = self.root_dir / "DSH.md"
+        self.assertTrue(dsh_file.exists(), "DSH.md directives file must exist")
+        content = dsh_file.read_text(encoding="utf-8")
+        self.assertIn("DeepSeek Harness", content)
+        self.assertIn("subagent", content)
+        self.assertIn("workflow", content)
+
+        skills_dir = self.root_dir / ".agents" / "skills"
+        self.assertTrue(skills_dir.exists(), ".agents/skills directory must exist")
+        expected_skills = [
+            "intent-capture",
+            "spec-architect",
+            "secure-api-design",
+            "adversarial-review",
+            "verifier-loop",
+        ]
+        for skill_name in expected_skills:
+            skill_file = skills_dir / skill_name / "SKILL.md"
+            self.assertTrue(skill_file.exists(), f"Missing skill file: {skill_file}")
+            text = skill_file.read_text(encoding="utf-8")
+            self.assertTrue(text.startswith("---"), f"Skill {skill_name} must have YAML frontmatter")
+            self.assertIn("name:", text)
+            self.assertIn("description:", text)
+
+    def test_uv_cache_isolation_in_scripts_and_makefile(self):
+        """Verifies that UV_CACHE_DIR is scoped project-locally and ignored in .gitignore."""
+        verify_script = (self.root_dir / "scripts" / "verify.sh").read_text(encoding="utf-8")
+        self.assertIn("UV_CACHE_DIR=", verify_script, "scripts/verify.sh must set UV_CACHE_DIR")
+        self.assertIn(".uv_cache", verify_script, "scripts/verify.sh must use .uv_cache")
+
+        makefile = (self.root_dir / "Makefile").read_text(encoding="utf-8")
+        self.assertIn("UV_CACHE_DIR", makefile, "Makefile must configure UV_CACHE_DIR")
+
+        gitignore = (self.root_dir / ".gitignore").read_text(encoding="utf-8")
+        self.assertIn(".uv_cache", gitignore, ".gitignore must ignore .uv_cache")
 
 
 if __name__ == "__main__":

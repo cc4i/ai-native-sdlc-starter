@@ -1,7 +1,7 @@
 # Team & Developer Onboarding Guide: The AI-Native SDLC
 
 > **Welcome to the AI-Native Software Development Life Cycle (SDLC) Starter Template.**  
-> This guide is designed for developers, product managers, architects, and engineering leads who want to bootstrap new projects or adapt existing codebases to the AI-native workflow using **Anthropic Claude Code**, **Google Antigravity**, **OpenAI Codex**, **Cursor**, or **GitHub Copilot**.
+> This guide is designed for developers, product managers, architects, and engineering leads who want to bootstrap new projects or adapt existing codebases to the AI-native workflow using **DeepSeek Harness**, **Anthropic Claude Code**, **Google Antigravity**, **OpenAI Codex**, **Cursor**, or **GitHub Copilot**.
 
 ---
 
@@ -274,11 +274,13 @@ Keep `GEMINI.md` under one page so that it acts as high-signal working memory ra
 
 | Directory / File | Lifecycle Stage | Description | Single Source of Truth |
 | :--- | :--- | :--- | :--- |
+| [`DSH.md`](DSH.md) | Universal | System instructions and multi-agent mapping for DeepSeek Harness | DSH Working Context |
 | [`CLAUDE.md`](CLAUDE.md) | Universal | System instructions and commands for Anthropic Claude Code | Claude Code Working Context |
 | [`GEMINI.md`](GEMINI.md) | Universal | System instructions and directives for Google Antigravity | Antigravity Working Context |
 | [`AGENTS.md`](AGENTS.md) | Universal | Universal cross-agent directives standard | Open Agent Specification |
 | [`CODEX.md`](CODEX.md) | Universal | System instructions for OpenAI Codex | Codex Working Context |
 | [`.cursorrules`](.cursorrules) | Universal | IDE directives and lifecycle rules for Cursor | Cursor IDE Rules |
+| [`.agents/skills/`](.agents/skills) | Knowledge | Open Agent standard skills auto-discovered by DSH | Institutional Memory |
 | [`.claude/commands/`](.claude/commands) | Tooling | Custom slash commands for Claude Code (`/grill-me`, `/verify`, etc.) | Claude Workflow Tools |
 | [`REVIEW.md`](REVIEW.md) | Stage 5: Deploy | Review policies, severity tiers, approval rules | Code Review Standard |
 | [`bands.yaml`](bands.yaml) | Stage 6: Maintain | Statistical control bands configuration ($\sigma$ tiers) | Anomaly Thresholds |
@@ -303,6 +305,7 @@ Keep `GEMINI.md` under one page so that it acts as high-signal working memory ra
 
 1. Scaffold your first feature: `make new-intent TITLE="My First Feature"`
 2. Launch your coding agent of choice:
+   - **DeepSeek Harness (DSH)**: Open project in DSH, load `intent-capture` skill to brainstorm!
    - **Claude Code**: Run `claude` and type `/grill-me let's brainstorm this feature!`
    - **Google Antigravity**: Prompt `/grill-me let's brainstorm this feature!`
    - **OpenAI Codex / Cursor**: Ask the agent to review `docs/intent/` and generate the spec following `AGENTS.md`.
