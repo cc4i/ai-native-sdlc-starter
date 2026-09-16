@@ -3,7 +3,7 @@
 # Enforce project-local UV cache to avoid touching external environment or ~/.cache
 export UV_CACHE_DIR ?= $(CURDIR)/.uv_cache
 
-.PHONY: default all help init install-hooks verify test lint eval format new-intent review-pr release release-push release-remote audit run clean
+.PHONY: default all help init install-hooks verify test lint eval format new-intent review-pr release release-push release-remote audit clean
 
 default: help
 
@@ -16,7 +16,6 @@ help:
 	@echo "  make install-hooks  - Configure .githooks as git core.hooksPath"
 	@echo "  make verify         - Run full local feedback verification (test + lint + artifacts)"
 	@echo "  make test           - Run unit & integration test suite"
-	@echo "  make run            - Launch Dinosaur Game browser server"
 	@echo "  make lint           - Run syntax & code style linters"
 	@echo "  make eval           - Run continuous AI regression evaluation suite"
 	@echo "  make format         - Format codebase according to project standards"
@@ -27,14 +26,6 @@ help:
 	@echo "  make release-remote - Trigger GitHub Actions release workflow (Usage: make release-remote VERSION=v1.X.X)"
 	@echo "  make audit          - Check artifact chain linkages and anti-shortcuts"
 	@echo "  make clean          - Remove temporary caches and virtual environment artifacts"
-
-run:
-	@if [ -d "dinosaur-game" ]; then \
-		$(MAKE) -C dinosaur-game run; \
-	else \
-		echo "❌ dinosaur-game directory not found."; \
-		exit 1; \
-	fi
 
 init: install-hooks
 	@echo "🚀 Initializing AI-Native SDLC project repository..."

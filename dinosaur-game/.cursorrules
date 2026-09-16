@@ -1,6 +1,0 @@
-# Cursor IDE Agent Rules (.cursorrules)
-
-1. ARTIFACTS BEFORE CODE: Do not write code in src/ without an approved plan in plans/ matching an approved spec in specs/.
-2. TEST-DRIVEN DEVELOPMENT: Always write failing tests first in tests/ before implementing application logic in src/.
-3. MANDATORY VERIFICATION: Always run make verify before declaring completion. Zero lint errors and all tests must pass.
-4. NO ANTI-SHORTCUTS: Zero TODO comments, empty stubs, or hardcoded secrets.
